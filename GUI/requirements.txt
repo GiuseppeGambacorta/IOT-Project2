@@ -1,3 +1,26 @@
 pyserial==3.5
 matplotlib
 plotly
+
+
+# Formattazione del codice
+black==23.9.1
+isort==5.12.0
+
+# Linting e analisi del codice
+flake8==6.1.0
+pylint==2.17.5
+
+# Controllo dei tipi
+mypy==1.5.1
+
+# Analisi della sicurezza
+bandit==1.7.5
+
+# Test e copertura
+pytest==7.5.0
+coverage==7.3.2
+
+# Automazione pre-commit
+pre-commit==3.5.3
+
