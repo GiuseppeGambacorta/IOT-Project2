@@ -6,22 +6,7 @@ v1.0.0 - 20241031
 
 We want to realise an embedded system called Smart Waste Disposal Container. The prototype  is meant to implement a simple smart system for waste disposal (dangerous liquid waste in particular). 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Hardware components:
+# Hardware components:
 USER DETECTOR is a PIR, to detect the presence of a user in front of the container
 WASTE DETECTOR is a sonar, to measure how much the container is full
 DOOR is a servo-motor, controlling a small door, to enter waste
@@ -38,11 +23,11 @@ a EMPTY button to empty the container
 a RESTORE button to restore the container (in the case of alarm)
 
 
-Description 
+# Description 
 
 Basic behaviour: a user can dispose of some waste (liquid in particular) by pressing the OPEN button. This opens the DOOR, so that the user can enter (spill) the waste, pressing the CLOSE button to close the DOOR.  When/if the container becomes full, it is no longer available for accepting waste and it waits for being emptied by operators. 
 
-Detailed behaviour
+# Detailed behaviour
 
 At the beginning, when turned on, the container is meant to be empty and available
 Led L1 is on, signaling availability
@@ -75,7 +60,7 @@ Develop the embedded software on Arduino + PC connected through the serial line,
 
 For any aspect not specified, you are free to choose the approach you consider more useful or valuable.
 
-The Deliverable
+# The Deliverable
 
 The deliverable consists in a zipped folder assignment-02.zip including two subfolders:
 src folder, including 
