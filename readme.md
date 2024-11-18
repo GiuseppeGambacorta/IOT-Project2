@@ -22,6 +22,7 @@ temperature
 a EMPTY button to empty the container
 a RESTORE button to restore the container (in the case of alarm)
 
+![Smart Waste Disposal System](img.png)
 
 # Description 
 
