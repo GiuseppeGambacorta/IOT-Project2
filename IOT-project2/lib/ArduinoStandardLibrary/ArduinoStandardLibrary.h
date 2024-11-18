@@ -1,8 +1,25 @@
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
 
 #ifndef STANDARDLIBRARY_H
 #define STANDARDLIBRARY_H
+
+
+
+class Timer
+{
+  private:
+    unsigned long oldTime;
+    unsigned long timeDuration;
+    unsigned int start;
+
+  public:
+    Timer(unsigned long timeDuration);
+   
+    
+    void active(bool start);
+    bool isTimeElapsed();
+    void reset();
+};
 
 class DigitalInput
 {
@@ -11,7 +28,7 @@ class DigitalInput
     unsigned int value;
     unsigned int oldValue;
     unsigned int trigChanged;
-    Timer& activationTimer;
+    Timer* activationTimer;
 
   public:
   DigitalInput(unsigned int pin, unsigned long threshold);
@@ -30,12 +47,8 @@ class DigitalOutput
     unsigned int value;
 
   public:
-    DigitalOutput(unsigned int pin)
-    {
-      pinMode(pin, OUTPUT);
-      this->pin = pin;
-      this->value = 0;
-    }
+    DigitalOutput(unsigned int pin);
+  
     
     void update();
     void turnOn();
@@ -45,25 +58,7 @@ class DigitalOutput
 };
 
 
-class Timer
-{
-  private:
-    unsigned long oldTime;
-    unsigned long timeDuration;
-    unsigned int start;
 
-  public:
-    Timer(unsigned long timeDuration)
-    {
-      this->oldTime = 0;
-      this->timeDuration = timeDuration;
-      this->start = 0;
-    }
-    
-    void active(bool start);
-    bool isTimeElapsed();
-    void reset();
-};
 
 
 
@@ -95,7 +90,7 @@ class AnalogOutput
     AnalogOutput(unsigned int pin, unsigned int maxValue);
     
     
-    void setValue(int value);
+    void setValue(unsigned int value);
     int getValue();
     void update();
 };
@@ -311,3 +306,5 @@ int isTimeElapsed(Timer *timer, unsigned long actualTime)
 }
 
 */
+
+#endif

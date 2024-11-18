@@ -3,9 +3,10 @@
 
 #pragma region DigitalInput
 DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
-    : pin(pin), value(0), oldValue(0), trigChanged(0), activationTimer(*new Timer(threshold))
+    : pin(pin), value(0), oldValue(0), trigChanged(0)
 {
     pinMode(pin, INPUT);
+    this->activationTimer = new Timer(threshold);
 };
 
 void DigitalInput::update()
@@ -13,6 +14,7 @@ void DigitalInput::update()
     this->value = digitalRead(this->pin);
     this->trigChanged = this->value != this->oldValue;
     this->oldValue = this->value;
+
 };
 
 bool DigitalInput::isActive(){
@@ -127,7 +129,7 @@ AnalogOutput::AnalogOutput(unsigned int pin, unsigned int maxValue)
 };
 
 
-void AnalogOutput::setValue(int value){
+void AnalogOutput::setValue(unsigned int value){
     if(value > this->maxValue){
         value = this->maxValue;
     }
