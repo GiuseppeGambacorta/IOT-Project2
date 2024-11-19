@@ -1,18 +1,27 @@
 #include <Arduino.h>
+#include "ArduinoStandardLibrary.h"
 
-// put function declarations here:
-int myFunction(int, int);
+
+DigitalInput button(2,500);
+
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+
+  if (Serial.available() > 0){
+    
+  }
+  button.update();
+
+  
+
+
+  if(button.isChanged()){
+    Serial.println("Button is changed");
+    Serial.println(millis());
+  }
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}

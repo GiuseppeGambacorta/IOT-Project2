@@ -10,7 +10,7 @@ class Timer
   private:
     unsigned long oldTime;
     unsigned long timeDuration;
-    unsigned int start;
+    bool startInterlock;
 
   public:
     Timer(unsigned long timeDuration);

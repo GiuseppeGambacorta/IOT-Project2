@@ -1,6 +1,49 @@
 #include "ArduinoStandardLibrary.h"
 
 
+
+#pragma region Timer
+Timer::Timer(unsigned long timeDuration)
+    : oldTime(0), timeDuration(timeDuration), startInterlock(0)
+{
+};
+
+void Timer::active(bool start)
+{
+    if (!start){
+        startInterlock = false;
+    }
+
+    if (!this->startInterlock){
+        if (start){
+            startInterlock = true;
+            oldTime = millis();
+        }
+    }
+};
+
+
+bool Timer::isTimeElapsed()
+{
+    if (this->startInterlock)
+    {
+        unsigned long currentTime = millis();
+        if (currentTime - this->oldTime >= this->timeDuration)
+        {
+            return true;
+        }
+    }
+    return false;
+};
+
+void Timer::reset()
+{
+    this->oldTime = 0;
+    this->startInterlock = 0;
+};
+#pragma endregion
+
+
 #pragma region DigitalInput
 DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
     : pin(pin), value(0), oldValue(0), trigChanged(0)
@@ -11,7 +54,8 @@ DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
 
 void DigitalInput::update()
 {
-    this->value = digitalRead(this->pin);
+    this->activationTimer->active(digitalRead(this->pin));
+    this->value = this->activationTimer->isTimeElapsed();
     this->trigChanged = this->value != this->oldValue;
     this->oldValue = this->value;
 
@@ -55,41 +99,6 @@ bool DigitalOutput::isActivated()
 };
 #pragma endregion
 
-#pragma region Timer
-Timer::Timer(unsigned long timeDuration)
-    : oldTime(0), timeDuration(timeDuration), start(0)
-{
-};
-
-void Timer::active(bool start)
-{
-    this->start = start;
-    if (start)
-    {
-        this->oldTime = millis();
-    }
-};
-
-
-bool Timer::isTimeElapsed()
-{
-    if (this->start)
-    {
-        unsigned long currentTime = millis();
-        if (currentTime - this->oldTime >= this->timeDuration)
-        {
-            return true;
-        }
-    }
-    return false;
-};
-
-void Timer::reset()
-{
-    this->oldTime = 0;
-    this->start = 0;
-};
-#pragma endregion
 
 #pragma region AnalogInput
 AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue,unsigned int filterSize)
