@@ -83,22 +83,21 @@ class DigitalOutput
 
 
 
-
-
-
 class AnalogInput
 {
   private:
     unsigned int pin;
     float value;
     unsigned int mapValue;
-    unsigned int maxFilterSize;
+    static const unsigned int maxFilterSize = 10;
+    int array[maxFilterSize];
     unsigned int filterCount;
     float val_coef = 0;
+    int currentIndex = 0;
     float filterValue(unsigned int inputValue);
 
   public:
-    AnalogInput(unsigned int pin, unsigned int mapValue, unsigned int filterSize);
+    AnalogInput(unsigned int pin, unsigned int mapValue);
     void update();
     int getValue();
 };
@@ -179,155 +178,6 @@ void print(Screen *screen, String message, int row)
   Serial.println(message);
   Serial.flush();
 #endif
-}
-
-
-void updateDigitalInput(DigitalInput *digitalInput)
-{
-  updateDigitalInput(digitalInput, digitalRead(digitalInput->pin), millis());
-}
-
-void updateDigitalInput(DigitalInput *digitalInput, unsigned int inputValue, unsigned long currentTime)
-{
-  startTimer(&digitalInput->activationTimer, inputValue, currentTime);
-  digitalInput->value = isTimeElapsed(&digitalInput->activationTimer, currentTime);
-  if (digitalInput->value != digitalInput->oldValue)
-  {
-    digitalInput->isChanged = 1;
-    digitalInput->oldValue = digitalInput->value;
-  }
-  else
-  {
-    digitalInput->isChanged = 0;
-  }
-}
-
-
-
-void initDigitalOutput(DigitalOutput *digitalOutput, unsigned int pin)
-{
-  pinMode(pin, OUTPUT);
-  digitalOutput->pin = pin;
-  digitalOutput->value = 0;
-}
-
-void writeDigitalOutput(DigitalOutput *digitalOutput)
-{
-  digitalWrite(digitalOutput->pin, digitalOutput->value);
-}
-
-void initAnalogInput(AnalogInput *analogInput, unsigned int pin, unsigned int filterSize)
-{
-  pinMode(pin, INPUT);
-  analogInput->pin = pin;
-  analogInput->value = 0;
-  analogInput->maxSizeFilter = filterSize;
-  analogInput->filterCount = 0;
-}
-
-void filterAnalogValue(AnalogInput *input, int inputValue)
-{
-  if (input->filterCount < input->maxSizeFilter)
-  {
-    input->filterCount++;
-  }
-  float val_coef = 1.0 / float(input->filterCount);
-  input->value += (inputValue - input->value) * val_coef;
-}
-
-void updateAnalogInput(AnalogInput *input)
-{
-  filterAnalogValue(input, analogRead(input->pin));
-}
-
-void initFadingLed(FadingLed *led, unsigned int pin, unsigned long timeDuration)
-{
-  pinMode(pin, OUTPUT);
-  led->pin = pin;
-  led->value = 0;
-  led->decreasing = 0;
-  unsigned int offset = 255 / 5;
-  initTimer(&led->fadingTimer, (timeDuration / offset) / 2);
-}
-
-void fadeAnalogOutput(FadingLed *led)
-{
-  long time = millis();
-  startTimer(&led->fadingTimer, true, time);
-  if (isTimeElapsed(&led->fadingTimer, time))
-  {
-    if (led->value <= 0)
-    {
-      led->value = 0;
-      led->decreasing = 0;
-    }
-    else if (led->value >= 255)
-    {
-      led->value = 255;
-      led->decreasing = 1;
-    }
-    if (led->decreasing)
-    {
-      led->value -= 5;
-    }
-    else
-    {
-      led->value += 5;
-    }
-    startTimer(&led->fadingTimer, false, time);
-  }
-}
-
-void turnOffFadingLed(FadingLed *led)
-{
-  led->value = 0;
-}
-
-void turnOnFadingLed(FadingLed *led)
-{
-  led->value = 255;
-}
-
-
-
-
-
-
-void initTimer(Timer *timer, unsigned long timeDuration)
-{
-  timer->start = 0;
-  timer->oldTime = 0;
-  timer->timeDuration = timeDuration;
-}
-
-void startTimer(Timer *timer, unsigned int start)
-{
-  startTimer(timer, start, millis());
-}
-
-void startTimer(Timer *timer, unsigned int start, unsigned long actualTime)
-{
-  if (start && !timer->start)
-  {
-    timer->oldTime = actualTime;
-    timer->start = true;
-  }
-  else if (!start)
-  {
-    timer->start = false;
-  }
-}
-
-int isTimeElapsed(Timer *timer, unsigned long actualTime)
-{
-  if (timer->start)
-  {
-    if (actualTime - timer->oldTime >= timer->timeDuration)
-    {
-      return true;
-    }
-  }
-  return false;
 }
 
 */

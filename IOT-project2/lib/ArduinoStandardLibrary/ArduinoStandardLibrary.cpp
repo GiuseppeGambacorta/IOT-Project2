@@ -137,20 +137,23 @@ bool DigitalOutput::isActive()
 /*---- ANALOG INPUT ----*/
 
 
-AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue,unsigned int filterSize)
-    : pin(pin), value(0),  mapValue(mapValue),maxFilterSize(filterSize), filterCount(0)
+AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue)
+    : pin(pin), value(0),  mapValue(mapValue), filterCount(0)
 {
     pinMode(pin, INPUT);
 };
 
 
 float AnalogInput::filterValue(unsigned int inputValue) {
-    if (this->filterCount < this->maxFilterSize) {
-        this->filterCount++;
-        val_coef = 1.0 / float(this->filterCount);
+    array[currentIndex] = inputValue; // Memorizza il valore letto nell'array
+    currentIndex = (currentIndex + 1) % maxFilterSize; // Aggiorna l'indice corrente
+
+    unsigned long sum = 0;
+    for (unsigned int i = 0; i < maxFilterSize; i++) {
+        sum += array[i]; // Calcola la somma dei valori nell'array
     }
-    float var = (float(inputValue) - this->value) * val_coef;
-    return var;
+
+    return sum / maxFilterSize; // Restituisce la media dei valori
 }
 
 void AnalogInput::update(){

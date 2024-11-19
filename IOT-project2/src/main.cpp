@@ -6,9 +6,13 @@ TimeKeeper& timeKeeper = TimeKeeper::getInstance();
 DigitalInput button(2,500);
 DigitalOutput led(LED_BUILTIN);
 
-AnalogInput potentiometer(A0, 100, 20);
+AnalogInput potentiometer(A0, 100);
 
-int count = 1;
+
+AnalogOutput out (9, 100);
+AnalogInput tryAnalogOut(A5, 1023);
+
+int count = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -18,10 +22,10 @@ void loop() {
 
   timeKeeper.update();
   button.update();
-  unsigned long start = millis();
-  Serial.println(start);
+
+  tryAnalogOut.update();
   potentiometer.update();
-  Serial.println(millis() - start);
+
 
 
   if (button.isChanged() && button.isActive()){
@@ -31,9 +35,13 @@ void loop() {
   if (button.isChanged() && !button.isActive()){
     led.turnOff();
   }
-
+  count++;
+  count = count % 100;
+  out.setValue(count);
+  Serial.println(tryAnalogOut.getValue());
   //Serial.println(potentiometer.getValue());
 
+  out.update();
   led.update();
   timeKeeper.reset();
 
