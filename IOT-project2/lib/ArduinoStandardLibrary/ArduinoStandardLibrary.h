@@ -5,19 +5,43 @@
 
 
 
+class TimeKeeper {
+private:
+    unsigned long currentTime;
+    bool updated;
+
+    // Costruttore privato per il singleton
+    TimeKeeper();
+
+public:
+    // Metodo per ottenere l'istanza singleton
+    static TimeKeeper& getInstance() {
+        static TimeKeeper instance;
+        return instance;
+    }
+
+    void update();
+    unsigned long getCurrentTime();
+    void reset();
+
+    // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
+    TimeKeeper(const TimeKeeper&) = delete;
+    void operator=(const TimeKeeper&) = delete;
+};
+
 class Timer
 {
   private:
     unsigned long oldTime;
     unsigned long timeDuration;
     bool startInterlock;
-
+    TimeKeeper& timeKeeper;
   public:
     Timer(unsigned long timeDuration);
-   
-    
+  
     void active(bool start);
     bool isTimeElapsed();
+    void setTime(unsigned long newTime);
     void reset();
 };
 

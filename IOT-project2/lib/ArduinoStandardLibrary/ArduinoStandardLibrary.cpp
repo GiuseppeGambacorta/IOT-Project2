@@ -1,12 +1,33 @@
 #include "ArduinoStandardLibrary.h"
 
 
+#pragma region TimeKeeper
+
+
+TimeKeeper::TimeKeeper() : currentTime(0), updated(false) {}
+
+void TimeKeeper::update() {
+    if (!updated) {
+        currentTime = millis();
+        updated = true;
+    }
+}
+
+unsigned long TimeKeeper::getCurrentTime() {
+    return currentTime;
+}
+
+void TimeKeeper::reset() {
+    updated = false;
+}
+
+#pragma endregion
 
 #pragma region Timer
 Timer::Timer(unsigned long timeDuration)
-    : oldTime(0), timeDuration(timeDuration), startInterlock(0)
+    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(TimeKeeper::getInstance())
 {
-};
+}
 
 void Timer::active(bool start)
 {
@@ -17,30 +38,35 @@ void Timer::active(bool start)
     if (!this->startInterlock){
         if (start){
             startInterlock = true;
-            oldTime = millis();
+            oldTime = timeKeeper.getCurrentTime();
         }
     }
-};
-
+}
 
 bool Timer::isTimeElapsed()
 {
     if (this->startInterlock)
     {
-        unsigned long currentTime = millis();
+        unsigned long currentTime = timeKeeper.getCurrentTime();
+        
         if (currentTime - this->oldTime >= this->timeDuration)
         {
+            
             return true;
         }
     }
     return false;
-};
+}
+
+void Timer::setTime(unsigned long newTime){
+    this->timeDuration = newTime;
+}
 
 void Timer::reset()
 {
     this->oldTime = 0;
     this->startInterlock = 0;
-};
+}
 #pragma endregion
 
 

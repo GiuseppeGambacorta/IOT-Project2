@@ -2,8 +2,10 @@
 #include "ArduinoStandardLibrary.h"
 
 
+TimeKeeper& timeKeeper = TimeKeeper::getInstance();
 DigitalInput button(2,500);
-
+Timer timer(1000);
+int count = 1;
 
 void setup() {
   Serial.begin(9600);
@@ -11,17 +13,15 @@ void setup() {
 
 void loop() {
 
-  if (Serial.available() > 0){
-    
-  }
+  timeKeeper.update();
   button.update();
 
-  
 
-
-  if(button.isChanged()){
-    Serial.println("Button is changed");
-    Serial.println(millis());
+  if (button.isChanged() && button.isActive()){
+    Serial.println("premuto");
   }
+
+  timeKeeper.reset();
+
 }
 
