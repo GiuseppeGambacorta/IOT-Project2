@@ -77,7 +77,7 @@ class DigitalOutput
     void update();
     void turnOn();
     void turnOff();
-    bool isActivated();
+    bool isActive();
 
 };
 
@@ -90,11 +90,12 @@ class AnalogInput
 {
   private:
     unsigned int pin;
-    unsigned int value;
+    float value;
     unsigned int mapValue;
     unsigned int maxFilterSize;
     unsigned int filterCount;
-    void filterValue(int inputValue);
+    float val_coef = 0;
+    float filterValue(unsigned int inputValue);
 
   public:
     AnalogInput(unsigned int pin, unsigned int mapValue, unsigned int filterSize);

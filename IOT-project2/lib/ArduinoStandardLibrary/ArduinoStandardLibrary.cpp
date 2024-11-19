@@ -1,8 +1,10 @@
 #include "ArduinoStandardLibrary.h"
 
 
-#pragma region TimeKeeper
 
+
+
+/*---- TIME KEEPER ----*/
 
 TimeKeeper::TimeKeeper() : currentTime(0), updated(false) {}
 
@@ -21,9 +23,11 @@ void TimeKeeper::reset() {
     updated = false;
 }
 
-#pragma endregion
 
-#pragma region Timer
+
+
+/*---- TIMER ----*/
+
 Timer::Timer(unsigned long timeDuration)
     : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(TimeKeeper::getInstance())
 {
@@ -67,10 +71,11 @@ void Timer::reset()
     this->oldTime = 0;
     this->startInterlock = 0;
 }
-#pragma endregion
 
 
-#pragma region DigitalInput
+
+/*---- DIGITAL INPUT ----*/
+
 DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
     : pin(pin), value(0), oldValue(0), trigChanged(0)
 {
@@ -94,9 +99,12 @@ bool DigitalInput::isActive(){
 bool DigitalInput::isChanged(){
     return this->trigChanged;
 }
-#pragma endregion
 
-#pragma region DigitalOutput
+
+
+/*---- DIGITAL OUTPUT ----*/
+
+
 DigitalOutput::DigitalOutput(unsigned int pin)
     : pin(pin), value(0)
 {
@@ -119,14 +127,16 @@ void DigitalOutput::turnOff()
     this->value = 0;
 };
 
-bool DigitalOutput::isActivated()
+bool DigitalOutput::isActive()
 {
     return this->value;
 };
-#pragma endregion
 
 
-#pragma region AnalogInput
+
+/*---- ANALOG INPUT ----*/
+
+
 AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue,unsigned int filterSize)
     : pin(pin), value(0),  mapValue(mapValue),maxFilterSize(filterSize), filterCount(0)
 {
@@ -134,17 +144,18 @@ AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue,unsigned int fi
 };
 
 
-void AnalogInput::filterValue(int inputValue){
-    if(this->filterCount < this->maxFilterSize){
+float AnalogInput::filterValue(unsigned int inputValue) {
+    if (this->filterCount < this->maxFilterSize) {
         this->filterCount++;
+        val_coef = 1.0 / float(this->filterCount);
     }
-    float val_coef = 1.0 / float(this->filterCount);
-    this->value += (inputValue - this->value) * val_coef;
+    float var = (float(inputValue) - this->value) * val_coef;
+    return var;
 }
 
 void AnalogInput::update(){
-    this->filterValue(analogRead(this->pin));
-    this->value = map(this->value, 0, 1023, 0, this->mapValue);
+      this->value += this->filterValue(map(analogRead(this->pin), 0, 1023, 0, this->mapValue));
+  
 }
 
 
@@ -153,16 +164,15 @@ int AnalogInput::getValue(){
 }
 
 
-#pragma endregion
 
-#pragma region AnalogOutput
+/*---- ANALOG OUTPUT ----*/
+
 
 AnalogOutput::AnalogOutput(unsigned int pin, unsigned int maxValue)
     : pin(pin), value(0), maxValue(maxValue)
 {
     pinMode(pin, OUTPUT);
 };
-
 
 void AnalogOutput::setValue(unsigned int value){
     if(value > this->maxValue){
@@ -181,7 +191,6 @@ void AnalogOutput::update(){
     analogWrite(this->pin, map(this->value, 0, this->maxValue, 0, 255));
 }
 
-#pragma endregion
 
 
 
