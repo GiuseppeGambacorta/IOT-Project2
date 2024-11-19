@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 import threading
+from components.button_frame import ButtonFrame
 
 class RealTimePlotApp(ctk.CTk):
     def __init__(self):
@@ -14,26 +15,12 @@ class RealTimePlotApp(ctk.CTk):
         window_width = int(screen_width * 0.8)
         window_height = int(screen_height * 0.8)
         self.geometry(f"{window_width}x{window_height}")
-
         
         self.is_running = True
         
         # Crea il frame per i pulsanti
-        self.button_frame = ctk.CTkFrame(self)
+        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore_plotting, self.empty_plotting)
         self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
-        
-        # Aggiungi i pulsanti
-        self.start_button = ctk.CTkButton(self.button_frame, text="Start", command=self.start_plotting)
-        self.start_button.pack(side="left", padx=10)
-        
-        self.stop_button = ctk.CTkButton(self.button_frame, text="Stop", command=self.stop_plotting)
-        self.stop_button.pack(side="left", padx=10)
-
-        self.stop_button = ctk.CTkButton(self.button_frame, text="Restore", command=self.stop_plotting)
-        self.stop_button.pack(side="right", padx=10)
-
-        self.stop_button = ctk.CTkButton(self.button_frame, text="Empty", command=self.stop_plotting)
-        self.stop_button.pack(side="right", padx=10)
         
         # Crea il frame per visualizzare il grafico
         self.frame = ctk.CTkFrame(self)
@@ -85,7 +72,7 @@ class RealTimePlotApp(ctk.CTk):
                     self.x_data = self.x_data[-50:]
                     self.y_data = self.y_data[-50:]
                 
-                # Aggiorna il grafico usando after() per thread safety, in modo che il thread principale possa aggiornare il grafico
+                # Aggiorna il grafico usando after() per thread safety
                 self.after(0, self.safe_update)
                 
                 time.sleep(1)
@@ -107,6 +94,14 @@ class RealTimePlotApp(ctk.CTk):
     
     def stop_plotting(self):
         self.is_running = False
+
+    def restore_plotting(self):
+        # Implementa la logica per il pulsante Restore
+        pass
+
+    def empty_plotting(self):
+        # Implementa la logica per il pulsante Empty
+        pass
     
     def on_close(self):
         # Ferma il thread
