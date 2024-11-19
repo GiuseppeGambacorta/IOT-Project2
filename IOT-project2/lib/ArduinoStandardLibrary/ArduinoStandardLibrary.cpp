@@ -1,12 +1,10 @@
 #include "ArduinoStandardLibrary.h"
 
 
-
-
-
 /*---- TIME KEEPER ----*/
 
 TimeKeeper::TimeKeeper() : currentTime(0), updated(false) {}
+
 
 void TimeKeeper::update() {
     if (!updated) {

@@ -38,9 +38,9 @@ void loop() {
   count++;
   count = count % 100;
   out.setValue(count);
-  Serial.println(tryAnalogOut.getValue());
+  //Serial.println(tryAnalogOut.getValue());
   //Serial.println(potentiometer.getValue());
-
+  Serial.println(led.isActive());
   out.update();
   led.update();
   timeKeeper.reset();

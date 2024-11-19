@@ -3,8 +3,6 @@
 #ifndef STANDARDLIBRARY_H
 #define STANDARDLIBRARY_H
 
-
-
 class TimeKeeper {
 private:
     unsigned long currentTime;
@@ -14,7 +12,7 @@ private:
     TimeKeeper();
 
 public:
-    // Metodo per ottenere l'istanza singleton
+    // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
     static TimeKeeper& getInstance() {
         static TimeKeeper instance;
         return instance;
@@ -25,8 +23,8 @@ public:
     void reset();
 
     // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
-    TimeKeeper(const TimeKeeper&) = delete;
-    void operator=(const TimeKeeper&) = delete;
+    TimeKeeper(const TimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
+    void operator=(const TimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
 class Timer
