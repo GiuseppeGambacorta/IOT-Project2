@@ -3,16 +3,24 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 import threading
+from components.button_frame import ButtonFrame
 
 class RealTimePlotApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         
-        self.title("Real-Time Plot with Matplotlib")
-        self.geometry("800x600")
+        self.title("ARDUiNO HMI")
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        window_width = int(screen_width * 0.8)
+        window_height = int(screen_height * 0.8)
+        self.geometry(f"{window_width}x{window_height}")
         
-        # Flag per controllare l'esecuzione del thread
         self.is_running = True
+        
+        # Crea il frame per i pulsanti
+        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore_plotting, self.empty_plotting)
+        self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
         
         # Crea il frame per visualizzare il grafico
         self.frame = ctk.CTkFrame(self)
@@ -77,6 +85,24 @@ class RealTimePlotApp(ctk.CTk):
             self.update_graph()
             self.canvas.draw()
     
+    def start_plotting(self):
+        self.is_running = True
+        if not self.update_thread.is_alive():
+            self.update_thread = threading.Thread(target=self.update_data)
+            self.update_thread.daemon = True
+            self.update_thread.start()
+    
+    def stop_plotting(self):
+        self.is_running = False
+
+    def restore_plotting(self):
+        # Implementa la logica per il pulsante Restore
+        pass
+
+    def empty_plotting(self):
+        # Implementa la logica per il pulsante Empty
+        pass
+    
     def on_close(self):
         # Ferma il thread
         self.is_running = False
@@ -85,10 +111,8 @@ class RealTimePlotApp(ctk.CTk):
         self.update_thread.join(timeout=1.0)
         
         # Chiude la finestra e termina l'applicazione
-       
         self.quit()
         self.destroy()
-
 
 if __name__ == "__main__":
     app = RealTimePlotApp()
