@@ -8,11 +8,32 @@ class RealTimePlotApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         
-        self.title("Real-Time Plot with Matplotlib")
-        self.geometry("800x600")
+        self.title("ARDUiNO HMI")
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        window_width = int(screen_width * 0.8)
+        window_height = int(screen_height * 0.8)
+        self.geometry(f"{window_width}x{window_height}")
+
         
-        # Flag per controllare l'esecuzione del thread
         self.is_running = True
+        
+        # Crea il frame per i pulsanti
+        self.button_frame = ctk.CTkFrame(self)
+        self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
+        
+        # Aggiungi i pulsanti
+        self.start_button = ctk.CTkButton(self.button_frame, text="Start", command=self.start_plotting)
+        self.start_button.pack(side="left", padx=10)
+        
+        self.stop_button = ctk.CTkButton(self.button_frame, text="Stop", command=self.stop_plotting)
+        self.stop_button.pack(side="left", padx=10)
+
+        self.stop_button = ctk.CTkButton(self.button_frame, text="Restore", command=self.stop_plotting)
+        self.stop_button.pack(side="right", padx=10)
+
+        self.stop_button = ctk.CTkButton(self.button_frame, text="Empty", command=self.stop_plotting)
+        self.stop_button.pack(side="right", padx=10)
         
         # Crea il frame per visualizzare il grafico
         self.frame = ctk.CTkFrame(self)
@@ -64,7 +85,7 @@ class RealTimePlotApp(ctk.CTk):
                     self.x_data = self.x_data[-50:]
                     self.y_data = self.y_data[-50:]
                 
-                # Aggiorna il grafico usando after() per thread safety
+                # Aggiorna il grafico usando after() per thread safety, in modo che il thread principale possa aggiornare il grafico
                 self.after(0, self.safe_update)
                 
                 time.sleep(1)
@@ -77,6 +98,16 @@ class RealTimePlotApp(ctk.CTk):
             self.update_graph()
             self.canvas.draw()
     
+    def start_plotting(self):
+        self.is_running = True
+        if not self.update_thread.is_alive():
+            self.update_thread = threading.Thread(target=self.update_data)
+            self.update_thread.daemon = True
+            self.update_thread.start()
+    
+    def stop_plotting(self):
+        self.is_running = False
+    
     def on_close(self):
         # Ferma il thread
         self.is_running = False
@@ -85,10 +116,8 @@ class RealTimePlotApp(ctk.CTk):
         self.update_thread.join(timeout=1.0)
         
         # Chiude la finestra e termina l'applicazione
-       
         self.quit()
         self.destroy()
-
 
 if __name__ == "__main__":
     app = RealTimePlotApp()
