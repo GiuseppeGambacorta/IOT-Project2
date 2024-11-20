@@ -5,63 +5,43 @@
 #define SERVICES_H
 
 
+/* Interface for TimeKeeper */
 class ITimeKeeper {
 protected:
-    ITimeKeeper() : currentTime(0) {}
+    ITimeKeeper();
     unsigned long currentTime;
 
-
 public:
-  ITimeKeeper& getInstance();
+  virtual ~ITimeKeeper() = default;
+  static ITimeKeeper& getInstance();
+  unsigned long getCurrentTime();
   virtual void update() = 0;
-  unsigned long getCurrentTime(){
-    return currentTime;
-  }
 
   ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
   void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
 
-class TimeKeeper : ITimeKeeper {
+/* Class that uses Millis() */
+class TimeKeeper : public ITimeKeeper {
 private:
-    // Costruttore privato per il singleton
     TimeKeeper();
+
 public:
-    // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
-    static ITimeKeeper& getInstance() {
-        static TimeKeeper instance;
-        return instance;
-    }
-
+    static ITimeKeeper& getInstance();
     void update() override;
-
-    // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
-    TimeKeeper(const TimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
-    void operator=(const TimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
-
-class MockTimeKeeper : ITimeKeeper {
+/* Class that uses a Mock Time for tests */
+class MockTimeKeeper : public ITimeKeeper {
 private:
-    // Costruttore privato per il singleton
     MockTimeKeeper();
-public:
-    // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
-    static ITimeKeeper& getInstance() {
-        static MockTimeKeeper instance;
-        return instance;
-    }
 
+public:
+    static ITimeKeeper& getInstance();
     void update() override;
     void setTime(unsigned long newTime);
-
-    // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
-    MockTimeKeeper(const MockTimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
-    void operator=(const MockTimeKeeper&) = delete; // tk2 = tk1; // NO
 };
-
-
 
 
 class ServiceFactory {
