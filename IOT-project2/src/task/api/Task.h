@@ -2,6 +2,7 @@
 #define __TASK__
 
 class Task {
+protected:
   int myPeriod;
   int timeElapsed;
   bool active;

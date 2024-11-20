@@ -1,11 +1,9 @@
-#include "task/api/Task.h"
+#include "task/api/ManagerTask.h"
 
-class ManagerTask : public Task{
+ManagerTask::ManagerTask() {}
 
-    ManagerTask (){}
+void ManagerTask::tick() {
 
-    void tick(){
-        
-    }
-};
+    //logic to select the task to run this cicle
+}
 

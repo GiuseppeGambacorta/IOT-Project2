@@ -87,7 +87,8 @@ void SchedulerTimer::setupFreq(int freq) {
 
 void SchedulerTimer::setupPeriod(int period) {
     tickInterval = period;
-    timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero
+    // da capire se necessario
+    // timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero 
     calculateNextTick();
 }
 

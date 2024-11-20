@@ -1,34 +1,29 @@
-#include "task/api/Task.h"
+#include "task/api/StdExecTask.h"
 
-typedef enum {
-    READY,
-    OPENING,
-    OPEN,
-    CLOSING
-} StdExecState;
+StdExecTask ::StdExecTask(){
+    state = READY;
+}
 
-class StdExecTask : public Task {
-    
-    StdExecState state;
+void Task::init(int period){}
 
-    StdExecTask (){
-       state = READY; 
+void StdExecTask ::tick(){
+    switch (state)
+    {
+    case READY:
+        // TODO: implement
+        break;
+    case OPENING:
+        // TODO: implement
+        break;
+    case OPEN:
+        // TODO: implement
+        break;
+    case CLOSING:
+        // TODO: implement
+        break;
     }
+}
 
-    void tick(){
-        switch (state){
-            case READY:
-                //TODO: implement
-                break;
-            case OPENING:
-                //TODO: implement
-                break;
-            case OPEN:
-                //TODO: implement
-                break;
-            case CLOSING:
-                //TODO: implement
-                break;
-        }
-    }
-};
+void StdExecTask ::reset(){
+    state = READY;
+}
