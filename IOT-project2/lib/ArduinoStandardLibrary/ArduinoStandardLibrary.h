@@ -43,6 +43,21 @@ class Timer
     void reset();
 };
 
+class SchedulerTimer {
+private:
+    TimeKeeper& timeKeeper;
+    unsigned long tickInterval;
+    unsigned long nextTickTime;
+
+    void calculateNextTick(); // Calcola il tempo del prossimo tick
+
+public:
+    SchedulerTimer();
+    void setupFreq(int freq);  // Configura la frequenza (Hz)
+    void setupPeriod(int period); // Configura il periodo (ms)
+    void waitForNextTick(); // Attende il prossimo tick
+};
+
 class DigitalInput
 {
   private:

@@ -11,7 +11,7 @@ class Scheduler {
   int basePeriod;
   int nTasks;
   Task* taskList[MAX_TASKS];  
-  Timer timer;
+  SchedulerTimer timer;
 
 public:
   void init(int basePeriod);  

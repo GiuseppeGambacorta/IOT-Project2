@@ -70,7 +70,37 @@ void Timer::reset()
     this->startInterlock = 0;
 }
 
+/*---- SCHEDULER TIMER ----*/
 
+SchedulerTimer::SchedulerTimer() 
+    : timeKeeper(TimeKeeper::getInstance()), tickInterval(0), nextTickTime(0) {}
+
+void SchedulerTimer::calculateNextTick() {
+    nextTickTime = timeKeeper.getCurrentTime() + tickInterval;
+}
+
+void SchedulerTimer::setupFreq(int freq) {
+    tickInterval = 1000 / freq; // Converti frequenza in intervallo (ms)
+    timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero
+    calculateNextTick();
+}
+
+void SchedulerTimer::setupPeriod(int period) {
+    tickInterval = period;
+    timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero
+    calculateNextTick();
+}
+
+void SchedulerTimer::waitForNextTick() {
+    while (true) {
+        timeKeeper.update(); // Aggiorna il tempo corrente
+        unsigned long currentTime = timeKeeper.getCurrentTime();
+        if (currentTime >= nextTickTime) {
+            calculateNextTick(); // Calcola il prossimo tick
+            break;
+        }
+    }
+}
 
 /*---- DIGITAL INPUT ----*/
 
