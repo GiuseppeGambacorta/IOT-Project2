@@ -1,6 +1,10 @@
 #include "Services.h"
 
 
+/*---- SERVICE LOCATOR ----*/
+// allocation of the static variable
+ITimeKeeper* ServiceLocator::timeKeeper = &TimeKeeper::getInstance();
+
 
 /*---- TIME KEEPER ABSTRACT CLASS ----*/
 

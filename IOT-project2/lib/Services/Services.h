@@ -19,7 +19,7 @@ public:
   virtual void update() = 0;
 
   ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
-  void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
+  //void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
 
@@ -48,11 +48,11 @@ public:
 class ServiceLocator {
 
     private:
-    inline static ITimeKeeper* timeKeeper = &TimeKeeper::getInstance();
+    static ITimeKeeper* timeKeeper; 
 
     public:
-    static void setTimeKeeperInstance(ITimeKeeper* newTimeKeeper){
-        timeKeeper = newTimeKeeper;
+    static void setTimeKeeperInstance(ITimeKeeper& newTimeKeeper){
+        timeKeeper = &newTimeKeeper;
     }
 
     static ITimeKeeper& getTimeKeeperInstance(){
