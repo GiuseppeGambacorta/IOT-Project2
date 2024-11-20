@@ -3,7 +3,7 @@
 /*---- TIMER ----*/
 
 Timer::Timer(unsigned long timeDuration)
-    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(ServiceFactory::getTimeKeeperInstance())
+    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(ServiceLocator::getTimeKeeperInstance())
 {
 }
 

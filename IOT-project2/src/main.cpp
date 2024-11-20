@@ -2,7 +2,7 @@
 #include "ArduinoStandardLibrary.h"
 
 
-ITimeKeeper& timeKeeper = ServiceFactory::getTimeKeeperInstance();
+ITimeKeeper& timeKeeper = ServiceLocator::getTimeKeeperInstance();
 DigitalInput button(2,500);
 DigitalOutput led(LED_BUILTIN);
 

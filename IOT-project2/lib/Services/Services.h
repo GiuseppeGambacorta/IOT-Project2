@@ -44,7 +44,7 @@ public:
 };
 
 
-class ServiceFactory {
+class ServiceLocator {
 
     private:
     inline static ITimeKeeper* timeKeeper = &TimeKeeper::getInstance();
