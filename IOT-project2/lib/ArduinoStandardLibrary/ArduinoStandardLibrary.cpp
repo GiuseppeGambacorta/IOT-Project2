@@ -1,33 +1,9 @@
 #include "ArduinoStandardLibrary.h"
 
-
-/*---- TIME KEEPER ----*/
-
-TimeKeeper::TimeKeeper() : ITimeKeeper() {}
-
-void TimeKeeper::update() {
-    this->currentTime = millis();
-}
-
-
-
-/*---- MOCK TIME KEEPER ----*/
-void MockTimeKeeper::update() {
-    ;
-}
-
-void MockTimeKeeper::setTime(unsigned long newTime) {
-    this->currentTime = newTime;
-}
-
-
-
-
-
 /*---- TIMER ----*/
 
 Timer::Timer(unsigned long timeDuration)
-    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(TimeKeeper::getInstance())
+    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(ServiceFactory::getTimeKeeperInstance())
 {
 }
 
