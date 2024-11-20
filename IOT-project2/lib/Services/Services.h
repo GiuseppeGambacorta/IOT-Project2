@@ -12,7 +12,8 @@ protected:
     unsigned long currentTime;
 
 public:
-  virtual ~ITimeKeeper() = default;
+
+  virtual ~ITimeKeeper() = default; // default destructor for all derived classes
   static ITimeKeeper& getInstance();
   unsigned long getCurrentTime();
   virtual void update() = 0;
@@ -59,11 +60,5 @@ class ServiceLocator {
     }
 
 };
-
-
-
-
-
-
 
 #endif

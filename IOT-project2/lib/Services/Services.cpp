@@ -29,10 +29,10 @@ void TimeKeeper::update() {
 
 /*---- MOCK TIME KEEPER ----*/
 
-TimeKeeper::TimeKeeper() : ITimeKeeper() {}
+MockTimeKeeper::MockTimeKeeper() : ITimeKeeper() {}
 
-ITimeKeeper& TimeKeeper::getInstance() {
-    static TimeKeeper instance;
+ITimeKeeper& MockTimeKeeper::getInstance() {
+    static MockTimeKeeper instance;
     return instance;
 }
 
