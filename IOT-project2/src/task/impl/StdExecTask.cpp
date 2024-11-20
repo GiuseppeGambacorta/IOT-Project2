@@ -8,6 +8,7 @@ typedef enum {
 } StdExecState;
 
 class StdExecTask : public Task {
+    
     StdExecState state;
 
     StdExecTask (){
