@@ -3,23 +3,23 @@
 
 /*---- TIME KEEPER ----*/
 
-TimeKeeper::TimeKeeper() : currentTime(0), updated(false) {}
-
+TimeKeeper::TimeKeeper() : ITimeKeeper() {}
 
 void TimeKeeper::update() {
-    if (!updated) {
-        currentTime = millis();
-        updated = true;
-    }
+    this->currentTime = millis();
 }
 
-unsigned long TimeKeeper::getCurrentTime() {
-    return currentTime;
+
+
+/*---- MOCK TIME KEEPER ----*/
+void MockTimeKeeper::update() {
+    ;
 }
 
-void TimeKeeper::reset() {
-    updated = false;
+void MockTimeKeeper::setTime(unsigned long newTime) {
+    this->currentTime = newTime;
 }
+
 
 
 

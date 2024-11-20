@@ -2,7 +2,7 @@
 #include "ArduinoStandardLibrary.h"
 
 
-TimeKeeper& timeKeeper = TimeKeeper::getInstance();
+ITimeKeeper& timeKeeper = MockTimeKeeper::getInstance();
 DigitalInput button(2,500);
 DigitalOutput led(LED_BUILTIN);
 
@@ -19,7 +19,7 @@ void setup() {
 }
 
 void loop() {
-
+  MockTimeKeeper::setTime(1000);
   timeKeeper.update();
   button.update();
 
@@ -43,7 +43,6 @@ void loop() {
   Serial.println(led.isActive());
   out.update();
   led.update();
-  timeKeeper.reset();
 
 }
 

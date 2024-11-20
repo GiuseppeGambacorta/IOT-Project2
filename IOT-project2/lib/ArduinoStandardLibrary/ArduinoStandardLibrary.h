@@ -3,29 +3,69 @@
 #ifndef STANDARDLIBRARY_H
 #define STANDARDLIBRARY_H
 
-class TimeKeeper {
-private:
-    unsigned long currentTime;
-    bool updated;
 
-    // Costruttore privato per il singleton
-    TimeKeeper();
+class ITimeKeeper {
+
+
+protected:
+    ITimeKeeper() : currentTime(0) {}
+    unsigned long currentTime;
+
 
 public:
+  ITimeKeeper& getInstance();
+  virtual void update() = 0;
+  unsigned long getCurrentTime(){
+    return currentTime;
+  }
+
+  ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
+  void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
+};
+
+
+class TimeKeeper : ITimeKeeper {
+private:
+    // Costruttore privato per il singleton
+    TimeKeeper();
+public:
     // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
-    static TimeKeeper& getInstance() {
+    static ITimeKeeper& getInstance() {
         static TimeKeeper instance;
         return instance;
     }
 
-    void update();
-    unsigned long getCurrentTime();
-    void reset();
+    void update() override;
 
     // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
     TimeKeeper(const TimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
     void operator=(const TimeKeeper&) = delete; // tk2 = tk1; // NO
 };
+
+
+class MockTimeKeeper : ITimeKeeper {
+private:
+    // Costruttore privato per il singleton
+    MockTimeKeeper();
+public:
+    // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
+    static ITimeKeeper& getInstance() {
+        static MockTimeKeeper instance;
+        return instance;
+    }
+
+    void update() override;
+    static void setTime(unsigned long newTime);
+
+    // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
+    MockTimeKeeper(const MockTimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
+    void operator=(const MockTimeKeeper&) = delete; // tk2 = tk1; // NO
+};
+
+
+
+
+
 
 class Timer
 {
@@ -33,7 +73,7 @@ class Timer
     unsigned long oldTime;
     unsigned long timeDuration;
     bool startInterlock;
-    TimeKeeper& timeKeeper;
+    ITimeKeeper& timeKeeper;
   public:
     Timer(unsigned long timeDuration);
   
