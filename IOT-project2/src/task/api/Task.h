@@ -26,12 +26,15 @@ public:
   }
 
   bool isActive(){
-    return active;
+    bool retActive = this->active;
+    return retActive;
   }
 
   void setActive(bool active){
     this->active = active;
   }
+
+  virtual void reset() = 0;
   
 };
 
