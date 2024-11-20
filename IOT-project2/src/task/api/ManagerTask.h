@@ -2,11 +2,12 @@
 #define __MANAGERTASK__
 
 #include "task/api/Task.h"
+#include "ArduinoStandardLibrary.h"
 
 class ManagerTask : public Task {
 
 private:
-    //add harware objects here
+    
 public:
     ManagerTask();
     void tick();
