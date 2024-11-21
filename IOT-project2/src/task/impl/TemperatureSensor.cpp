@@ -4,14 +4,14 @@
 #define MAXTEMP 100
 
 TemperatureSensor::TemperatureSensor(int pin) {
-    this->pin = pin;
     this->temperature = 0;
-    pinMode(pin, INPUT);
+    this->sensor = new AnalogInput(pin, 1023);
 }
 
 int TemperatureSensor::readTemperature() {
     // Read the analog value from the sensor
-    int analogValue = analogRead(pin);
+    sensor->update();
+    int analogValue = sensor->getValue();
     // Convert the analog value to a temperature value for the LM35 sensor
     this->temperature = analogValue * (5.0 / 1023.0) * 100;
     return this->temperature;
