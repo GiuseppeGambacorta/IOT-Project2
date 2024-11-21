@@ -1,27 +1,31 @@
-#include "scheduler\api\Scheduler.h"
+#include "scheduler/api/Scheduler.h"
 
-void Scheduler::init(int basePeriod){
+void Scheduler::init(int basePeriod) {
   this->basePeriod = basePeriod;
-  timer.setupPeriod(basePeriod);  
-  nTasks = 0;
+  this->nExechangeableTasks = 0;
+  this->timer.setupPeriod(basePeriod);
+  managerTask = ManagerTask();
+
+  // Inizializza i componenti I/O
+  door.attach(9); // non sono sicuro sia necessqario
 }
 
-bool Scheduler::addTask(Task* task){
-  if (nTasks < MAX_TASKS-1){
-    taskList[nTasks] = task;
-    nTasks++;
+bool Scheduler::addTask(Task* task) {
+  if (nExechangeableTasks < MAX_EXCHANGEABLE_TASKS) {
+    taskExchangeableList[nExechangeableTasks] = task;
+    nExechangeableTasks++;
     return true;
   } else {
-    return false; 
+    return false;
   }
 }
-  
-void Scheduler::schedule(){
+
+void Scheduler::schedule() {
   timer.waitForNextTick();
-  for (int i = 0; i < nTasks; i++){
-    if (taskList[i]->updateAndCheckTime(basePeriod)){
-      taskList[i]->tick();
+  managerTask.tick();
+  for (int i = 0; i < nExechangeableTasks; i++) {
+    if (taskExchangeableList[i]->updateAndCheckTime(basePeriod)) {
+      taskExchangeableList[i]->tick();
     }
   }
 }
-
