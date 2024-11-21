@@ -3,13 +3,13 @@
 
 #define MAXTEMPTIME 10000
 
-TemperatureCheck::TemperatureCheck(int pin, int threshold) {
+TemperatureCheckTask::TemperatureCheckTask(int pin, int threshold) {
     this->pin = pin;
     this->sensor = new TemperatureSensor(pin, threshold);
     state = OK;
 }
 
-void TemperatureCheck::tick() {
+void TemperatureCheckTask::tick() {
     if (sensor->isThresholdExceeded()) {
         state = HIGH_TEMP;
     } else {
@@ -17,6 +17,6 @@ void TemperatureCheck::tick() {
     }
 }
 
-void TemperatureCheck::reset() {
+void TemperatureCheckTask::reset() {
     state = OK;
 }

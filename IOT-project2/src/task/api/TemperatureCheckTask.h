@@ -4,7 +4,7 @@
 #include "Task.h"
 #include "TemperatureSensor.h"
 
-class TemperatureCheck : public Task {
+class TemperatureCheckTask : public Task {
 
     int pin;
     TemperatureSensor *sensor;
@@ -12,7 +12,7 @@ class TemperatureCheck : public Task {
 
   public:
 
-    TemperatureCheck(int pin, int threshold);
+    TemperatureCheckTask(int pin, int threshold);
     void tick();
     void reset();
 };
