@@ -1,16 +1,15 @@
 #include "task/api/TemperatureCheckTask.h"
-#include "Arduino.h"
+#include "task/api/TemperatureSensor.h"
+#include <Arduino.h>
 
 #define MAXTEMPTIME 10000
 
-TemperatureCheckTask::TemperatureCheckTask(int pin) {
-    this->pin = pin;
-    this->sensor = new TemperatureSensor(pin);
+TemperatureCheckTask::TemperatureCheckTask() {
     state = OK;
 }
 
-void TemperatureCheckTask::tick() {
-    if (sensor->isThresholdExceeded()) {
+void TemperatureCheckTask::tick(TemperatureSensor& tempSensor) {
+    if (tempSensor.isThresholdExceeded()) {
         state = HIGH_TEMP;
     } else {
         state = OK;

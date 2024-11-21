@@ -6,14 +6,12 @@
 
 class TemperatureCheckTask : public Task {
 
-    int pin;
-    TemperatureSensor *sensor;
-    enum {OK, HIGH_TEMP} state;
+  enum {OK, HIGH_TEMP} state;
 
   public:
 
-    TemperatureCheckTask(int pin);
-    void tick();
+    TemperatureCheckTask();
+    void tick(TemperatureSensor& tempSensor);
     void reset();
 };
 
