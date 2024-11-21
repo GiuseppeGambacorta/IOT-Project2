@@ -12,7 +12,7 @@ class TemperatureCheckTask : public Task {
 
   public:
 
-    TemperatureCheckTask(int pin, int threshold);
+    TemperatureCheckTask(int pin);
     void tick();
     void reset();
 };

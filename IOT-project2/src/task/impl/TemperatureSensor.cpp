@@ -3,7 +3,7 @@
 
 #define MAXTEMP 100
 
-TemperatureSensor::TemperatureSensor(int pin, int threshold) {
+TemperatureSensor::TemperatureSensor(int pin) {
     this->pin = pin;
     this->temperature = 0;
     pinMode(pin, INPUT);

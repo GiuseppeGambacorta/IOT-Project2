@@ -3,9 +3,9 @@
 
 #define MAXTEMPTIME 10000
 
-TemperatureCheckTask::TemperatureCheckTask(int pin, int threshold) {
+TemperatureCheckTask::TemperatureCheckTask(int pin) {
     this->pin = pin;
-    this->sensor = new TemperatureSensor(pin, threshold);
+    this->sensor = new TemperatureSensor(pin);
     state = OK;
 }
 

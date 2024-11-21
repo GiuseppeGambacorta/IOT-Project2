@@ -3,7 +3,7 @@
 
 class TemperatureSensor{
     public:
-        TemperatureSensor(int pin, int threshold);
+        TemperatureSensor(int pin);
         int readTemperature();
         bool isThresholdExceeded();
     private:
