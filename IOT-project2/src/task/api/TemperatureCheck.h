@@ -2,12 +2,12 @@
 #define __TEMPERATURECHECK__
 
 #include "Task.h"
+#include "TemperatureSensor.h"
 
 class TemperatureCheck : public Task {
 
     int pin;
-    int temperature;
-    int threshold;
+    TemperatureSensor *sensor;
 
   public:
 
