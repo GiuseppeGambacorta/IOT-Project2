@@ -1,9 +1,10 @@
 #include "task/api/TemperatureSensor.h"
 #include <Arduino.h>
 
+#define MAXTEMP 100
+
 TemperatureSensor::TemperatureSensor(int pin, int threshold) {
     this->pin = pin;
-    this->threshold = threshold;
     this->temperature = 0;
     pinMode(pin, INPUT);
 }
@@ -18,5 +19,5 @@ int TemperatureSensor::readTemperature() {
 
 bool TemperatureSensor::isThresholdExceeded() {
     // Check if the temperature exceeds the threshold
-    return readTemperature() > this->threshold;
+    return readTemperature() > MAXTEMP;
 }

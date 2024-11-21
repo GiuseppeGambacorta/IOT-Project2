@@ -9,7 +9,6 @@ class TemperatureSensor{
     private:
         int pin;
         int temperature;
-        int threshold;
 };
 
 
