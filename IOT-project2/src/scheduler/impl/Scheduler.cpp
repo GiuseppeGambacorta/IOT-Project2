@@ -5,9 +5,6 @@ void Scheduler::init(int basePeriod) {
   this->nExechangeableTasks = 0;
   this->timer.setupPeriod(basePeriod);
   managerTask = ManagerTask();
-
-  // Inizializza i componenti I/O
-  door.attach(9); // non sono sicuro sia necessqario
 }
 
 bool Scheduler::addTask(Task* task) {

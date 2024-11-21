@@ -39,7 +39,9 @@ public:
       ledGreen(5),
       ledRed(6),
       tempSensor(A1, 100)
-  {}
+  {
+    door.attach(9);
+  }
 
   void init(int basePeriod);  
   bool addTask(Task* task);  
