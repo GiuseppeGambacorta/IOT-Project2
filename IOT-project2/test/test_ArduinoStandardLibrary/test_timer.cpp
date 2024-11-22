@@ -29,6 +29,12 @@ void test_timer(void) {
 
     timer.active(false);
     TEST_ASSERT_FALSE(timer.isTimeElapsed());
+
+    timer.active(true);
+    TEST_ASSERT_FALSE(timer.isTimeElapsed());
+
+    TimeKeeper.setTime(2100);
+    TEST_ASSERT_TRUE(timer.isTimeElapsed());
 }
 
 
