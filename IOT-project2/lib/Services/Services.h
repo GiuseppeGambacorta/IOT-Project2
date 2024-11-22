@@ -76,6 +76,19 @@ class RealInputKeeper : public IInputKeeper {
 };
 
 
+
+class MockInputKeeper : public IInputKeeper {
+
+    private:
+        MockInputKeeper();
+    public:
+        static IInputKeeper& getInstance();
+        void update() override;
+        void setDigitalPinState(unsigned int pin, bool state);
+        void setAnalogPinValue(unsigned int pin, unsigned int value);
+};
+
+
 class ServiceLocator {
 
     private:
@@ -89,6 +102,11 @@ class ServiceLocator {
 
         static ITimeKeeper& getTimeKeeperInstance(){
             return *timeKeeper;
+        }
+
+
+        static void setInputKeeperInstance(IInputKeeper& newInputKeeper){
+            inputKeeper = &newInputKeeper;
         }
 
         static IInputKeeper& getInputKeeperInstance(){

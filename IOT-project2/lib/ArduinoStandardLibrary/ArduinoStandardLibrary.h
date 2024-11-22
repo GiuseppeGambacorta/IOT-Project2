@@ -29,6 +29,7 @@ class DigitalInput
     unsigned int oldValue;
     unsigned int trigChanged;
     Timer* activationTimer;
+    IInputKeeper& inputKeeper;
 
   public:
   DigitalInput(unsigned int pin, unsigned long threshold);
@@ -71,6 +72,7 @@ class AnalogInput
     float val_coef = 0;
     int currentIndex = 0;
     float filterValue(unsigned int inputValue);
+    IInputKeeper& inputKeeper;
 
   public:
     AnalogInput(unsigned int pin, unsigned int mapValue);

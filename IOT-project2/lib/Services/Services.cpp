@@ -92,3 +92,32 @@ void RealInputKeeper::update() {
         analogPins[i] = analogRead(i);
     }
 }
+
+
+/* ---- Mock Input Keeper ---- */
+
+MockInputKeeper::MockInputKeeper() : IInputKeeper() {}
+
+IInputKeeper& MockInputKeeper::getInstance() {
+    static MockInputKeeper instance;
+    return instance;
+}
+
+
+void MockInputKeeper::update() {
+    ;
+}
+
+
+void MockInputKeeper::setDigitalPinState(unsigned int pin, bool state) {
+    if (pin < NUM_DIGITAL_PINS) {
+        digitalPins[pin] = state;
+    }
+}
+
+
+void MockInputKeeper::setAnalogPinValue(unsigned int pin, unsigned int value) {
+    if (pin < NUM_ANALOG_INPUTS) {
+        analogPins[pin] = value;
+    }
+}

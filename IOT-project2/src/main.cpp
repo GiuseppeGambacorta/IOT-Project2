@@ -3,6 +3,7 @@
 
 
 ITimeKeeper& timeKeeper = ServiceLocator::getTimeKeeperInstance();
+IInputKeeper& inputKeeper = ServiceLocator::getInputKeeperInstance();
 DigitalInput button(2,500);
 DigitalOutput led(LED_BUILTIN);
 
@@ -25,6 +26,7 @@ void setup() {
 void loop() {
 
   timeKeeper.update();
+  inputKeeper.update();
   button.update();
   tryAnalogOut.update();
   potentiometer.update();

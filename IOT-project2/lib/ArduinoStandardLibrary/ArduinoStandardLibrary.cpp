@@ -51,7 +51,7 @@ void Timer::reset()
 /*---- DIGITAL INPUT ----*/
 
 DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
-    : pin(pin), value(0), oldValue(0), trigChanged(0)
+    : pin(pin), value(0), oldValue(0), trigChanged(0), inputKeeper(ServiceLocator::getInputKeeperInstance())
 {
     pinMode(pin, INPUT);
     this->activationTimer = new Timer(threshold);
@@ -59,7 +59,7 @@ DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
 
 void DigitalInput::update()
 {
-    this->activationTimer->active(digitalRead(this->pin));
+    this->activationTimer->active(this->inputKeeper.getDigitalPinState(this->pin));
     this->value = this->activationTimer->isTimeElapsed();
     this->trigChanged = this->value != this->oldValue;
     this->oldValue = this->value;
@@ -112,7 +112,7 @@ bool DigitalOutput::isActive()
 
 
 AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue)
-    : pin(pin), value(0),  mapValue(mapValue), filterCount(0)
+    : pin(pin), value(0),  mapValue(mapValue), filterCount(0), currentIndex(0), inputKeeper(ServiceLocator::getInputKeeperInstance())
 {
     pinMode(pin, INPUT);
 };
