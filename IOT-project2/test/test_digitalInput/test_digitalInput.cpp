@@ -14,13 +14,13 @@ void tearDown(void) {
 }
 
 void test_digitalRead_noDelay(void) {
-    MockInputKeeper& TimeKeeper = (MockInputKeeper&) ServiceLocator::getInputKeeperInstance();
+    MockInputKeeper& InputKeeper = (MockInputKeeper&) ServiceLocator::getInputKeeperInstance();
     DigitalInput button(0,0);
 
     TEST_ASSERT_FALSE(button.isActive());
     TEST_ASSERT_FALSE(button.isChanged());
 
-    TimeKeeper.setDigitalPinState(0, true);
+    InputKeeper.setDigitalPinState(0, true);
     button.update();
     TEST_ASSERT_TRUE(button.isActive());
     TEST_ASSERT_TRUE(button.isChanged());
@@ -29,7 +29,7 @@ void test_digitalRead_noDelay(void) {
     TEST_ASSERT_TRUE(button.isActive());
     TEST_ASSERT_FALSE(button.isChanged());
 
-    TimeKeeper.setDigitalPinState(0, false);
+    InputKeeper.setDigitalPinState(0, false);
     button.update();
 
     TEST_ASSERT_FALSE(button.isActive());
