@@ -45,20 +45,65 @@ public:
 };
 
 
+/*  Input Services  */
+
+class IInputKeeper {
+protected:
+    IInputKeeper();
+    bool digitalPins[NUM_DIGITAL_PINS]; // digital pin + analog pin, because analog pins can be used as digital
+    int analogPins[NUM_ANALOG_INPUTS];
+
+public:
+
+  virtual ~IInputKeeper() = default; // default destructor for all derived classes
+  static IInputKeeper& getInstance();
+  bool getDigitalPinState(unsigned int pin);
+  unsigned int getAnalogPinValue(unsigned int pin);
+  virtual void update() = 0;
+
+  IInputKeeper(const IInputKeeper&) = delete;  // IInputKeeper tk2 = tk1;  // NO
+
+};
+
+
+class RealInputKeeper : public IInputKeeper {
+
+    private:
+        RealInputKeeper();
+    public:
+        static IInputKeeper& getInstance();
+        void update() override;
+};
+
+
 class ServiceLocator {
 
     private:
-    static ITimeKeeper* timeKeeper; 
+        static ITimeKeeper* timeKeeper; 
+        static IInputKeeper* inputKeeper;
 
     public:
-    static void setTimeKeeperInstance(ITimeKeeper& newTimeKeeper){
-        timeKeeper = &newTimeKeeper;
-    }
+        static void setTimeKeeperInstance(ITimeKeeper& newTimeKeeper){
+            timeKeeper = &newTimeKeeper;
+        }
 
-    static ITimeKeeper& getTimeKeeperInstance(){
-        return *timeKeeper;
-    }
+        static ITimeKeeper& getTimeKeeperInstance(){
+            return *timeKeeper;
+        }
+
+        static IInputKeeper& getInputKeeperInstance(){
+            return *inputKeeper;
+        }
 
 };
+
+
+
+
+
+
+
+
+
 
 #endif
