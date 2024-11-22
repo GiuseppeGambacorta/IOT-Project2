@@ -59,6 +59,7 @@ DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
 
 void DigitalInput::update()
 {
+
     this->activationTimer->active(this->inputKeeper.getDigitalPinState(this->pin));
     this->value = this->activationTimer->isTimeElapsed();
     this->trigChanged = this->value != this->oldValue;
@@ -67,6 +68,9 @@ void DigitalInput::update()
 };
 
 bool DigitalInput::isActive(){
+
+
+
     return this->value;
 }
 

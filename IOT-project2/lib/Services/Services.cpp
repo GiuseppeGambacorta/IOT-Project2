@@ -56,21 +56,7 @@ void MockTimeKeeper::setTime(unsigned long newTime) {
 
 IInputKeeper::IInputKeeper() {}
 
-bool IInputKeeper::getDigitalPinState(unsigned int pin) {
 
-    if (pin >= NUM_DIGITAL_PINS) {
-        return false;
-    }
-    return digitalPins[pin];
-}
-
-unsigned int IInputKeeper::getAnalogPinValue(unsigned int pin) {
-
-    if (pin >= NUM_ANALOG_INPUTS) {
-        return 0;
-    }
-    return analogPins[pin];
-}
 
 
 
@@ -83,14 +69,20 @@ IInputKeeper& RealInputKeeper::getInstance() {
     return instance;
 }
 
-void RealInputKeeper::update() {
-    for (int i = 0; i < NUM_DIGITAL_PINS; i++) {
-        digitalPins[i] = digitalRead(i);
-    }
+bool RealInputKeeper::getDigitalPinState(unsigned int pin) {
 
-    for (int i = 0; i < NUM_ANALOG_INPUTS; i++) {
-        analogPins[i] = analogRead(i);
+    if (pin >= NUM_DIGITAL_PINS) {
+        return false;
     }
+    return digitalRead(pin);
+}
+
+unsigned int RealInputKeeper::getAnalogPinValue(unsigned int pin) {
+
+    if (pin >= NUM_ANALOG_INPUTS) {
+        return 0;
+    }
+    return analogRead(pin);
 }
 
 
@@ -104,9 +96,20 @@ IInputKeeper& MockInputKeeper::getInstance() {
 }
 
 
-void MockInputKeeper::update() {
-    ;
+bool MockInputKeeper::getDigitalPinState(unsigned int pin) {
+    if (pin < NUM_DIGITAL_PINS) {
+        return digitalPins[pin];
+    }
+    return false;
 }
+
+unsigned int MockInputKeeper::getAnalogPinValue(unsigned int pin) {
+    if (pin < NUM_ANALOG_INPUTS) {
+        return analogPins[pin];
+    }
+    return 0;
+}
+
 
 
 void MockInputKeeper::setDigitalPinState(unsigned int pin, bool state) {

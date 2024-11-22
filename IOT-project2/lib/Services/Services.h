@@ -50,16 +50,13 @@ public:
 class IInputKeeper {
 protected:
     IInputKeeper();
-    bool digitalPins[NUM_DIGITAL_PINS]; // digital pin + analog pin, because analog pins can be used as digital
-    int analogPins[NUM_ANALOG_INPUTS];
 
 public:
 
   virtual ~IInputKeeper() = default; // default destructor for all derived classes
   static IInputKeeper& getInstance();
-  bool getDigitalPinState(unsigned int pin);
-  unsigned int getAnalogPinValue(unsigned int pin);
-  virtual void update() = 0;
+  virtual bool getDigitalPinState(unsigned int pin) = 0;
+  virtual unsigned int getAnalogPinValue(unsigned int pin) = 0;
 
   IInputKeeper(const IInputKeeper&) = delete;  // IInputKeeper tk2 = tk1;  // NO
 
@@ -72,7 +69,9 @@ class RealInputKeeper : public IInputKeeper {
         RealInputKeeper();
     public:
         static IInputKeeper& getInstance();
-        void update() override;
+        bool getDigitalPinState(unsigned int pin) override;
+        unsigned int getAnalogPinValue(unsigned int pin) override;
+    
 };
 
 
@@ -81,9 +80,12 @@ class MockInputKeeper : public IInputKeeper {
 
     private:
         MockInputKeeper();
+         int digitalPins[NUM_DIGITAL_PINS];
+        int analogPins[NUM_ANALOG_INPUTS];
     public:
         static IInputKeeper& getInstance();
-        void update() override;
+        bool getDigitalPinState(unsigned int pin) override;
+        unsigned int getAnalogPinValue(unsigned int pin) override;
         void setDigitalPinState(unsigned int pin, bool state);
         void setAnalogPinValue(unsigned int pin, unsigned int value);
 };
