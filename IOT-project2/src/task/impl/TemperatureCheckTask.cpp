@@ -4,11 +4,11 @@
 
 #define MAXTEMPTIME 10000
 
-TemperatureCheckTask::TemperatureCheckTask() {
+TemperatureCheckTask::TemperatureCheckTask(TemperatureSensor& sensor) : tempSensor(sensor) {
     state = OK;
 }
 
-void TemperatureCheckTask::tick(TemperatureSensor& tempSensor) {
+void TemperatureCheckTask::tick() {
     if (tempSensor.isThresholdExceeded()) {
         state = HIGH_TEMP;
     } else {
