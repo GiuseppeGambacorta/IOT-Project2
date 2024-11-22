@@ -37,11 +37,47 @@ void test_digitalRead_noDelay(void) {
  
 }
 
+void test_digitalRead_Delay(void) {
+    MockInputKeeper& InputKeeper = (MockInputKeeper&) ServiceLocator::getInputKeeperInstance();
+    MockTimeKeeper& TimeKeeper = (MockTimeKeeper&) ServiceLocator::getTimeKeeperInstance();
+    DigitalInput button(0,1000);
+
+    TEST_ASSERT_FALSE(button.isActive());
+    TEST_ASSERT_FALSE(button.isChanged());
+
+    InputKeeper.setDigitalPinState(0, true);
+    button.update();
+    TEST_ASSERT_FALSE(button.isActive());
+    TEST_ASSERT_FALSE(button.isChanged());
+
+    TimeKeeper.setTime(900);
+    button.update();
+    TEST_ASSERT_FALSE(button.isActive());
+    TEST_ASSERT_FALSE(button.isChanged());
+
+    TimeKeeper.setTime(1000);
+    button.update();
+    TEST_ASSERT_TRUE(button.isActive());
+    TEST_ASSERT_TRUE(button.isChanged());
+
+    TimeKeeper.setTime(1100);
+    button.update();
+    TEST_ASSERT_TRUE(button.isActive());
+    TEST_ASSERT_FALSE(button.isChanged());
+
+    InputKeeper.setDigitalPinState(0, false);
+    button.update();
+    TEST_ASSERT_FALSE(button.isActive());
+    TEST_ASSERT_TRUE(button.isChanged());
+ 
+}
+
 
 
 void setup() {
     UNITY_BEGIN(); // Inizia il testing
     RUN_TEST(test_digitalRead_noDelay);
+    RUN_TEST(test_digitalRead_Delay);
     UNITY_END(); // Termina il testing
 }
 
