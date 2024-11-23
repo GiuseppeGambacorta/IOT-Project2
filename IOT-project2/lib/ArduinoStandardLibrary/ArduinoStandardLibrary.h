@@ -1,55 +1,14 @@
 #include <Arduino.h>
+#include "Services.h"
 
 #ifndef STANDARDLIBRARY_H
 #define STANDARDLIBRARY_H
 
-class TimeKeeper
-{
-private:
-  unsigned long currentTime;
-  bool updated;
-
-  // Costruttore privato per il singleton
-  TimeKeeper();
-
-public:
-  // Metodo per ottenere l'istanza singleton,l'istanza viene creata alla prima chiamata di getIstance
-  static TimeKeeper &getInstance()
-  {
-    static TimeKeeper instance;
-    return instance;
-  }
-
-  void update();
-  unsigned long getCurrentTime();
-  void reset();
-
-  // Elimina i metodi di copia e assegnazione per evitare copie dell'istanza singleton
-  TimeKeeper(const TimeKeeper &) = delete;     // TimeKeeper tk2 = tk1;  // NO
-  void operator=(const TimeKeeper &) = delete; // tk2 = tk1; // NO
-};
-
-class Timer
-{
-private:
-  unsigned long oldTime;
-  unsigned long timeDuration;
-  bool startInterlock;
-  TimeKeeper &timeKeeper;
-
-public:
-  Timer(unsigned long timeDuration);
-
-  void active(bool start);
-  bool isTimeElapsed();
-  void setTime(unsigned long newTime);
-  void reset();
-};
 
 class SchedulerTimer
 {
 private:
-  TimeKeeper &timeKeeper;
+  ITimeKeeper& timeKeeper;
   unsigned long tickInterval;
   unsigned long nextTickTime;
 
@@ -62,14 +21,32 @@ public:
   void waitForNextTick();       // Attende il prossimo tick
 };
 
+class Timer
+{
+  private:
+    unsigned long oldTime;
+    unsigned long timeDuration;
+    bool startInterlock;
+    ITimeKeeper& timeKeeper;
+  public:
+    Timer(unsigned long timeDuration);
+  
+    void active(bool start);
+    bool isTimeElapsed();
+    void setTime(unsigned long newTime);
+    void reset();
+};
+
+
 class DigitalInput
 {
-private:
-  unsigned int pin;
-  unsigned int value;
-  unsigned int oldValue;
-  unsigned int trigChanged;
-  Timer *activationTimer;
+  private:
+    unsigned int pin;
+    unsigned int value;
+    unsigned int oldValue;
+    unsigned int trigChanged;
+    Timer* activationTimer;
+    IInputKeeper& inputKeeper;
 
 public:
   DigitalInput(unsigned int pin, unsigned long threshold);
@@ -96,16 +73,17 @@ public:
 
 class AnalogInput
 {
-private:
-  unsigned int pin;
-  float value;
-  unsigned int mapValue;
-  static const unsigned int maxFilterSize = 10;
-  int array[maxFilterSize];
-  unsigned int filterCount;
-  float val_coef = 0;
-  int currentIndex = 0;
-  float filterValue(unsigned int inputValue);
+  private:
+    unsigned int pin;
+    float value;
+    unsigned int mapValue;
+    static const unsigned int maxFilterSize = 10;
+    int array[maxFilterSize];
+    unsigned int filterCount;
+    float val_coef = 0;
+    int currentIndex = 0;
+    float filterValue(unsigned int inputValue);
+    IInputKeeper& inputKeeper;
 
 public:
   AnalogInput(unsigned int pin, unsigned int mapValue);

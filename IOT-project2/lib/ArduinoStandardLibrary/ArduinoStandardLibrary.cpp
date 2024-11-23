@@ -1,32 +1,52 @@
 #include "ArduinoStandardLibrary.h"
 
-/*---- TIME KEEPER ----*/
 
-TimeKeeper::TimeKeeper() : currentTime(0), updated(false) {}
 
-void TimeKeeper::update()
+/*---- SCHEDULER TIMER ----*/
+
+SchedulerTimer::SchedulerTimer()
+    : timeKeeper(ServiceLocator::getTimeKeeperInstance()), tickInterval(0), nextTickTime(0) {}
+
+void SchedulerTimer::calculateNextTick()
 {
-    if (!updated)
+    nextTickTime = timeKeeper.getCurrentTime() + tickInterval;
+}
+
+void SchedulerTimer::setupFreq(int freq)
+{
+    tickInterval = 1000 / freq; // Converti frequenza in intervallo (ms)
+    //timeKeeper.reset();         // Resetta il TimeKeeper per iniziare da zero
+    calculateNextTick();
+}
+
+void SchedulerTimer::setupPeriod(int period)
+{
+    tickInterval = period;
+    // da capire se necessario
+    // timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero
+    calculateNextTick();
+}
+
+void SchedulerTimer::waitForNextTick()
+{
+    while (true)
     {
-        currentTime = millis();
-        updated = true;
+        timeKeeper.update(); // Aggiorna il tempo corrente
+        unsigned long currentTime = timeKeeper.getCurrentTime();
+        if (currentTime >= nextTickTime)
+        {
+            calculateNextTick(); // Calcola il prossimo tick
+            break;
+        }
     }
 }
 
-unsigned long TimeKeeper::getCurrentTime()
-{
-    return currentTime;
-}
 
-void TimeKeeper::reset()
-{
-    updated = false;
-}
 
 /*---- TIMER ----*/
 
 Timer::Timer(unsigned long timeDuration)
-    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(TimeKeeper::getInstance())
+    : oldTime(0), timeDuration(timeDuration), startInterlock(0), timeKeeper(ServiceLocator::getTimeKeeperInstance())
 {
 }
 
@@ -73,49 +93,12 @@ void Timer::reset()
     this->startInterlock = 0;
 }
 
-/*---- SCHEDULER TIMER ----*/
 
-SchedulerTimer::SchedulerTimer()
-    : timeKeeper(TimeKeeper::getInstance()), tickInterval(0), nextTickTime(0) {}
-
-void SchedulerTimer::calculateNextTick()
-{
-    nextTickTime = timeKeeper.getCurrentTime() + tickInterval;
-}
-
-void SchedulerTimer::setupFreq(int freq)
-{
-    tickInterval = 1000 / freq; // Converti frequenza in intervallo (ms)
-    timeKeeper.reset();         // Resetta il TimeKeeper per iniziare da zero
-    calculateNextTick();
-}
-
-void SchedulerTimer::setupPeriod(int period)
-{
-    tickInterval = period;
-    // da capire se necessario
-    // timeKeeper.reset(); // Resetta il TimeKeeper per iniziare da zero
-    calculateNextTick();
-}
-
-void SchedulerTimer::waitForNextTick()
-{
-    while (true)
-    {
-        timeKeeper.update(); // Aggiorna il tempo corrente
-        unsigned long currentTime = timeKeeper.getCurrentTime();
-        if (currentTime >= nextTickTime)
-        {
-            calculateNextTick(); // Calcola il prossimo tick
-            break;
-        }
-    }
-}
 
 /*---- DIGITAL INPUT ----*/
 
 DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
-    : pin(pin), value(0), oldValue(0), trigChanged(0)
+    : pin(pin), value(0), oldValue(0), trigChanged(0), inputKeeper(ServiceLocator::getInputKeeperInstance())
 {
     pinMode(pin, INPUT);
     this->activationTimer = new Timer(threshold);
@@ -123,7 +106,8 @@ DigitalInput::DigitalInput(unsigned int pin, unsigned long threshold)
 
 void DigitalInput::update()
 {
-    this->activationTimer->active(digitalRead(this->pin));
+
+    this->activationTimer->active(this->inputKeeper.getDigitalPinState(this->pin));
     this->value = this->activationTimer->isTimeElapsed();
     this->trigChanged = this->value != this->oldValue;
     this->oldValue = this->value;
@@ -131,6 +115,9 @@ void DigitalInput::update()
 
 bool DigitalInput::isActive()
 {
+
+
+
     return this->value;
 }
 
@@ -170,28 +157,35 @@ bool DigitalOutput::isActive()
 /*---- ANALOG INPUT ----*/
 
 AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue)
-    : pin(pin), value(0), mapValue(mapValue), filterCount(0)
+    : pin(pin), value(0),  mapValue(mapValue), filterCount(0), currentIndex(0), inputKeeper(ServiceLocator::getInputKeeperInstance())
 {
     pinMode(pin, INPUT);
+    for (unsigned int i = 0; i < maxFilterSize; i++) {
+        array[i] = 0;
+    }
 };
 
-float AnalogInput::filterValue(unsigned int inputValue)
-{
-    array[currentIndex] = inputValue;                  // Memorizza il valore letto nell'array
-    currentIndex = (currentIndex + 1) % maxFilterSize; // Aggiorna l'indice corrente
 
-    unsigned long sum = 0;
-    for (unsigned int i = 0; i < maxFilterSize; i++)
-    {
-        sum += array[i]; // Calcola la somma dei valori nell'array
+float AnalogInput::filterValue(unsigned int inputValue) {
+    array[currentIndex] = inputValue; 
+    currentIndex = (currentIndex + 1) % maxFilterSize;
+    if (filterCount < maxFilterSize){
+        filterCount++;
     }
 
-    return sum / maxFilterSize; // Restituisce la media dei valori
+    unsigned long sum = 0;
+    for (unsigned int i = 0; i < filterCount; i++) {
+        sum += array[i]; 
+    }
+    int returnValue = sum / filterCount;
+   
+    return returnValue; 
 }
 
-void AnalogInput::update()
-{
-    this->value += this->filterValue(map(analogRead(this->pin), 0, 1023, 0, this->mapValue));
+void AnalogInput::update(){
+      int actualValue = this->inputKeeper.getAnalogPinValue(this->pin);
+      this->value = this->filterValue(map(actualValue, 0, 1023, 0, this->mapValue));
+  
 }
 
 int AnalogInput::getValue()
@@ -207,11 +201,11 @@ AnalogOutput::AnalogOutput(unsigned int pin, unsigned int maxValue)
     pinMode(pin, OUTPUT);
 };
 
-void AnalogOutput::setValue(unsigned int value)
-{
-    if (value > this->maxValue)
-    {
-        value = this->maxValue;
+void AnalogOutput::setValue(unsigned int value){
+    if(value <= this->maxValue){
+        this->value = value;
+    } else {
+        this->value = this->maxValue;
     }
 }
 

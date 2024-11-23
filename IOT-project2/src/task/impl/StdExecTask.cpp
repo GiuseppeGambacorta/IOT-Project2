@@ -5,7 +5,7 @@ StdExecTask ::StdExecTask(){
     state = READY;
 }
 
-void Task::init(int period){}
+//void Task::init(int period){}
 
 void StdExecTask ::tick(){
     switch (state)
