@@ -6,16 +6,24 @@
 
 TemperatureCheckTask::TemperatureCheckTask(TemperatureSensor& sensor) : tempSensor(sensor) {
     state = OK;
+    highTempStartTime = 0;
 }
 
 void TemperatureCheckTask::tick() {
     if (tempSensor.isThresholdExceeded()) {
-        state = HIGH_TEMP;
+        if (state == OK) {
+            highTempStartTime = millis(); // Start the timer
+            state = HIGH_TEMP;
+        } else if (state == HIGH_TEMP && millis() - highTempStartTime >= MAXTEMPTIME) {
+            state = EMERGENCY;
+        }
     } else {
         state = OK;
+        highTempStartTime = 0; // Reset the timer
     }
 }
 
 void TemperatureCheckTask::reset() {
     state = OK;
+    highTempStartTime = 0;
 }

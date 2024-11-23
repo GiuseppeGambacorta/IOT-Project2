@@ -6,7 +6,8 @@
 
 class TemperatureCheckTask : public Task {
   TemperatureSensor& tempSensor;
-  enum {OK, HIGH_TEMP} state;
+  enum {OK, HIGH_TEMP, EMERGENCY} state;
+  unsigned long highTempStartTime;
 
   public:
 
