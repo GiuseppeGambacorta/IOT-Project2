@@ -11,6 +11,7 @@ Sonar::Sonar(int triggerPin, int echoPin) {
 }
 
 float Sonar::readDistance() {
+    // Send pulse
     trigger->turnOn();
     trigger->update();
     delayMicroseconds(3);
@@ -19,6 +20,7 @@ float Sonar::readDistance() {
     delayMicroseconds(5);
     trigger->turnOn();
     trigger->update();
+    // Read pulse
     long tUS = pulseInLong(echoPin, HIGH);
     double t = tUS / 1000.0 / 1000.0 / 2;
     level = t*vs;
