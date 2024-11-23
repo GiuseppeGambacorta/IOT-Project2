@@ -2,7 +2,7 @@
 
 ManagerTask::ManagerTask() {}
 
-void ManagerTask::tick() {
+void ManagerTask::tick(DigitalInput userDetector, DigitalInput openButton, DigitalInput closeButton) {
 
     //logic to select the task to run this cicle
 }

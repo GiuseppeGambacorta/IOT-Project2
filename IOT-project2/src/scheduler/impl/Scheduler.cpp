@@ -4,7 +4,9 @@ void Scheduler::init(int basePeriod) {
   this->basePeriod = basePeriod;
   this->nExechangeableTasks = 0;
   this->timer.setupPeriod(basePeriod);
+
   // task di input
+  // task di controllo
   managerTask = ManagerTask();
   // task di output
 }
@@ -22,9 +24,11 @@ bool Scheduler::addTask(Task* task) {
 void Scheduler::schedule() {
   timer.waitForNextTick();
   // task di input
-  managerTask.tick();
+  // task di controllo
+  managerTask.tick(userDetector, openButton, closeButton);
   for (int i = 0; i < nExechangeableTasks; i++) {
-    if (taskExchangeableList[i]->updateAndCheckTime(basePeriod) && taskExchangeableList[i]->isActive()) {
+    if (taskExchangeableList[i]->updateAndCheckTime(basePeriod) 
+      && taskExchangeableList[i]->isActive()) {
       taskExchangeableList[i]->tick();
     }
   }

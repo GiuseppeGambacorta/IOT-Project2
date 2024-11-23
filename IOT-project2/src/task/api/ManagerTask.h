@@ -11,6 +11,7 @@ private:
 public:
     ManagerTask();
     void tick();
+    void tick(DigitalInput userDetector, DigitalInput openButton, DigitalInput closeButton);
     void reset();
 };
 

@@ -14,7 +14,6 @@ class StdExecTask : public Task {
     
 private:
     StdExecState state;
-    //add harware objects here
 public:
     StdExecTask();
     void tick();
