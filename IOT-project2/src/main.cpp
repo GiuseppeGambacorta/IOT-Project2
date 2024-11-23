@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "ArduinoStandardLibrary.h"
-#include "Motor/Motor.h"
+#include "Components/Door/api/Door.h"
 
 // Definizione degli stati
 enum MotorState {
@@ -10,13 +10,12 @@ enum MotorState {
     WAIT
 };
 
-Motor motor(9, 90, 90, -90);
+Door door(9);
 MotorState currentState = INIT; // Stato iniziale
 Timer wait = Timer(1000);
 void setup() {
     Serial.begin(9600);
-    motor.init();
-    motor.setPosition(0);
+    door.init();
     delay(2000);
 }
 
@@ -26,22 +25,22 @@ void loop() {
     wait.active(currentState == WAIT);
         switch (currentState) {
             case INIT:
-                motor.setPosition(0);
-                if (motor.isInPosition()) {
+                door.close();
+                if (door.isClosed()) {
                     currentState = MOVE_TO_90;
                 }
                 break;
 
             case MOVE_TO_90:
-                motor.setPosition(90);
-                if (motor.isInPosition()) {
+                door.open();
+                if (door.isOpened()) {
                     currentState = MOVE_TO_MINUS_90;
                 }
                 break;
 
             case MOVE_TO_MINUS_90:
-                motor.setPosition(-90);
-                if (motor.isInPosition()) {
+                door.empty();
+                if (door.isInEmptyPosition()) {
                     currentState = INIT;
                 }
                 break;
@@ -54,6 +53,8 @@ void loop() {
                 break;
 
         }
+
+        Serial.println(currentState);
 
 
 
