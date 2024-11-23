@@ -4,6 +4,7 @@
 #ifndef SERVICES_H
 #define SERVICES_H
 
+#define MAX_PINS NUM_DIGITAL_PINS
 
 /* Interface for TimeKeeper */
 class ITimeKeeper {
@@ -80,13 +81,13 @@ class MockInputKeeper : public IInputKeeper {
 
     private:
         MockInputKeeper();
-         int digitalPins[NUM_DIGITAL_PINS];
-        int analogPins[NUM_ANALOG_INPUTS];
+        int pins[MAX_PINS]; // using one array for both digital and analog pins, because analog pins start at 14 and digital pins at 0
+
     public:
         static IInputKeeper& getInstance();
         bool getDigitalPinState(unsigned int pin) override;
         unsigned int getAnalogPinValue(unsigned int pin) override;
-        void setDigitalPinState(unsigned int pin, bool state);
+        void setDigitalPinState(unsigned int pin, unsigned int state);
         void setAnalogPinValue(unsigned int pin, unsigned int value);
 };
 

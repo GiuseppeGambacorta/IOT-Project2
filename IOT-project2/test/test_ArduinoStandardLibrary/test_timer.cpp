@@ -40,11 +40,11 @@ void test_timer(void) {
 
 
 void setup() {
-    UNITY_BEGIN(); // Inizia il testing
+    UNITY_BEGIN(); 
     RUN_TEST(test_timer);
-    UNITY_END(); // Termina il testing
+    UNITY_END(); 
 }
 
 void loop() {
-    // Vuoto
+   
 }

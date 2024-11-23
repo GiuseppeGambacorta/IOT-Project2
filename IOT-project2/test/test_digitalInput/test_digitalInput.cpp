@@ -5,7 +5,7 @@
 // execute before each test
 void setUp(void) {
     ServiceLocator::setInputKeeperInstance(MockInputKeeper::getInstance());
-      ServiceLocator::setTimeKeeperInstance(MockTimeKeeper::getInstance());
+    ServiceLocator::setTimeKeeperInstance(MockTimeKeeper::getInstance());
 }
 
 

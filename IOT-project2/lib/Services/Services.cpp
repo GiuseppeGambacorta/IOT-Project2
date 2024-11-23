@@ -97,30 +97,30 @@ IInputKeeper& MockInputKeeper::getInstance() {
 
 
 bool MockInputKeeper::getDigitalPinState(unsigned int pin) {
-    if (pin < NUM_DIGITAL_PINS) {
-        return digitalPins[pin];
+    if (pin < MAX_PINS) {
+        return pins[pin];
     }
     return false;
 }
 
 unsigned int MockInputKeeper::getAnalogPinValue(unsigned int pin) {
-    if (pin < NUM_ANALOG_INPUTS) {
-        return analogPins[pin];
+    if (pin < MAX_PINS) {
+        return pins[pin];
     }
     return 0;
 }
 
 
 
-void MockInputKeeper::setDigitalPinState(unsigned int pin, bool state) {
-    if (pin < NUM_DIGITAL_PINS) {
-        digitalPins[pin] = state;
+void MockInputKeeper::setDigitalPinState(unsigned int pin, unsigned int state) {
+    if (pin < MAX_PINS) {
+        pins[pin] = state;
     }
 }
 
 
 void MockInputKeeper::setAnalogPinValue(unsigned int pin, unsigned int value) {
-    if (pin < NUM_ANALOG_INPUTS) {
-        analogPins[pin] = value;
+    if (pin < MAX_PINS) {
+        pins[pin] = value;
     }
 }
