@@ -7,14 +7,12 @@ enum MotorState {
     INIT,
     MOVE_TO_90,
     MOVE_TO_MINUS_90,
-    MOVE_TO_0
+    WAIT
 };
 
 Motor motor(9, 90, 90, -90);
-Timer moveMotor(50); // Timer per gestire il tempo tra le transizioni di stato
-bool start;
 MotorState currentState = INIT; // Stato iniziale
-
+Timer wait = Timer(1000);
 void setup() {
     Serial.begin(9600);
     motor.init();
@@ -24,9 +22,8 @@ void setup() {
 
 void loop() {
     ServiceLocator::getTimeKeeperInstance().update();
-    moveMotor.active(start);
 
- 
+    wait.active(currentState == WAIT);
         switch (currentState) {
             case INIT:
                 motor.setPosition(0);
@@ -38,8 +35,6 @@ void loop() {
             case MOVE_TO_90:
                 motor.setPosition(90);
                 if (motor.isInPosition()) {
-                    Serial.println("state: " + String(currentState));
-                    Serial.println("Position: " + String(motor.getPosition()));
                     currentState = MOVE_TO_MINUS_90;
                 }
                 break;
@@ -47,16 +42,21 @@ void loop() {
             case MOVE_TO_MINUS_90:
                 motor.setPosition(-90);
                 if (motor.isInPosition()) {
-                     Serial.println("state: " + String(currentState));
-                    Serial.println("Position: " + String(motor.getPosition()));
                     currentState = INIT;
                 }
                 break;
 
-        }
-    
+              case WAIT:
+                if (wait.isTimeElapsed()) {
+                    currentState = INIT;
+                }
+                
+                break;
 
-      start = !moveMotor.isTimeElapsed();
+        }
+
+
+
 
 
       
