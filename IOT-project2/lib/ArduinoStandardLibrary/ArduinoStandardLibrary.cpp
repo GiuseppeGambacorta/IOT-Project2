@@ -82,7 +82,6 @@ bool DigitalInput::isChanged(){
 
 /*---- DIGITAL OUTPUT ----*/
 
-
 DigitalOutput::DigitalOutput(unsigned int pin)
     : pin(pin), value(0)
 {
@@ -113,7 +112,6 @@ bool DigitalOutput::isActive()
 
 
 /*---- ANALOG INPUT ----*/
-
 
 AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue)
     : pin(pin), value(0),  mapValue(mapValue), filterCount(0), currentIndex(0), inputKeeper(ServiceLocator::getInputKeeperInstance())
@@ -155,7 +153,6 @@ int AnalogInput::getValue(){
 
 
 /*---- ANALOG OUTPUT ----*/
-
 
 AnalogOutput::AnalogOutput(unsigned int pin, unsigned int maxValue)
     : pin(pin), value(0), maxValue(maxValue)

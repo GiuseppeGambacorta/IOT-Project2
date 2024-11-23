@@ -2,6 +2,7 @@
 
 
 /*---- SERVICE LOCATOR ----*/
+
 // allocation of the static variable
 ITimeKeeper* ServiceLocator::timeKeeper = &TimeKeeper::getInstance();
 IInputKeeper* ServiceLocator::inputKeeper = &RealInputKeeper::getInstance();
@@ -57,10 +58,8 @@ void MockTimeKeeper::setTime(unsigned long newTime) {
 IInputKeeper::IInputKeeper() {}
 
 
-
-
-
 /*---- INPUT KEEPER WITH DIGITALREAD() AND ANALOGREAD() ----*/
+
 
 RealInputKeeper::RealInputKeeper() : IInputKeeper() {}
 
@@ -86,7 +85,7 @@ unsigned int RealInputKeeper::getAnalogPinValue(unsigned int pin) {
 }
 
 
-/* ---- Mock Input Keeper ---- */
+/* ---- MOCK INPUT KEEPER ---- */
 
 MockInputKeeper::MockInputKeeper() : IInputKeeper() {}
 

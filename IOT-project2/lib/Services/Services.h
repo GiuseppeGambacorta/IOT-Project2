@@ -4,9 +4,10 @@
 #ifndef SERVICES_H
 #define SERVICES_H
 
-#define MAX_PINS NUM_DIGITAL_PINS
+#define MAX_PINS NUM_DIGITAL_PINS // SAME NUMBER SHARED BY ANALOG AND DIGITAL PINS, ANALOG PINS CAN BE USED AS DIGITAL PINS
 
-/* Interface for TimeKeeper */
+/* --- TIME SERVICES ---*/
+
 class ITimeKeeper {
 protected:
     ITimeKeeper();
@@ -46,7 +47,7 @@ public:
 };
 
 
-/*  Input Services  */
+/* --- INPUT SERVICES --- */
 
 class IInputKeeper {
 protected:
@@ -63,7 +64,7 @@ public:
 
 };
 
-
+/* Class that uses digitalRead() and analogRead() */
 class RealInputKeeper : public IInputKeeper {
 
     private:
@@ -76,7 +77,7 @@ class RealInputKeeper : public IInputKeeper {
 };
 
 
-
+/* Class that uses a Mock array of inputs for tests */
 class MockInputKeeper : public IInputKeeper {
 
     private:
@@ -91,6 +92,8 @@ class MockInputKeeper : public IInputKeeper {
         void setAnalogPinValue(unsigned int pin, unsigned int value);
 };
 
+
+/* --- SERVICE LOCATOR --- */
 
 class ServiceLocator {
 
