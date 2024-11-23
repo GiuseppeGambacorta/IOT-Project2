@@ -161,8 +161,10 @@ AnalogOutput::AnalogOutput(unsigned int pin, unsigned int maxValue)
 };
 
 void AnalogOutput::setValue(unsigned int value){
-    if(value > this->maxValue){
-        value = this->maxValue;
+    if(value <= this->maxValue){
+        this->value = value;
+    } else {
+        this->value = this->maxValue;
     }
 }
 
