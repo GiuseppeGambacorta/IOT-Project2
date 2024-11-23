@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "ArduinoStandardLibrary.h"
-#include "Motor.h"
+#include "Motor/Motor.h"
 
 // Definizione degli stati
 enum MotorState {

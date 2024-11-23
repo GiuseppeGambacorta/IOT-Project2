@@ -1,9 +1,10 @@
 
+#pragma once
+
 #include "ArduinoStandardLibrary.h"
 #include "Servo.h"
 
-#ifndef MOTOR_H
-#define MOTOR_H
+
 
 class Motor
 {
@@ -28,4 +29,3 @@ public:
     bool isAtLowerLimit();
 };
 
-#endif // MOTOR_H

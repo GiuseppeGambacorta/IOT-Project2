@@ -1,8 +1,9 @@
 
+#pragma once
+
 #include <Arduino.h>
 
-#ifndef SERVICES_H
-#define SERVICES_H
+
 
 #define MAX_PINS NUM_DIGITAL_PINS // SAME NUMBER SHARED BY ANALOG AND DIGITAL PINS, ANALOG PINS CAN BE USED AS DIGITAL PINS
 
@@ -121,13 +122,3 @@ class ServiceLocator {
 
 };
 
-
-
-
-
-
-
-
-
-
-#endif

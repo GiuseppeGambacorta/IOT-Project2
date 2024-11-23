@@ -1,8 +1,8 @@
+#pragma once
+
+
 #include <Arduino.h>
 #include "Services.h"
-
-#ifndef STANDARDLIBRARY_H
-#define STANDARDLIBRARY_H
 
 /* ---- SCHEDULER TIMER ---- */
 
@@ -110,5 +110,3 @@ public:
     int getValue();
     void update();
 };
-
-#endif // STANDARDLIBRARY_H
