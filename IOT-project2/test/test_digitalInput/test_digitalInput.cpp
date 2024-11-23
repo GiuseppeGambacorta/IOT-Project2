@@ -13,7 +13,7 @@ void setUp(void) {
 void tearDown(void) {
 }
 
-void test_digitalRead_noDelay(void) {
+void test_DigitalInput_NoDelay(void) {
     MockInputKeeper& InputKeeper = (MockInputKeeper&) ServiceLocator::getInputKeeperInstance();
     DigitalInput button(0,0);
 
@@ -37,7 +37,7 @@ void test_digitalRead_noDelay(void) {
  
 }
 
-void test_digitalRead_Delay(void) {
+void test_digitalInput_WithDelay(void) {
     MockInputKeeper& InputKeeper = (MockInputKeeper&) ServiceLocator::getInputKeeperInstance();
     MockTimeKeeper& TimeKeeper = (MockTimeKeeper&) ServiceLocator::getTimeKeeperInstance();
     DigitalInput button(0,1000);
@@ -75,12 +75,11 @@ void test_digitalRead_Delay(void) {
 
 
 void setup() {
-    UNITY_BEGIN(); // Inizia il testing
-    RUN_TEST(test_digitalRead_noDelay);
-    RUN_TEST(test_digitalRead_Delay);
-    UNITY_END(); // Termina il testing
+    UNITY_BEGIN(); 
+    RUN_TEST(test_DigitalInput_NoDelay);
+    RUN_TEST(test_digitalInput_WithDelay);
+    UNITY_END(); 
 }
 
 void loop() {
-    // Vuoto
 }

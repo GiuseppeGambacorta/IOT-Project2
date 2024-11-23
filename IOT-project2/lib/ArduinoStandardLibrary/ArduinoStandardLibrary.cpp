@@ -128,13 +128,17 @@ AnalogInput::AnalogInput(unsigned int pin, unsigned int mapValue)
 float AnalogInput::filterValue(unsigned int inputValue) {
     array[currentIndex] = inputValue; 
     currentIndex = (currentIndex + 1) % maxFilterSize;
-
-    unsigned long sum = 0;
-    for (unsigned int i = 0; i < maxFilterSize; i++) {
-        sum += array[i]; 
+    if (filterCount < maxFilterSize){
+        filterCount++;
     }
 
-    return sum / maxFilterSize; 
+    unsigned long sum = 0;
+    for (unsigned int i = 0; i < filterCount; i++) {
+        sum += array[i]; 
+    }
+    int returnValue = sum / filterCount;
+   
+    return returnValue; 
 }
 
 void AnalogInput::update(){
