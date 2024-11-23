@@ -27,3 +27,7 @@ void TemperatureCheckTask::reset() {
     state = OK;
     highTempStartTime = 0;
 }
+
+int TemperatureCheckTask::getState() {
+    return state;
+}

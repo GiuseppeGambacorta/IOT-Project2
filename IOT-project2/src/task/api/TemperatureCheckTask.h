@@ -14,6 +14,7 @@ class TemperatureCheckTask : public Task {
     TemperatureCheckTask(TemperatureSensor& sensor);
     void tick();
     void reset();
+    int getState();
 };
 
 #endif
