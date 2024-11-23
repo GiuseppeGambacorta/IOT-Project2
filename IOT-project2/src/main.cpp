@@ -5,6 +5,9 @@
 Scheduler scheduler;
 
 void setup() {
+    Serial.begin(9600);
+
+    delay(2000);
   Serial.begin(9600);
 
   // conto del tempo ottimale per i task

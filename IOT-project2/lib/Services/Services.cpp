@@ -10,7 +10,7 @@ IInputKeeper* ServiceLocator::inputKeeper = &RealInputKeeper::getInstance();
 
 /*---- TIME KEEPER ABSTRACT CLASS ----*/
 
-ITimeKeeper::ITimeKeeper() : currentTime(0) {}
+ITimeKeeper::ITimeKeeper()  {}
 
 unsigned long ITimeKeeper::getCurrentTime() {
     return this->currentTime;
