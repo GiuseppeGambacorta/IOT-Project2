@@ -7,10 +7,12 @@
 class Sonar {
 public:
     Sonar(int triggerPin, int echoPin);
-    void begin();
-    long readDistance();
+    float readDistance();
+    bool isThresholdLower();
 
 private:
+    int echoPin;
+    double level;
     DigitalOutput* trigger;
     DigitalInput* echo;
 };

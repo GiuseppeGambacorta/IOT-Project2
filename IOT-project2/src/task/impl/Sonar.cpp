@@ -1,22 +1,30 @@
 #include <Arduino.h>
 #include "task/api/Sonar.h"
 
+#define D1 10;
+const double vs = 331.45 + 0.62*20;
+
 Sonar::Sonar(int triggerPin, int echoPin) {
+    this->echoPin = echoPin;
     trigger = new DigitalOutput(triggerPin);
     echo = new DigitalInput(echoPin, 1000);
 }
-/*
-void Sonar::begin() {
-    trigger.update();
-    echo.update();
+
+float Sonar::readDistance() {
+    trigger->turnOn();
+    trigger->update();
+    delayMicroseconds(3);
+    trigger->turnOff();
+    trigger->update();
+    delayMicroseconds(5);
+    trigger->turnOn();
+    trigger->update();
+    long tUS = pulseInLong(echoPin, HIGH);
+    double t = tUS / 1000.0 / 1000.0 / 2;
+    level = t*vs;
+    return level;
 }
 
-long Sonar::readDistance() {
-    trigger.turnOn();
-    delayMicroseconds(10);
-    trigger.turnOff();
-
-    echo.update();
-    long duration = pulseIn(echo.pin, HIGH);
-    return duration * 0.034 / 2;
-}*/
+bool Sonar::isThresholdLower() {
+    return readDistance() < D1;
+}
