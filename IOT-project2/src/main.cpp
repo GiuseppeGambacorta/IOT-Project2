@@ -59,11 +59,11 @@ void loop() {
 
     header.data = (byte*) &i2;
 
-    Serial.write((byte*)&header.type, sizeof(header.type));
-    Serial.write((byte*)&header.varType, sizeof(header.varType));
-    Serial.write(header.data, 2); // Assumendo che la lunghezza dei dati sia 1 byte
+    //Serial.write((byte*)&header.type, sizeof(header.type));
+    //Serial.write((byte*)&header.varType, sizeof(header.varType));
+    //Serial.write(header.data, 2); // Assumendo che la lunghezza dei dati sia 1 byte
 
-    i++;
+    i+=5;
     i2++;
     //Serial.flush();
     //delay(5000);

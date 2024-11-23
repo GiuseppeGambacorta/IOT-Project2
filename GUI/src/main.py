@@ -4,19 +4,20 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 import threading
 from components.button_frame import ButtonFrame
+from arduino import ArduinoReader
 
 class RealTimePlotApp(ctk.CTk):
     def __init__(self):
         super().__init__()
-        
-        self.title("ARDUiNO HMI")
+
+        self.title("ARDUINO HMI")
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
         window_width = int(screen_width * 0.8)
         window_height = int(screen_height * 0.8)
         self.geometry(f"{window_width}x{window_height}")
         
-        self.is_running = True
+  
         
         # Crea il frame per i pulsanti
         self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore_plotting, self.empty_plotting)
@@ -36,8 +37,12 @@ class RealTimePlotApp(ctk.CTk):
         # Inizializza i dati
         self.x_data = []
         self.y_data = []
+
+        self.arduino = ArduinoReader(port='COM3')
+        self.arduino.connect()
         
         # Avvia un thread per simulare l'aggiornamento dei dati
+        self.is_running = True
         self.update_thread = threading.Thread(target=self.update_data)
         self.update_thread.daemon = True
         self.update_thread.start()
@@ -50,6 +55,7 @@ class RealTimePlotApp(ctk.CTk):
         ax.set_title("Real-Time Plot")
         ax.set_xlabel("Time")
         ax.set_ylabel("Value")
+        ax.set
         return fig, ax
     
     def update_graph(self):
@@ -63,9 +69,14 @@ class RealTimePlotApp(ctk.CTk):
     def update_data(self):
         while self.is_running:
             try:
+                message = self.arduino.read_data()
+                if message is None:
+                    continue
+
+
                 # Aggiungi un nuovo punto ai dati
                 self.x_data.append(time.time())
-                self.y_data.append(10 * (0.5 - time.time() % 1))
+                self.y_data.append(int(message.data))
                 
                 # Mantieni solo gli ultimi 50 punti
                 if len(self.x_data) > 50:
@@ -78,7 +89,8 @@ class RealTimePlotApp(ctk.CTk):
                 time.sleep(1)
             except RuntimeError:
                 # Gestisce l'errore se l'applicazione viene chiusa
-                break
+                ciao = True
+                
     
     def safe_update(self):
         if self.is_running:
@@ -94,6 +106,9 @@ class RealTimePlotApp(ctk.CTk):
     
     def stop_plotting(self):
         self.is_running = False
+        self.update_thread.join(timeout=1.0)
+        self.x_data.clear()
+        self.y_data.clear()
 
     def restore_plotting(self):
         # Implementa la logica per il pulsante Restore
