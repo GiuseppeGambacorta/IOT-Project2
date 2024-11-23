@@ -6,7 +6,7 @@
 
 class TemperatureCheckTask : public Task {
   TemperatureSensor& tempSensor;
-  enum {OK, HIGH_TEMP, EMERGENCY} state;
+  enum {OK, EMERGENCY} state;
   Timer* timer;
 
   public:
