@@ -4,168 +4,111 @@
 #ifndef STANDARDLIBRARY_H
 #define STANDARDLIBRARY_H
 
+/* ---- SCHEDULER TIMER ---- */
 
-class SchedulerTimer
-{
+class SchedulerTimer {
 private:
-  ITimeKeeper& timeKeeper;
-  unsigned long tickInterval;
-  unsigned long nextTickTime;
+    ITimeKeeper& timeKeeper = ServiceLocator::getTimeKeeperInstance();
+    unsigned long tickInterval = 0;
+    unsigned long nextTickTime = 0;
 
-  void calculateNextTick(); // Calcola il tempo del prossimo tick
+    void calculateNextTick(); // Calcola il tempo del prossimo tick
 
 public:
-  SchedulerTimer();
-  void setupFreq(int freq);     // Configura la frequenza (Hz)
-  void setupPeriod(int period); // Configura il periodo (ms)
-  void waitForNextTick();       // Attende il prossimo tick
+    SchedulerTimer();
+    void setupFreq(int freq);     // Configura la frequenza (Hz)
+    void setupPeriod(int period); // Configura il periodo (ms)
+    void waitForNextTick();       // Attende il prossimo tick
 };
 
-class Timer
-{
-  private:
-    unsigned long oldTime;
+/* ---- TIMER ---- */
+
+class Timer {
+private:
     unsigned long timeDuration;
-    bool startInterlock;
-    ITimeKeeper& timeKeeper;
-  public:
+    unsigned long oldTime = 0;
+    bool startInterlock = false;
+    ITimeKeeper& timeKeeper = ServiceLocator::getTimeKeeperInstance();
+
+public:
     Timer(unsigned long timeDuration);
-  
+
     void active(bool start);
     bool isTimeElapsed();
     void setTime(unsigned long newTime);
     void reset();
 };
 
+/* ---- DIGITAL INPUT ---- */
 
-class DigitalInput
-{
-  private:
-    unsigned int pin;
-    unsigned int value;
-    unsigned int oldValue;
-    unsigned int trigChanged;
-    Timer* activationTimer;
-    IInputKeeper& inputKeeper;
-
-public:
-  DigitalInput(unsigned int pin, unsigned long threshold);
-
-  void update();
-  bool isActive();
-  bool isChanged();
-};
-
-class DigitalOutput
-{
+class DigitalInput {
 private:
-  unsigned int pin;
-  unsigned int value;
+    unsigned int pin;
+    Timer* activationTimer;
+    unsigned int value = 0;
+    unsigned int oldValue = 0;
+    unsigned int trigChanged = 0;
+    IInputKeeper& inputKeeper = ServiceLocator::getInputKeeperInstance();
 
 public:
-  DigitalOutput(unsigned int pin);
+    DigitalInput(unsigned int pin, unsigned long threshold);
 
-  void update();
-  void turnOn();
-  void turnOff();
-  bool isActive();
+    void update();
+    bool isActive();
+    bool isChanged();
 };
 
-class AnalogInput
-{
-  private:
+/* ---- DIGITAL OUTPUT ---- */
+
+class DigitalOutput {
+private:
     unsigned int pin;
-    float value;
+    unsigned int value = 0;
+
+public:
+    DigitalOutput(unsigned int pin);
+
+    void update();
+    void turnOn();
+    void turnOff();
+    bool isActive();
+};
+
+/* ---- ANALOG INPUT ---- */
+
+class AnalogInput {
+private:
+    unsigned int pin;
     unsigned int mapValue;
+    float value = 0;
     static const unsigned int maxFilterSize = 10;
-    int array[maxFilterSize];
-    unsigned int filterCount;
+    int array[maxFilterSize] = {0};
+    unsigned int filterCount = 0;
     float val_coef = 0;
     int currentIndex = 0;
     float filterValue(unsigned int inputValue);
-    IInputKeeper& inputKeeper;
+    IInputKeeper& inputKeeper = ServiceLocator::getInputKeeperInstance();
 
 public:
-  AnalogInput(unsigned int pin, unsigned int mapValue);
-  void update();
-  int getValue();
+    AnalogInput(unsigned int pin, unsigned int mapValue);
+    void update();
+    int getValue();
 };
 
-class AnalogOutput
-{
+/* ---- ANALOG OUTPUT ---- */
+
+class AnalogOutput {
 private:
-  unsigned int pin;
-  unsigned int value;
-  unsigned int maxValue;
+    unsigned int pin;
+    unsigned int maxValue;
+    unsigned int value = 0;
 
 public:
-  AnalogOutput(unsigned int pin, unsigned int maxValue);
+    AnalogOutput(unsigned int pin, unsigned int maxValue);
 
-  void setValue(unsigned int value);
-  int getValue();
-  void update();
+    void setValue(unsigned int value);
+    int getValue();
+    void update();
 };
 
-/*
-class Screen
-{
-  private:
-    LiquidCrystal_I2C lcd;
-    bool lock;
-
-  public:
-    Screen(unsigned int address, unsigned int columns, unsigned int rows)
-    {
-      this->lcd = LiquidCrystal_I2C(address, columns, rows);
-      this->lock = 0;
-    }
-
-    void clearScreen();
-    void lock();
-    void unlock();
-    void print(String message, int row);
-};
-
-
-#endif
-
-
-
-void clearScreen(Screen *screen){
-  screen->lcd.clear();
-  screen->lock = 0;
-}
-
-void print(Screen *screen, String message, int row, int lock)
-{
-  if (!lock)
-  {
-    screen->lock = false;
-  }
-
-  if (!screen->lock)
-  {
-    screen->lock = false;
-    print(screen, message, row);
-  }
-
-  if (lock)
-  {
-    screen->lock = true;
-  }
-}
-
-void print(Screen *screen, String message, int row)
-{
-  screen->lcd.setCursor(0, row);
-  screen->lcd.print(message);
-
-#ifdef DEBUG
-  Serial.println(message);
-  Serial.flush();
-#endif
-}
-
-*/
-
-#endif
+#endif // STANDARDLIBRARY_H

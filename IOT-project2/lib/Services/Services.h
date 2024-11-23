@@ -11,7 +11,7 @@
 class ITimeKeeper {
 protected:
     ITimeKeeper();
-    unsigned long currentTime;
+    unsigned long currentTime = 0;
 
 public:
 
