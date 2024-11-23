@@ -1,8 +1,9 @@
 
+#pragma once
+
 #include <Arduino.h>
 
-#ifndef SERVICES_H
-#define SERVICES_H
+
 
 #define MAX_PINS NUM_DIGITAL_PINS // SAME NUMBER SHARED BY ANALOG AND DIGITAL PINS, ANALOG PINS CAN BE USED AS DIGITAL PINS
 
@@ -11,7 +12,7 @@
 class ITimeKeeper {
 protected:
     ITimeKeeper();
-    unsigned long currentTime;
+    unsigned long currentTime = 0;
 
 public:
 
@@ -20,8 +21,8 @@ public:
   unsigned long getCurrentTime();
   virtual void update() = 0;
 
-  ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
-  //void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
+  //ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
+  void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
 
@@ -121,13 +122,3 @@ class ServiceLocator {
 
 };
 
-
-
-
-
-
-
-
-
-
-#endif
