@@ -1,55 +1,67 @@
 #include <Arduino.h>
 #include "ArduinoStandardLibrary.h"
+#include "Motor.h"
 
+// Definizione degli stati
+enum MotorState {
+    INIT,
+    MOVE_TO_90,
+    MOVE_TO_MINUS_90,
+    MOVE_TO_0
+};
 
-ITimeKeeper& timeKeeper = ServiceLocator::getTimeKeeperInstance();
-IInputKeeper& inputKeeper = ServiceLocator::getInputKeeperInstance();
-DigitalInput button(2,500);
-DigitalOutput led(LED_BUILTIN);
-
-AnalogInput potentiometer(A0, 100);
-
-
-AnalogOutput out (9, 100);
-AnalogInput tryAnalogOut(A5, 1023);
-
-
-Timer ledTimerOn(1000);
-Timer ledTimerOff(1000);
-
-int count = 0;
+Motor motor(9, 90, 90, -90);
+Timer moveMotor(450); // Timer per gestire il tempo tra le transizioni di stato
+bool start;
+MotorState currentState = INIT; // Stato iniziale
 
 void setup() {
-  Serial.begin(9600);
+    Serial.begin(9600);
+    motor.init();
+    motor.setPosition(0);
+    delay(2000);
 }
 
 void loop() {
+    ServiceLocator::getTimeKeeperInstance().update();
+    moveMotor.active(start);
 
-  timeKeeper.update();
-  button.update();
-  tryAnalogOut.update();
-  potentiometer.update();
+    if (moveMotor.isTimeElapsed()) {
+        switch (currentState) {
+            case INIT:
+                motor.setPosition(0);
+                if (motor.getPosition() == 0) {
+                    currentState = MOVE_TO_90;
+                }
+                break;
 
-  ledTimerOn.active(!led.isActive());
-  ledTimerOff.active(led.isActive());
-  
-  if (ledTimerOn.isTimeElapsed()){
-    led.turnOn();
-  }
+            case MOVE_TO_90:
+                motor.setPosition(90);
+                if (motor.getPosition() == 90) {
+                    Serial.println("state: " + String(currentState));
+                    Serial.println("Position: " + String(motor.getPosition()));
+                    currentState = MOVE_TO_MINUS_90;
+                }
+                break;
 
-  if (ledTimerOff.isTimeElapsed()){
-    led.turnOff();
-  }
+            case MOVE_TO_MINUS_90:
+                motor.setPosition(-90);
+                if (motor.getPosition() == -90) {
+                     Serial.println("state: " + String(currentState));
+                    Serial.println("Position: " + String(motor.getPosition()));
+                    currentState = INIT;
+                }
+                break;
 
-  
-  count++;
-  count = count % 100;
-  out.setValue(count);
-  //Serial.println(tryAnalogOut.getValue());
-  //Serial.println(potentiometer.getValue());
-  Serial.println(led.isActive());
-  out.update();
-  led.update();
+        }
+    }
 
+      start = !moveMotor.isTimeElapsed();
+
+
+      
+
+    
+     
+    
 }
-

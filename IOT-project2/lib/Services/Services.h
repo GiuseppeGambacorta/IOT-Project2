@@ -20,8 +20,8 @@ public:
   unsigned long getCurrentTime();
   virtual void update() = 0;
 
-  ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
-  //void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
+  //ITimeKeeper(const ITimeKeeper&) = delete;  // TimeKeeper tk2 = tk1;  // NO
+  void operator=(const ITimeKeeper&) = delete; // tk2 = tk1; // NO
 };
 
 

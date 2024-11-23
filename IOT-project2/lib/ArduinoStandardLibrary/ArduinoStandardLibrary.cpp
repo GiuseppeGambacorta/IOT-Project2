@@ -61,6 +61,7 @@ void Timer::active(bool start)
     {
         if (start)
         {
+            //  Serial.println("start");
             startInterlock = true;
             oldTime = timeKeeper.getCurrentTime();
         }
@@ -71,8 +72,10 @@ bool Timer::isTimeElapsed()
 {
     if (this->startInterlock)
     {
+     
         unsigned long currentTime = timeKeeper.getCurrentTime();
-
+        //Serial.print("Current Time: ");
+        //Serial.println(currentTime);
         if (currentTime - this->oldTime >= this->timeDuration)
         {
 
@@ -115,9 +118,6 @@ void DigitalInput::update()
 
 bool DigitalInput::isActive()
 {
-
-
-
     return this->value;
 }
 
