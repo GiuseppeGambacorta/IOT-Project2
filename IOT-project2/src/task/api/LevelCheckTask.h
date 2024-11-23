@@ -13,6 +13,7 @@ class LevelCheckTask : public Task {
     LevelCheckTask(Sonar& sensor);
     void tick();
     void reset();
+    int getState();
 };
 
 #endif

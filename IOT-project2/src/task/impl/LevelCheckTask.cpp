@@ -17,3 +17,7 @@ void LevelCheckTask::tick() {
 void LevelCheckTask::reset() {
     state = OK;
 }
+
+int LevelCheckTask::getState() {
+    return state;
+}
