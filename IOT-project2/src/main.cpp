@@ -48,7 +48,7 @@ void loop() {
    //Serial.println(s.length());
    // Serial.println(s.c_str());
     if (start) {
-
+        serialManager.addDebugMessage("prova debug seriale");
         serialManager.sendData();
         s = "gambacorta " + String(i);
         delay(1000);

@@ -28,56 +28,93 @@ class Register {
 private:
     static const int MAX_VARIABLES = 10; 
     DataHeader variables[MAX_VARIABLES]; 
-    int count = 0;
+    unsigned int variablesCount = 0;
+    static const int MAX_DEBUG = 100;
+    DataHeader debugMessage[MAX_DEBUG];
+    unsigned int debugCount = 0;
 
 public:
     Register() {}
 
     void addVariable(byte* var, VarType varType) {
-        if (count < MAX_VARIABLES) {
-            variables[count].messageType = MessageType::VAR;
-            variables[count].varType = varType;
-            variables[count].data = var;
+        if (variablesCount < MAX_VARIABLES) {
+            variables[variablesCount].messageType = MessageType::VAR;
+            variables[variablesCount].varType = varType;
+            variables[variablesCount].data = var;
             switch (varType) {
                 case VarType::BYTE:
-                    variables[count].size = sizeof(byte);
+                    variables[variablesCount].size = sizeof(byte);
                     break;
                 case VarType::INT:
-                    variables[count].size = sizeof(int);
+                    variables[variablesCount].size = sizeof(int);
                     break;
             }
-            count++;
+            variablesCount++;
         }
     }
 
     void addVariable(String* string){
-        if (count < MAX_VARIABLES) {
-            variables[count].messageType = MessageType::VAR;
-            variables[count].varType = VarType::STRING;
-            variables[count].data = (byte*)string;
-            variables[count].size = string->length() + 1;
-            Serial.println(variables[count].size);
-            count++;
+        if (variablesCount < MAX_VARIABLES) {
+            variables[variablesCount].messageType = MessageType::VAR;
+            variables[variablesCount].varType = VarType::STRING;
+            variables[variablesCount].data = (byte*)string;
+            variables[variablesCount].size = string->length() + 1;
+            Serial.println(variables[variablesCount].size);
+            variablesCount++;
         }
     }
 
 
-    void updateStringLength(int index, String* string) {
-        if (index >= 0 && index < count && variables[index].varType == VarType::STRING) {
+    void addDebugMessage(const char* message) {
+        if (debugCount < MAX_DEBUG) {
+            debugMessage[debugCount].messageType = MessageType::DEBUG;
+            debugMessage[debugCount].varType = VarType::STRING;
+            debugMessage[debugCount].data = (byte*)message;
+            debugMessage[debugCount].size = sizeof(message);
+            debugCount++;
+        }
+    }
+
+
+    void updateStringLength(unsigned int  index, String* string) {
+        if (index >= 0 && index < variablesCount && variables[index].varType == VarType::STRING) {
             variables[index].size = string->length() + 1;
         }
     }
 
-    DataHeader* getHeader(int index) {
-        if (index >= 0 && index < count) {
+    DataHeader* getVariableHeader(unsigned int index) {
+        if (index >= 0 && index < variablesCount) {
             return &variables[index];
         } else {
             return nullptr;
         }
     }
 
-    int getCount() {
-        return count;
+    DataHeader* getDebugMessageHeader(unsigned int index) {
+        if (index >= 0 && index < variablesCount) {
+            return &debugMessage[index];
+        } else {
+            return nullptr;
+        }
+    }
+
+
+    int getVariableCount() {
+        return variablesCount;
+    }
+
+    int getDebugMessageCount() {
+        return debugCount;
+    }
+
+    void resetDebugMessages() {
+        for (unsigned int i = 0; i < debugCount; i++) {
+            debugMessage[i].messageType = MessageType::DEBUG;
+            debugMessage[i].varType = VarType::STRING;
+            debugMessage[i].data = nullptr;
+            debugMessage[i].size = 0;
+        }
+        debugCount = 0;
     }
 };
 
@@ -112,15 +149,19 @@ class SerialManager{
             internalRegister.addVariable(string);
         }
 
+        void addDebugMessage(const char* message) {
+            internalRegister.addDebugMessage(message);
+        }
+
         void sendData() {
-            byte numberOfVariables = internalRegister.getCount();
+            byte numberOfVariables = internalRegister.getVariableCount()+ internalRegister.getDebugMessageCount();
             byte header = 255;
             Serial.write(header);
             header = 0;
             Serial.write(header);
             Serial.write((byte*)&numberOfVariables, sizeof(numberOfVariables));
-            for (int i = 0; i < internalRegister.getCount(); i++) {
-                DataHeader* header = internalRegister.getHeader(i);
+            for (int i = 0; i < internalRegister.getVariableCount(); i++) {
+                DataHeader* header = internalRegister.getVariableHeader(i);
 
 
                 Serial.write((byte*)&header->messageType, sizeof(header->messageType));
@@ -137,6 +178,21 @@ class SerialManager{
                     Serial.write(header->data, header->size); 
                 }
             }
+            
+            for (int i = 0; i < internalRegister.getDebugMessageCount(); i++) {
+                DataHeader* header = internalRegister.getDebugMessageHeader(i);
+
+                Serial.write((byte*)&header->messageType, sizeof(header->messageType));
+                Serial.write((byte*)&header->varType, sizeof(header->varType));
+                Serial.write((byte*)&header->size, sizeof(header->size));
+                Serial.write(header->data, header->size);
+               
+            }
+            
+            internalRegister.resetDebugMessages();
+
+
+
             Serial.flush();
         }
 
