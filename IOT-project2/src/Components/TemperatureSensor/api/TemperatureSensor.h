@@ -6,6 +6,7 @@
 class TemperatureSensor{
     public:
         TemperatureSensor(int pin);
+        void update();
         int readTemperature();
         bool isThresholdExceeded();
     private:

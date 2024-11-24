@@ -8,6 +8,7 @@ class Pir{
     public:
         Pir(int pin);
         void calibrate();
+        void update();
         bool isDetected();
     private:
         DigitalInput* pir;

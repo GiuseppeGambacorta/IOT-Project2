@@ -16,7 +16,7 @@ void Pir::calibrate() {
     delay(50);
 }
 
-bool Pir::isDetected() {
+void Pir::update() {
     if (!this->calibrated) {
         calibrate();
     }
@@ -24,5 +24,8 @@ bool Pir::isDetected() {
     if (current != detected) {
         detected = current;
     }
+}
+
+bool Pir::isDetected() {
     return detected;
 }

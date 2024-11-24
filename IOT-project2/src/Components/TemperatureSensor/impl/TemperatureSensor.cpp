@@ -8,16 +8,17 @@ TemperatureSensor::TemperatureSensor(int pin) {
     this->sensor = new AnalogInput(pin, 1023);
 }
 
-int TemperatureSensor::readTemperature() {
-    // Read the analog value from the sensor
+void TemperatureSensor::update() {
     sensor->update();
     int analogValue = sensor->getValue();
     // Convert the analog value to a temperature value for the LM35 sensor
     this->temperature = analogValue * (5.0 / 1023.0) * 100;
+}
+
+int TemperatureSensor::readTemperature() {
     return this->temperature;
 }
 
 bool TemperatureSensor::isThresholdExceeded() {
-    // Check if the temperature exceeds the threshold
     return readTemperature() > MAXTEMP;
 }
