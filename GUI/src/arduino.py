@@ -27,6 +27,8 @@ class ArduinoReader:
         try:
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
             print(f"Connesso ad Arduino su {self.port} a {self.baudrate} baud.")
+
+       
         except serial.SerialException as e:
             print(f"Errore di connessione: {e}")
 
@@ -44,12 +46,14 @@ class ArduinoReader:
 
                 for i in range(number_of_messages):
                     data.append(self._read_data())
-                  
+                
+                self.serial_connection.flushInput()
                 if data == [] or None in data:
+                    print("Errore di lettura.")
                     return None
                 print(data[0].data)
                 print(data[1].data)
-                print(data[2].data)
+               # print(data[2].data)
                 return data[0]
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
