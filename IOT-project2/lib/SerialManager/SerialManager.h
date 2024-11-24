@@ -13,6 +13,7 @@ enum class MessageType : byte
 {
     VAR,
     DEBUG,
+    EVENT,
 };
 
 struct DataHeader
@@ -29,9 +30,13 @@ private:
     static const int MAX_VARIABLES = 10; 
     DataHeader variables[MAX_VARIABLES]; 
     unsigned int variablesCount = 0;
-    static const int MAX_DEBUG = 100;
+    static const int MAX_DEBUG = 50;
     DataHeader debugMessage[MAX_DEBUG];
     unsigned int debugCount = 0;
+
+    static const int MAX_EVENTS = 50;
+    DataHeader eventMessage[MAX_EVENTS];
+    unsigned int eventCount = 0;
 
 public:
     Register() {}
@@ -67,7 +72,7 @@ public:
 
     void addDebugMessage(const char* message) {
 
-        for (int i = 0; i < debugCount; i++) {
+        for (unsigned int i = 0; i < debugCount; i++) {
             if (strcmp((char*)debugMessage[i].data, message) == 0) {
                 return;
             }
@@ -79,6 +84,23 @@ public:
             debugMessage[debugCount].data = (byte*)message;
             debugMessage[debugCount].size = strlen(message) + 1;
             debugCount++;
+        }
+    }
+
+    void addEventMessage(const char* message) {
+
+        for (unsigned int i = 0; i < eventCount; i++) {
+            if (strcmp((char*)eventMessage[i].data, message) == 0) {
+                return;
+            }
+        }
+
+        if (eventCount < MAX_EVENTS) {
+            eventMessage[eventCount].messageType = MessageType::EVENT;
+            eventMessage[eventCount].varType = VarType::STRING;
+            eventMessage[eventCount].data = (byte*)message;
+            eventMessage[eventCount].size = strlen(message) + 1;
+            eventCount++;
         }
     }
 
@@ -105,17 +127,33 @@ public:
         }
     }
 
+    DataHeader* getEventMessageHeader(unsigned int index) {
+        if (index >= 0 && index < variablesCount) {
+            return &eventMessage[index];
+        } else {
+            return nullptr;
+        }
+    }
 
-    int getVariableCount() {
+
+    unsigned int getVariableCount() {
         return variablesCount;
     }
 
-    int getDebugMessageCount() {
+    unsigned int getDebugMessageCount() {
         return debugCount;
+    }
+
+    unsigned int  getEventMessageCount() {
+        return eventCount;
     }
 
     void resetDebugMessages() {
         debugCount = 0;
+    }
+
+    void resetEventMessages() {
+        eventCount = 0;
     }
 };
 
@@ -154,14 +192,18 @@ class SerialManager{
             internalRegister.addDebugMessage(message);
         }
 
+        void addEventMessage(const char* message) {
+            internalRegister.addEventMessage(message);
+        }
+
         void sendData() {
-            byte numberOfVariables = internalRegister.getVariableCount()+ internalRegister.getDebugMessageCount();
+            byte numberOfVariables = internalRegister.getVariableCount()+ internalRegister.getDebugMessageCount()+ internalRegister.getEventMessageCount();
             byte header = 255;
             Serial.write(header);
             header = 0;
             Serial.write(header);
             Serial.write((byte*)&numberOfVariables, sizeof(numberOfVariables));
-            for (int i = 0; i < internalRegister.getVariableCount(); i++) {
+            for (unsigned int i = 0; i < internalRegister.getVariableCount(); i++) {
                 DataHeader* header = internalRegister.getVariableHeader(i);
 
 
@@ -180,7 +222,7 @@ class SerialManager{
                 }
             }
             
-            for (int i = 0; i < internalRegister.getDebugMessageCount(); i++) {
+            for (unsigned int i = 0; i < internalRegister.getDebugMessageCount(); i++) {
                 DataHeader* header = internalRegister.getDebugMessageHeader(i);
 
                 Serial.write((byte*)&header->messageType, sizeof(header->messageType));
@@ -189,8 +231,19 @@ class SerialManager{
                 Serial.write(header->data, header->size);
                
             }
+
+
+            for (unsigned int i = 0; i < internalRegister.getEventMessageCount(); i++) {
+                DataHeader* header = internalRegister.getEventMessageHeader(i);
+
+                Serial.write((byte*)&header->messageType, sizeof(header->messageType));
+                Serial.write((byte*)&header->varType, sizeof(header->varType));
+                Serial.write((byte*)&header->size, sizeof(header->size));
+                Serial.write(header->data, header->size);
+            }
             
             internalRegister.resetDebugMessages();
+            internalRegister.resetEventMessages();
 
 
 

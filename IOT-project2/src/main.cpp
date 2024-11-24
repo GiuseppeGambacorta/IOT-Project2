@@ -51,6 +51,7 @@ void loop() {
     if (start) {
         serialManager.addDebugMessage("prova debug seriale");
         serialManager.addDebugMessage("prova debug seriale");
+        serialManager.addEventMessage("prova evento seriale");
         toggle = !toggle;
         if (toggle){
             serialManager.addDebugMessage("prova debug seriale che capita ogni tanto");
