@@ -6,7 +6,6 @@
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
-#include <Servo.h>
 #include <LiquidCrystal_I2C.h>
 
 #include "task/api/Task.h"
