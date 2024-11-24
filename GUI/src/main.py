@@ -5,6 +5,7 @@ import time
 import threading
 from components.button_frame import ButtonFrame
 from arduino import ArduinoReader
+import tkinter as tk
 
 class RealTimePlotApp(ctk.CTk):
     def __init__(self):
@@ -13,30 +14,51 @@ class RealTimePlotApp(ctk.CTk):
         self.title("ARDUINO HMI")
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
-        window_width = int(screen_width * 0.8)
-        window_height = int(screen_height * 0.8)
-        self.geometry(f"{window_width}x{window_height}")
-        
-  
-        
+        window_width = int(screen_width)
+        window_height = int(screen_height)
+
+        # Posiziona la finestra al centro dello schermo
+        x_pos = int((screen_width - window_width) / 2)
+        y_pos = int((screen_height - window_height) / 2)
+        self.geometry(f"{window_width}x{window_height}+{x_pos}+{y_pos}")
+      
         # Crea il frame per i pulsanti
         self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore_plotting, self.empty_plotting)
         self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
         
-        # Crea il frame per visualizzare il grafico
+        # Crea il frame per visualizzare i grafici
         self.frame = ctk.CTkFrame(self)
         self.frame.pack(fill="both", expand=True, padx=20, pady=20)
         
-        # Crea il grafico matplotlib
-        self.fig, self.ax = self.create_real_time_plot()
-        
-        # Crea il canvas per il grafico
+        # Crea i grafici matplotlib (due grafici affiancati)
+        self.fig, (self.ax1, self.ax2) = self.create_real_time_plots()
+
+        # Crea il canvas per i grafici
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
         self.canvas.get_tk_widget().pack(fill="both", expand=True)
         
+        # Crea il frame per visualizzare i testi degli eventi
+        self.text_frame_event = ctk.CTkFrame(self)
+        self.text_frame_event.pack(fill="x", padx=20, pady=(20, 0))
+        
+        # Crea il widget Text per gli eventi
+        self.text_event = tk.Text(self.text_frame_event, height=10)
+        self.text_event.pack(fill="x", padx=20, pady=(20, 0))
+
+        # Crea il frame per visualizzare i testi di debug
+        self.text_frame_debug = ctk.CTkFrame(self)
+        self.text_frame_debug.pack(fill="x", padx=20, pady=(20, 20))
+        
+        # Crea il widget Text per i messaggi di debug
+        self.text_debug = tk.Text(self.text_frame_debug, height=10)
+        self.text_debug.pack(fill="x", padx=20, pady=(20, 0))
+
         # Inizializza i dati
         self.x_data = []
         self.y_data = []
+
+        self.x2_data = []
+        self.y2_data = []
 
         self.arduino = ArduinoReader(port='COM3')
         self.arduino.connect()
@@ -50,21 +72,32 @@ class RealTimePlotApp(ctk.CTk):
         # Gestione della chiusura della finestra
         self.protocol("WM_DELETE_WINDOW", self.on_close)
     
-    def create_real_time_plot(self):
-        fig, ax = plt.subplots(figsize=(8, 6))
-        ax.set_title("Real-Time Plot")
-        ax.set_xlabel("Time")
-        ax.set_ylabel("Value")
-        ax.set
-        return fig, ax
+    def create_real_time_plots(self):
+        fig, (ax1, ax2) = plt.subplots(figsize=(12, 6), ncols=2)
+        ax1.set_title("Temperature")
+        ax1.set_xlabel("Time")
+        ax1.set_ylabel("Value")
+
+        ax2.set_title("Temperature")
+        ax2.set_xlabel("Time")
+        ax2.set_ylabel("Value")
+
+        return fig, (ax1, ax2)
     
     def update_graph(self):
-        self.ax.clear()
-        self.ax.plot(self.x_data, self.y_data, label="Data", color="blue")
-        self.ax.set_title("Real-Time Plot")
-        self.ax.set_xlabel("Time")
-        self.ax.set_ylabel("Value")
-        self.ax.legend()
+        self.ax1.clear()
+        self.ax1.plot(self.x_data, self.y_data, label="Data", color="blue")
+        self.ax1.set_title("Temperature")
+        self.ax1.set_xlabel("Time")
+        self.ax1.set_ylabel("Value")
+        self.ax1.legend()
+
+        self.ax2.clear()
+        self.ax2.plot(self.x2_data, self.y2_data, label="Data", color="green")
+        self.ax2.set_title("waste level")
+        self.ax2.set_xlabel("Time")
+        self.ax2.set_ylabel("Value")
+        self.ax2.legend()
     
     def update_data(self):
         while self.is_running:
@@ -76,17 +109,33 @@ class RealTimePlotApp(ctk.CTk):
 
                 var, debug, event = result
 
-
                 message = var[0]
 
                 # Aggiungi un nuovo punto ai dati
                 self.x_data.append(time.time())
                 self.y_data.append(int(message.data))
+
+
+                message = var[1]
+                self.x2_data.append(time.time())
+                self.y2_data.append(int(message.data))
+                
+                # Aggiorna il testo visualizzato
+                for debug_message in debug:
+                    self.update_debug_text(f"DEBUG: {debug_message.data}")
+
+                for event_message in event:
+                    self.update_event_text(f"EVENT: {event_message.data}")
                 
                 # Mantieni solo gli ultimi 50 punti
                 if len(self.x_data) > 50:
                     self.x_data = self.x_data[-50:]
                     self.y_data = self.y_data[-50:]
+
+
+                if len(self.x2_data) > 50:
+                    self.x2_data = self.x2_data[-50:]
+                    self.y2_data = self.y2_data[-50:]
                 
                 # Aggiorna il grafico usando after() per thread safety
                 self.after(0, self.safe_update)
@@ -95,7 +144,22 @@ class RealTimePlotApp(ctk.CTk):
 
             except RuntimeError:
                 pass
-                
+    
+    def update_debug_text(self, text):
+        self.text_debug.insert(tk.END, text + "\n")
+        self.text_debug.see(tk.END)
+        self.limit_text(self.text_debug)
+
+    def update_event_text(self, text):
+        self.text_event.insert(tk.END, text + "\n")
+        self.text_event.see(tk.END)
+        self.limit_text(self.text_event)
+
+    def limit_text(self, text_widget, max_lines=50):
+        lines = text_widget.get(1.0, tk.END).splitlines()
+        if len(lines) > max_lines:
+            text_widget.delete(1.0, f"{len(lines) - max_lines + 1}.0")
+
     
     def safe_update(self):
         if self.is_running:
