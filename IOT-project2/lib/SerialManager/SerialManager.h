@@ -66,6 +66,13 @@ public:
 
 
     void addDebugMessage(const char* message) {
+
+        for (int i = 0; i < debugCount; i++) {
+            if (strcmp((char*)debugMessage[i].data, message) == 0) {
+                return;
+            }
+        }
+
         if (debugCount < MAX_DEBUG) {
             debugMessage[debugCount].messageType = MessageType::DEBUG;
             debugMessage[debugCount].varType = VarType::STRING;
