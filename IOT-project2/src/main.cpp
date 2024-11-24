@@ -59,7 +59,7 @@ void loop() {
   
         serialManager.sendData();
         s = "gambacorta " + String(i);
-        delay(1000);
+        delay(100);
         
     }
 

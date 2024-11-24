@@ -23,6 +23,8 @@ class ArduinoReader:
         self.timeout = timeout
         self.serial_connection = None
 
+        self.data = []
+
     def connect(self):
         try:
             # Configura la connessione seriale
@@ -51,7 +53,7 @@ class ArduinoReader:
 
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
-            data = []
+            self.data.clear()
             try:
 
                 starthead = self.serial_connection.read(1)
@@ -78,17 +80,17 @@ class ArduinoReader:
                 number_of_messages = struct.unpack('B', number_of_messages)[0]
                 print(f'lunghezza messaggi {number_of_messages}')
                 for i in range(number_of_messages):
-                    data.append(self._read_data())
+                    self.data.append(self._read_data())
                 
                 self.serial_connection.reset_input_buffer()
-                if data == [] or None in data:
+                if self.data == [] or None in self.data:
                     print("Errore di lettura.")
                     return None
 
-                for reading in data:
+                for reading in self.data:
                     print(reading.data)
             
-                return data[0]
+                return self.data[0]
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
                     return None
