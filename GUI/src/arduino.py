@@ -25,28 +25,50 @@ class ArduinoReader:
 
     def connect(self):
         try:
+            # Configura la connessione seriale
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
             print(f"Connesso ad Arduino su {self.port} a {self.baudrate} baud.")
             self.serial_connection.reset_input_buffer()
             self.serial_connection.reset_output_buffer()
-            self.serial_connection.write(b'1')
 
-       
-        except serial.SerialException as e:
-            print(f"Errore di connessione: {e}")
+        
+            response = None
+            while response != 10:  # Aspetto il byte 0x0A (10 in decimale)
+                print("Aspetto che Arduino si connetta...")
+                value_to_send = 255
+                self.serial_connection.write(value_to_send.to_bytes(1, 'big'))
+                response = self.serial_connection.read(1)  # Leggo un byte
+                if not response:
+                    continue
+                response = struct.unpack('B', response)[0]
+                print(f"Ricevuto: {response}")
+            print("Arduino connesso!")
+
+        except Exception as e:
+            print(f"Errore nella connessione: {e}")
 
 
 
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
             data = []
-
             try:
+
+                starthead = self.serial_connection.read(1)
+                if not starthead:
+                    return None
+                starthead = struct.unpack('B', starthead)[0]
+                print(f'header {starthead}')
+                if starthead != 255:
+                    print("Errore di sincronizzazione.")
+                    return None
+
                 number_of_messages = self.serial_connection.read(1)
+           
                 if not number_of_messages:
                     return None
                 number_of_messages = struct.unpack('B', number_of_messages)[0]
-
+                print(f'lunghezza messaggi {number_of_messages}')
                 for i in range(number_of_messages):
                     data.append(self._read_data())
                 

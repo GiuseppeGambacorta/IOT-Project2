@@ -16,12 +16,15 @@ int i2 = 65;
 bool start = false;
 SerialManager serialManager(9600);
 
+
 void setup() {
    serialManager.init();
   serialManager.addVariableToSend((byte*)&i, Type::INT);
   serialManager.addVariableToSend((byte*)&i2, Type::INT);
   serialManager.addVariableToSend(&s);
+  pinMode(2, OUTPUT);
    //Serial.begin(9600);
+   digitalWrite(2, HIGH);
 }
 
 void loop() {
@@ -30,8 +33,14 @@ void loop() {
         delay(1000);
     }
 
-    if (!start) {
-        start = Serial.read();
+      while (!start) {
+        if (Serial.available() > 0) {
+            byte received =(short unsigned int) Serial.read(); // Leggo il byte come valore grezzo
+            if (received == 255) {          // Controllo se è il byte 0x01
+                Serial.write(10);          // Invio il byte 0x0A (10 in decimale)
+                start = true;
+            }
+        }
     }
     //scheduler.schedule();
 
@@ -39,10 +48,14 @@ void loop() {
    //Serial.println(s.length());
    // Serial.println(s.c_str());
     if (start) {
+
         serialManager.sendData();
         s = "gambacorta " + String(i);
         delay(1000);
+        
     }
+
+      digitalWrite(2, !start);
 
     
 
