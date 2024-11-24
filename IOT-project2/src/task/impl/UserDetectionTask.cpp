@@ -1,5 +1,5 @@
 #include "task/api/UserDetectionTask.h"
-#include "task/api/Pir.h"
+#include "../../Components/Pir/api/Pir.h"
 #include <Arduino.h>
 
 UserDetectionTask::UserDetectionTask(Pir& sensor) : pir(sensor) {
