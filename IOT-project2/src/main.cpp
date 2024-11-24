@@ -13,6 +13,7 @@ int i = 530;
 
 String s = "gambacorta";
 int i2 = 65;
+bool start = false;
 SerialManager serialManager(9600);
 
 void setup() {
@@ -29,18 +30,24 @@ void loop() {
         delay(1000);
     }
 
+    if (!start) {
+        start = Serial.read();
+    }
     //scheduler.schedule();
 
 
    //Serial.println(s.length());
    // Serial.println(s.c_str());
-    serialManager.sendData();
-    delay(1000);
+    if (start) {
+        serialManager.sendData();
+        s = "gambacorta " + String(i);
+        delay(1000);
+    }
+
+    
 
     i+=5;
 
-    if (i > 700) {
-        s = "ciao bello";
-    }
+
 
 }
