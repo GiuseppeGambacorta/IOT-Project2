@@ -1,27 +1,28 @@
 #include <Arduino.h>
 #include "task/api/Pir.h"
 
-#define CALIBRATION_TIME 10000
+#define CALIBRATION_TIME 10
 
-Pir::Pir(int pin) : calibrated(false) {
-    pir = new DigitalInput(pin, 1);
+Pir::Pir(int pin) : calibrated(false), pin(pin) {
+    pir = new DigitalInput(pin, 0);
 }
 
 void Pir::calibrate() {
-    Serial.print("Calibrating sensor... ");
-    for (unsigned long i = 0; i < CALIBRATION_TIME / 1000; i++) {
-        Serial.print(".");
+    for (unsigned long i = 0; i < CALIBRATION_TIME; i++) {
         delay(1000);
     }
-    Serial.println(" done");
-    Serial.println("PIR SENSOR READY.");
-    calibrated = true;
+    this->calibrated = true;
+    this->detected = false;
+    delay(50);
 }
 
 bool Pir::isDetected() {
-    if (!calibrated) {
+    if (!this->calibrated) {
         calibrate();
     }
-    pir->update();
-    return pir->isActive();
+    int current = digitalRead(this->pin);
+    if (current != detected) {
+        detected = current;
+    }
+    return detected;
 }

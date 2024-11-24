@@ -12,6 +12,8 @@ class Pir{
     private:
         DigitalInput* pir;
         bool calibrated;
+        bool detected;
+        int pin;
 };
 
 #endif
