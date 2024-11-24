@@ -70,7 +70,7 @@ public:
             debugMessage[debugCount].messageType = MessageType::DEBUG;
             debugMessage[debugCount].varType = VarType::STRING;
             debugMessage[debugCount].data = (byte*)message;
-            debugMessage[debugCount].size = sizeof(message);
+            debugMessage[debugCount].size = strlen(message) + 1;
             debugCount++;
         }
     }

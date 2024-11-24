@@ -15,6 +15,7 @@ String s = "gambacorta";
 int i2 = 65;
 bool start = false;
 SerialManager serialManager(9600);
+bool toggle = false;
 
 
 void setup() {
@@ -49,6 +50,11 @@ void loop() {
    // Serial.println(s.c_str());
     if (start) {
         serialManager.addDebugMessage("prova debug seriale");
+        toggle = !toggle;
+        if (toggle){
+            serialManager.addDebugMessage("prova debug seriale che capita ogni tanto");
+        }
+  
         serialManager.sendData();
         s = "gambacorta " + String(i);
         delay(1000);
