@@ -43,8 +43,6 @@ class Task {
     void setActive(bool active){
       this->active = active;
     }
-
-    virtual void reset() = 0;
   
 };
 

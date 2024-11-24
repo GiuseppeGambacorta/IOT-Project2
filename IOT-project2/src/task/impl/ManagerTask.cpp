@@ -56,7 +56,3 @@ void ManagerTask::tick() {
     }
   }
 }
-
-void ManagerTask::reset() {
-  // Implementa il reset specifico per ManagerTask
-}

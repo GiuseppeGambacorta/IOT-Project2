@@ -33,7 +33,6 @@ public:
             this->type = IN;
           }
     void tick() override {}
-    void reset() override {}
 };
 
 #endif
