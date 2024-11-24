@@ -2,7 +2,7 @@
 #define __USERDETECTIONTASK__
 
 #include "Task.h"
-#include "Pir.h"
+#include "../../Components/Pir/api/Pir.h"
 
 class UserDetectionTask : public Task {
   Pir& pir;
