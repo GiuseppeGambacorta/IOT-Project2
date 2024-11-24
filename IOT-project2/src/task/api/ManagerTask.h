@@ -16,20 +16,16 @@ private:
     AnalogInput levelDetector;
     AnalogInput tempSensor;
     DigitalInput userDetector;
-    DigitalInput openButton;
-    DigitalInput closeButton;
     Task* taskList[MAX_TASKS];
     
 public:
     ManagerTask(AnalogInput levelDetector,
                 AnalogInput tempSensor,
                 DigitalInput userDetector, 
-                DigitalInput openButton, 
-                DigitalInput closeButton,
                 Task* taskList[MAX_TASKS]);
-    void tick();
-    void tick();
-    void reset();
+
+    void tick() override;
+    void reset() override;
 };
 
 #endif

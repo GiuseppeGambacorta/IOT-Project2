@@ -3,29 +3,59 @@
 ManagerTask::ManagerTask(AnalogInput levelDetector,
                          AnalogInput tempSensor,
                          DigitalInput userDetector, 
-                         DigitalInput openButton, 
-                         DigitalInput closeButton,
                          Task* taskList[MAX_TASKS])
     : levelDetector(levelDetector),
       tempSensor(tempSensor), 
-      userDetector(userDetector), 
-      openButton(openButton), 
-      closeButton(closeButton)
-{
+      userDetector(userDetector) {
     this->type = MANAGER;
     for (int i = 0; i < MAX_TASKS; i++) {
         this->taskList[i] = taskList[i];
     }
 }
+
 void ManagerTask::tick() {
+
+    levelDetector.update();
+    tempSensor.update();
+    userDetector.update();
 
     int level = levelDetector.getValue();
     int temp = tempSensor.getValue();
     bool user = userDetector.isActive();
-    bool openPressed = openButton.isActive();
-    bool closePressed = closeButton.isActive();
 
-    //logica di gestione
-
+    if (level>LEVEL_MAX) {
+        for (int i = 0; i < MAX_TASKS; i++) {
+            taskList[i]->setActive(false);
+            if (taskList[i]->getType() == ALLARM_LEVEL
+                || taskList[i]->getType() == MANAGER) {
+                taskList[i]->setActive(true);
+            }
+        }
+    }
+    if (temp>TEMP_MAX) {
+        for (int i = 0; i < MAX_TASKS; i++) {
+            taskList[i]->setActive(false);
+            if (taskList[i]->getType() == ALLARM_TMP
+                || taskList[i]->getType() == MANAGER) {
+                taskList[i]->setActive(true);
+            }
+        }
+    } else if (!user) {
+        for (int i = 0; i < MAX_TASKS; i++) {
+            taskList[i]->setActive(false);
+            if (taskList[i]->getType() == SLEEP
+                || taskList[i]->getType() == MANAGER) {
+                taskList[i]->setActive(true);
+            }
+        }
+    } else {
+        for (int i = 0; i < MAX_TASKS; i++) {
+            taskList[i]->setActive(false);
+            if (taskList[i]->getType() == STD_EXEC
+                || taskList[i]->getType() == MANAGER) {
+                taskList[i]->setActive(true);
+            }
+        }
+    }
 }
 

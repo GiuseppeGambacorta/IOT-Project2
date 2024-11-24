@@ -2,13 +2,12 @@
 #define __TASKSTYPE__
 
 enum TaskType {
-    INPUT,
     MANAGER,
     STD_EXEC,
-    ALLARM_TMP,
     ALLARM_LEVEL,
+    ALLARM_TMP,
     SLEEP,
-    UOTPUT
+    HOMING
 };
 
 #endif
