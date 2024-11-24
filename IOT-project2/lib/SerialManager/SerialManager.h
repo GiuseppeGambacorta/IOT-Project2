@@ -108,12 +108,6 @@ public:
     }
 
     void resetDebugMessages() {
-        for (unsigned int i = 0; i < debugCount; i++) {
-            debugMessage[i].messageType = MessageType::DEBUG;
-            debugMessage[i].varType = VarType::STRING;
-            debugMessage[i].data = nullptr;
-            debugMessage[i].size = 0;
-        }
         debugCount = 0;
     }
 };
