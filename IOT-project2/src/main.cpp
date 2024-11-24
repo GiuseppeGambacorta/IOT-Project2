@@ -10,14 +10,17 @@
 
 //Scheduler scheduler;
 int i = 530;
-int i2 =1000;
+
+String s = "gambacorta";
+int i2 = 65;
 SerialManager serialManager(9600);
 
 void setup() {
-    serialManager.init();
-    serialManager.addVariableToSend((byte*)&i, Type::INT);
-    serialManager.addVariableToSend((byte*)&i2, Type::INT);
-    
+   serialManager.init();
+  serialManager.addVariableToSend((byte*)&i, Type::INT);
+  serialManager.addVariableToSend((byte*)&i2, Type::INT);
+  serialManager.addVariableToSend(&s);
+   //Serial.begin(9600);
 }
 
 void loop() {
@@ -29,10 +32,10 @@ void loop() {
     //scheduler.schedule();
 
 
-
+   //Serial.println(s.length());
+   // Serial.println(s.c_str());
     serialManager.sendData();
     delay(1000);
-    DataHeader header;
 
     i+=5;
 

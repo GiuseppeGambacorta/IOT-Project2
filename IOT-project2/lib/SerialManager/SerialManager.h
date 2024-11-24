@@ -5,7 +5,8 @@
 enum class Type : byte
 {
     BYTE,
-    INT
+    INT,
+    STRING,
 };
 
 struct DataHeader
@@ -20,7 +21,7 @@ struct DataHeader
 class Register {
 private:
     static const int MAX_VARIABLES = 10; 
-    DataHeader headers[MAX_VARIABLES]; 
+    DataHeader variables[MAX_VARIABLES]; 
     int count = 0;
 
 public:
@@ -28,24 +29,42 @@ public:
 
     void addVariable(byte* var, Type varType) {
         if (count < MAX_VARIABLES) {
-            headers[count].id = count;
-            headers[count].varType = varType;
-            headers[count].data = var;
+            variables[count].id = count;
+            variables[count].varType = varType;
+            variables[count].data = var;
             switch (varType) {
                 case Type::BYTE:
-                    headers[count].size = sizeof(byte);
+                    variables[count].size = sizeof(byte);
                     break;
                 case Type::INT:
-                    headers[count].size = sizeof(int);
+                    variables[count].size = sizeof(int);
                     break;
             }
             count++;
         }
     }
 
+    void addVariable(String* string){
+        if (count < MAX_VARIABLES) {
+            variables[count].id = count;
+            variables[count].varType = Type::STRING;
+            variables[count].data = (byte*)string->c_str();
+            variables[count].size = string->length() + 1;
+            Serial.println(variables[count].size);
+            count++;
+        }
+    }
+
+
+    void updateStringLength(int index, String* string) {
+        if (index >= 0 && index < count && variables[index].varType == Type::STRING) {
+            variables[index].size = string->length() + 1;
+        }
+    }
+
     DataHeader* getHeader(int index) {
         if (index >= 0 && index < count) {
-            return &headers[index];
+            return &variables[index];
         } else {
             return nullptr;
         }
@@ -83,11 +102,20 @@ class SerialManager{
             internalRegister.addVariable(var, varType);
         }
 
+        void addVariableToSend(String* string) {
+            internalRegister.addVariable(string);
+        }
+
         void sendData() {
             byte numberOfVariables = internalRegister.getCount();
             Serial.write((byte*)&numberOfVariables, sizeof(numberOfVariables));
             for (int i = 0; i < internalRegister.getCount(); i++) {
                 DataHeader* header = internalRegister.getHeader(i);
+
+                if (header->varType == Type::STRING) {
+                   // internalRegister.updateStringLength(i, (String*)header->data);
+                }
+
                 Serial.write((byte*)&header->id, sizeof(header->id));
                 Serial.write((byte*)&header->varType, sizeof(header->varType));
                 Serial.write((byte*)&header->size, sizeof(header->size));

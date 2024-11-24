@@ -3,7 +3,9 @@ import struct
 from enum import Enum
 
 class VarType(Enum):
+    BYTE = 0
     INT = 1
+    STRING = 2
     # Aggiungi altri tipi di variabili se necessario
 
 class DataHeader:
@@ -43,10 +45,11 @@ class ArduinoReader:
                 for i in range(number_of_messages):
                     data.append(self._read_data())
                   
-                if data == []:
+                if data == [] or None in data:
                     return None
                 print(data[0].data)
                 print(data[1].data)
+                print(data[2].data)
                 return data[0]
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
@@ -73,13 +76,21 @@ class ArduinoReader:
             return None
         size = struct.unpack('B', size)[0]
 
+
+
         if var_type == VarType.INT.value:
-            data = self.serial_connection.read(2)
+            data = self.serial_connection.read(size)
             if not data:
                 return None
-            
-            int_value = struct.unpack('h', data)[0]
-            return DataHeader(id, var_type, data, int_value)
+            value = struct.unpack('h', data)[0]
+            return DataHeader(id, var_type, data, value)
+        
+        if var_type == VarType.STRING.value:
+            data = self.serial_connection.read(size)
+            if not data:
+                return None
+            value = data.decode('utf-8')
+            return DataHeader(id, var_type, data, value)
         
         return None
 
