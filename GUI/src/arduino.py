@@ -62,6 +62,14 @@ class ArduinoReader:
                 if starthead != 255:
                     print("Errore di sincronizzazione.")
                     return None
+                
+                starthead = self.serial_connection.read(1)
+                if not starthead:
+                    return None
+                starthead = struct.unpack('B', starthead)[0]
+                if starthead != 0:
+                    print("Errore di sincronizzazione.")
+                    return None
 
                 number_of_messages = self.serial_connection.read(1)
            
