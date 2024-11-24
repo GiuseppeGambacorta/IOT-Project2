@@ -5,6 +5,10 @@
 #include "ArduinoStandardLibrary.h"
 #include "task/TasksType.h"
 
+#include "task/api/Pir.h"
+#include "task/api/Sonar.h"
+#include "task/api/TemperatureSensor.h"
+
 #define MAX_TASKS 10 //da rendere globale
 
 #define LEVEL_MAX 100
@@ -13,15 +17,15 @@
 class ManagerTask : public Task {
 
 private:
-    AnalogInput levelDetector;
-    AnalogInput tempSensor;
-    DigitalInput userDetector;
+    Sonar levelDetector;
+    TemperatureSensor tempSensor;
+    Pir userDetector;
     Task* taskList[MAX_TASKS];
     
 public:
-    ManagerTask(AnalogInput levelDetector,
-                AnalogInput tempSensor,
-                DigitalInput userDetector, 
+    ManagerTask(Sonar levelDetector,
+                TemperatureSensor tempSensor,
+                Pir userDetector,
                 Task* taskList[MAX_TASKS]);
 
     void tick() override;

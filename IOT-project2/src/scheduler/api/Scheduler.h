@@ -2,10 +2,15 @@
 #define __SCHEDULER__
 
 #include "ArduinoStandardLibrary.h"
-#include "task/api/Task.h"
-#include "task/api/ManagerTask.h"
+#include "task/api/Pir.h"
+#include "task/api/Sonar.h"
+#include "task/api/TemperatureSensor.h"
+#include "Components/Door/Api/Door.h"
 #include <Servo.h>
 #include <LiquidCrystal_I2C.h>
+
+#include "task/api/Task.h"
+#include "task/api/ManagerTask.h"
 
 #define MAX_TASKS 10
 
@@ -18,29 +23,28 @@ private:
   SchedulerTimer timer;
 
   // Componenti I/O
-  DigitalInput userDetector; // Sensore PIR
-  AnalogInput levelDetector; // Sonar
-  Servo door; // Servo-motore
+  Pir userDetector; // Sensore PIR
+  Sonar levelDetector; // Sonar
+  Door door; // Servo-motore
   LiquidCrystal_I2C display; // Display
   DigitalInput openButton; // Pulsante OPEN
   DigitalInput closeButton; // Pulsante CLOSE
   DigitalOutput ledGreen; // LED verde
   DigitalOutput ledRed; // LED rosso
-  AnalogInput tempSensor; // Sensore di temperatura
+  TemperatureSensor tempSensor; // Sensore di temperatura
 
 public:
   Scheduler()
-    : userDetector(2, 500), 
-      levelDetector(A0, 100),
+    : userDetector(9), 
+      levelDetector(13, 12),
       display(0x27, 16, 2), 
-      openButton(3, 500),
-      closeButton(4, 500),
+      openButton(2, 500),
+      closeButton(3, 500),
       ledGreen(5),
-      ledRed(6),
-      tempSensor(A1, 100)
-  {
-    door.attach(9);
-  }
+      ledRed(4),
+      tempSensor(2),
+      door(9)
+  {}
 
   void init(int basePeriod);  
   bool addTask(Task* task);  

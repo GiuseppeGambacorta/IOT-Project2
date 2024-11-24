@@ -1,9 +1,9 @@
 #include "task/api/ManagerTask.h"
 
-ManagerTask::ManagerTask(AnalogInput levelDetector,
-                         AnalogInput tempSensor,
-                         DigitalInput userDetector, 
-                         Task* taskList[MAX_TASKS])
+ManagerTask::ManagerTask(Sonar levelDetector,
+                        TemperatureSensor tempSensor,
+                        Pir userDetector, 
+                        Task* taskList[MAX_TASKS])
     : levelDetector(levelDetector),
       tempSensor(tempSensor), 
       userDetector(userDetector) {
@@ -15,9 +15,9 @@ ManagerTask::ManagerTask(AnalogInput levelDetector,
 
 void ManagerTask::tick() {
 
-    int level = levelDetector.getValue();
-    int temp = tempSensor.getValue();
-    bool user = userDetector.isActive();
+    int level = levelDetector.readDistance();
+    int temp = tempSensor.readTemperature();
+    bool user = userDetector.isDetected();
 
     if (level>LEVEL_MAX) {
         for (int i = 0; i < MAX_TASKS; i++) {
