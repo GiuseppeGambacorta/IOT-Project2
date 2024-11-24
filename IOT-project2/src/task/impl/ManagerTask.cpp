@@ -28,7 +28,7 @@ void ManagerTask::tick() {
             }
         }
     }
-    if (temp>TEMP_MAX) {
+    if (temp>TEMP_MAX) { // TODO : deve rimanere in questo stato per n sec prima di attivare l'allarme
         for (int i = 0; i < MAX_TASKS; i++) {
             taskList[i]->setActive(false);
             if (taskList[i]->getType() == ALLARM_TMP
