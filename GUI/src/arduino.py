@@ -11,8 +11,9 @@ class VarType(Enum):
     # Aggiungi altri tipi di variabili se necessario
 
 class DataHeader:
-    def __init__(self, var_type, data):
+    def __init__(self, id, var_type, data):
         self.type = DatagramType.DATA.value
+        self.id = id
         self.var_type = var_type
         self.data = data
 
@@ -58,6 +59,13 @@ class ArduinoReader:
             return None
 
     def _read_data(self):
+
+
+        id_data = self.serial_connection.read(1)
+        if not id_data:
+            return None
+        id = struct.unpack('B', id_data)[0]
+
         var_type_data = self.serial_connection.read(1)
         if not var_type_data:
             return None
@@ -68,7 +76,7 @@ class ArduinoReader:
             if not data:
                 return None
             int_value = struct.unpack('h', data)[0]
-            return DataHeader(var_type, int_value)
+            return DataHeader(id, var_type, int_value)
         
         return None
 
@@ -99,6 +107,7 @@ if __name__ == "__main__":
             if message:
                 print(f"Tipo di messaggio: {message.type}")
                 if isinstance(message, DataHeader):
+                    print(f"ID del messaggio: {message.id}")
                     print(f"Tipo di variabile: {message.var_type}")
                     print(f"Dati ricevuti: {message.data}")
                 elif isinstance(message, MessageHeader):

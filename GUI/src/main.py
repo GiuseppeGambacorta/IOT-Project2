@@ -70,7 +70,7 @@ class RealTimePlotApp(ctk.CTk):
         while self.is_running:
             try:
                 message = self.arduino.read_data()
-                if message is None:
+                if message is None or message.id != 0:
                     continue
 
 
