@@ -2,17 +2,23 @@
 
 #include <Arduino.h>
 
-enum class Type : byte
+enum class VarType : byte
 {
     BYTE,
     INT,
     STRING,
 };
 
+enum class MessageType : byte
+{
+    VAR,
+    DEBUG,
+};
+
 struct DataHeader
 {
-    byte id;
-    Type varType;
+    MessageType messageType;
+    VarType varType;
     byte size;
     byte *data;
 };
@@ -27,16 +33,16 @@ private:
 public:
     Register() {}
 
-    void addVariable(byte* var, Type varType) {
+    void addVariable(byte* var, VarType varType) {
         if (count < MAX_VARIABLES) {
-            variables[count].id = count;
+            variables[count].messageType = MessageType::VAR;
             variables[count].varType = varType;
             variables[count].data = var;
             switch (varType) {
-                case Type::BYTE:
+                case VarType::BYTE:
                     variables[count].size = sizeof(byte);
                     break;
-                case Type::INT:
+                case VarType::INT:
                     variables[count].size = sizeof(int);
                     break;
             }
@@ -46,8 +52,8 @@ public:
 
     void addVariable(String* string){
         if (count < MAX_VARIABLES) {
-            variables[count].id = count;
-            variables[count].varType = Type::STRING;
+            variables[count].messageType = MessageType::VAR;
+            variables[count].varType = VarType::STRING;
             variables[count].data = (byte*)string;
             variables[count].size = string->length() + 1;
             Serial.println(variables[count].size);
@@ -57,7 +63,7 @@ public:
 
 
     void updateStringLength(int index, String* string) {
-        if (index >= 0 && index < count && variables[index].varType == Type::STRING) {
+        if (index >= 0 && index < count && variables[index].varType == VarType::STRING) {
             variables[index].size = string->length() + 1;
         }
     }
@@ -98,7 +104,7 @@ class SerialManager{
             return Serial;
         }
 
-        void addVariableToSend(byte* var, Type varType) {
+        void addVariableToSend(byte* var, VarType varType) {
             internalRegister.addVariable(var, varType);
         }
 
@@ -117,10 +123,10 @@ class SerialManager{
                 DataHeader* header = internalRegister.getHeader(i);
 
 
-                Serial.write((byte*)&header->id, sizeof(header->id));
+                Serial.write((byte*)&header->messageType, sizeof(header->messageType));
                 Serial.write((byte*)&header->varType, sizeof(header->varType));
 
-                if (header->varType == Type::STRING) {
+                if (header->varType == VarType::STRING) {
                      internalRegister.updateStringLength(i, (String*)header->data);
                     Serial.write((byte*)&header->size, sizeof(header->size));
                     String* string = (String*)header->data;

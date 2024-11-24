@@ -19,8 +19,8 @@ SerialManager serialManager(9600);
 
 void setup() {
    serialManager.init();
-  serialManager.addVariableToSend((byte*)&i, Type::INT);
-  serialManager.addVariableToSend((byte*)&i2, Type::INT);
+  serialManager.addVariableToSend((byte*)&i, VarType::INT);
+  serialManager.addVariableToSend((byte*)&i2, VarType::INT);
   serialManager.addVariableToSend(&s);
   pinMode(2, OUTPUT);
    //Serial.begin(9600);
