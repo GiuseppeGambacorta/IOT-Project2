@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "task/api/Pir.h"
+#include "../api/Pir.h"
 
 #define CALIBRATION_TIME 10
 
