@@ -53,7 +53,7 @@ class ArduinoReader:
                     return None
                 print(data[0].data)
                 print(data[1].data)
-               # print(data[2].data)
+                print(data[2].data)
                 return data[0]
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")

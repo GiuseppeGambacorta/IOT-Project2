@@ -19,7 +19,7 @@ void setup() {
    serialManager.init();
   serialManager.addVariableToSend((byte*)&i, Type::INT);
   serialManager.addVariableToSend((byte*)&i2, Type::INT);
-  //serialManager.addVariableToSend(&s);
+  serialManager.addVariableToSend(&s);
    //Serial.begin(9600);
 }
 
@@ -39,7 +39,7 @@ void loop() {
 
     i+=5;
 
-    if (i > 600) {
+    if (i > 700) {
         s = "ciao bello";
     }
 
