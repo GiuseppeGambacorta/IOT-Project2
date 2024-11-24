@@ -15,10 +15,6 @@ ManagerTask::ManagerTask(AnalogInput levelDetector,
 
 void ManagerTask::tick() {
 
-    levelDetector.update();
-    tempSensor.update();
-    userDetector.update();
-
     int level = levelDetector.getValue();
     int temp = tempSensor.getValue();
     bool user = userDetector.isActive();
