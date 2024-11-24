@@ -39,4 +39,8 @@ void loop() {
 
     i+=5;
 
+    if (i > 600) {
+        s = "ciao bello";
+    }
+
 }

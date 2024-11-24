@@ -48,7 +48,7 @@ public:
         if (count < MAX_VARIABLES) {
             variables[count].id = count;
             variables[count].varType = Type::STRING;
-            variables[count].data = (byte*)string->c_str();
+            variables[count].data = (byte*)string;
             variables[count].size = string->length() + 1;
             Serial.println(variables[count].size);
             count++;
@@ -112,14 +112,20 @@ class SerialManager{
             for (int i = 0; i < internalRegister.getCount(); i++) {
                 DataHeader* header = internalRegister.getHeader(i);
 
-                if (header->varType == Type::STRING) {
-                   // internalRegister.updateStringLength(i, (String*)header->data);
-                }
 
                 Serial.write((byte*)&header->id, sizeof(header->id));
                 Serial.write((byte*)&header->varType, sizeof(header->varType));
-                Serial.write((byte*)&header->size, sizeof(header->size));
-                Serial.write(header->data, header->size); // for now we assume that the data are only integers
+
+                if (header->varType == Type::STRING) {
+                     internalRegister.updateStringLength(i, (String*)header->data);
+                    Serial.write((byte*)&header->size, sizeof(header->size));
+                    String* string = (String*)header->data;
+                    Serial.write(string->c_str(), header->size);
+                } else {
+
+                    Serial.write((byte*)&header->size, sizeof(header->size));
+                    Serial.write(header->data, header->size); 
+                }
             }
             Serial.flush();
         }
