@@ -69,10 +69,15 @@ class RealTimePlotApp(ctk.CTk):
     def update_data(self):
         while self.is_running:
             try:
-                message = self.arduino.read_data()
-                if message is None or message.message_type != 0:
+                result = self.arduino.read_data()
+
+                if result is None:
                     continue
 
+                var, debug, event = result
+
+
+                message = var[0]
 
                 # Aggiungi un nuovo punto ai dati
                 self.x_data.append(time.time())
@@ -87,9 +92,9 @@ class RealTimePlotApp(ctk.CTk):
                 self.after(0, self.safe_update)
                 
                 time.sleep(1)
+
             except RuntimeError:
-                # Gestisce l'errore se l'applicazione viene chiusa
-                ciao = True
+                pass
                 
     
     def safe_update(self):

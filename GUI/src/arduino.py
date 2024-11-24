@@ -123,7 +123,7 @@ class ArduinoReader:
                     for reading in self.events:
                         print(reading.data)
             
-                return self.variables[0]
+                return self.variables.copy(), self.debugs.copy(), self.events.copy()
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
                     return None
