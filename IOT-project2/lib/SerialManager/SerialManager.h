@@ -45,8 +45,15 @@ public:
             headers[count].type = MessageType::DATA;
             headers[count].id = count;
             headers[count].varType = varType;
-            headers[count].size = sizeof(int);
             headers[count].data = var;
+            switch (varType) {
+                case Type::BYTE:
+                    headers[count].size = sizeof(byte);
+                    break;
+                case Type::INT:
+                    headers[count].size = sizeof(int);
+                    break;
+            }
             count++;
         }
     }

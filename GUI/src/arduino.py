@@ -42,19 +42,26 @@ class ArduinoReader:
 
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
+            data = []
             try:
-                type_data = self.serial_connection.read(1)
-                if not type_data:
-                    return None
-                message_type = struct.unpack('B', type_data)[0]
+                for i in range(2):
+                    type_data = self.serial_connection.read(1)
+                    if not type_data:
+                        return None
+                    message_type = struct.unpack('B', type_data)[0]
 
-                if message_type == DatagramType.DATA.value:
-                    return self._read_data()
-                elif message_type == DatagramType.MESSAGE.value:
-                    return self._read_message()
+                    if message_type == DatagramType.DATA.value:
+                        data.append(self._read_data())
+                    elif message_type == DatagramType.MESSAGE.value:
+                        return self._read_message()
+                if data == []:
+                    return None
+                print(data[0].data)
+                print(data[1].data)
+                return data[0]
             except serial.SerialException as e:
-                print(f"Errore di lettura: {e}")
-                return None
+                    print(f"Errore di lettura: {e}")
+                    return None
         else:
             print("Connessione seriale non aperta.")
             return None

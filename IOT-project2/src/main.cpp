@@ -16,6 +16,7 @@ SerialManager serialManager(9600);
 void setup() {
     serialManager.init();
     serialManager.addVariableToSend((byte*)&i, Type::INT);
+    serialManager.addVariableToSend((byte*)&i2, Type::INT);
     
 }
 
