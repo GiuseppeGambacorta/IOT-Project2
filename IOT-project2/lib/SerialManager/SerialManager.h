@@ -99,6 +99,8 @@ class SerialManager{
         }
 
         void sendData() {
+            byte numberOfVariables = internalRegister.getCount();
+            Serial.write((byte*)&numberOfVariables, sizeof(numberOfVariables));
             for (int i = 0; i < internalRegister.getCount(); i++) {
                 DataHeader* header = internalRegister.getHeader(i);
                 Serial.write((byte*)&header->type, sizeof(header->type));

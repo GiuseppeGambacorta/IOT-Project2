@@ -43,8 +43,14 @@ class ArduinoReader:
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
             data = []
+
             try:
-                for i in range(2):
+                number_of_messages = self.serial_connection.read(1)
+                if not number_of_messages:
+                    return None
+                number_of_messages = struct.unpack('B', number_of_messages)[0]
+
+                for i in range(number_of_messages):
                     type_data = self.serial_connection.read(1)
                     if not type_data:
                         return None
