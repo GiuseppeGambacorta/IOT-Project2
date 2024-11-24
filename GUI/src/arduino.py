@@ -29,7 +29,9 @@ class ArduinoReader:
         self.timeout = timeout
         self.serial_connection = None
 
-        self.data = []
+        self.variables = []
+        self.debugs = []
+        self.events = []
 
     def connect(self):
         try:
@@ -59,12 +61,16 @@ class ArduinoReader:
 
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
-            self.data.clear()
+            self.variables.clear()
+            self.debugs.clear()
+            self.events.clear()
+
             try:
 
                 starthead = self.serial_connection.read(1)
                 if not starthead:
                     return None
+                
                 starthead = struct.unpack('B', starthead)[0]
                 print(f'header {starthead}')
                 if starthead != 255:
@@ -86,17 +92,38 @@ class ArduinoReader:
                 number_of_messages = struct.unpack('B', number_of_messages)[0]
                 print(f'lunghezza messaggi {number_of_messages}')
                 for i in range(number_of_messages):
-                    self.data.append(self._read_data())
+                    temp_message = self._read_data()
+                    if temp_message is None:
+                        print("Errore di lettura.")
+                        return None
+                    if temp_message.message_type == MessageType.VAR.value:
+                        self.variables.append(temp_message)
+                    elif temp_message.message_type == MessageType.DEBUG.value:
+                        self.debugs.append(temp_message)
+                    elif temp_message.message_type == MessageType.EVENT.value:
+                        self.events.append(temp_message)
                 
                 self.serial_connection.reset_input_buffer()
-                if self.data == [] or None in self.data:
+                if self.variables == [] or None in self.variables:
                     print("Errore di lettura.")
                     return None
+                
+                if len(self.variables) > 0:
+                    print("Variabili lette:")
+                    for reading in self.variables:
+                        print(reading.data)
 
-                for reading in self.data:
-                    print(reading.data)
+                if len(self.debugs) > 0:
+                    print("Debug letti:")
+                    for reading in self.debugs:
+                        print(reading.data)
+                
+                if len(self.events) > 0:
+                    print("Eventi letti:")
+                    for reading in self.events:
+                        print(reading.data)
             
-                return self.data[0]
+                return self.variables[0]
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
                     return None
