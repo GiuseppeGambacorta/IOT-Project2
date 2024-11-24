@@ -10,7 +10,7 @@ Sonar::Sonar(int triggerPin, int echoPin) {
     echo = new DigitalInput(echoPin, 1000);
 }
 
-float Sonar::readDistance() {
+void Sonar::update() {
     // Send pulse
     trigger->turnOn();
     trigger->update();
@@ -21,10 +21,13 @@ float Sonar::readDistance() {
     trigger->turnOn();
     trigger->update();
     // Read pulse
-    long tUS = pulseInLong(echoPin, HIGH);
+    long tUS = pulseInLong(this->echoPin, HIGH);
     double t = tUS / 1000.0 / 1000.0 / 2;
-    level = t*vs;
-    return level;
+    this->level = t * vs;
+}
+
+float Sonar::readDistance() {
+    return this->level;
 }
 
 bool Sonar::isThresholdLower() {
