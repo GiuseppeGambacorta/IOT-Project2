@@ -2,27 +2,17 @@ import serial
 import struct
 from enum import Enum
 
-class DatagramType(Enum):
-    DATA = 0
-    MESSAGE = 1
-
 class VarType(Enum):
     INT = 1
     # Aggiungi altri tipi di variabili se necessario
 
 class DataHeader:
     def __init__(self, id, var_type, size, data):
-        self.type = DatagramType.DATA.value
         self.id = id
         self.var_type = var_type
         self.size = size
         self.data = data
 
-class MessageHeader:
-    def __init__(self, length, data):
-        self.type = DatagramType.MESSAGE.value
-        self.length = length
-        self.data = data
 
 class ArduinoReader:
     def __init__(self, port, baudrate=9600, timeout=1):
@@ -51,15 +41,8 @@ class ArduinoReader:
                 number_of_messages = struct.unpack('B', number_of_messages)[0]
 
                 for i in range(number_of_messages):
-                    type_data = self.serial_connection.read(1)
-                    if not type_data:
-                        return None
-                    message_type = struct.unpack('B', type_data)[0]
-
-                    if message_type == DatagramType.DATA.value:
-                        data.append(self._read_data())
-                    elif message_type == DatagramType.MESSAGE.value:
-                        return self._read_message()
+                    data.append(self._read_data())
+                  
                 if data == []:
                     return None
                 print(data[0].data)
@@ -100,18 +83,7 @@ class ArduinoReader:
         
         return None
 
-    def _read_message(self):
-        length_data = self.serial_connection.read(1)
-        if not length_data:
-            return None
-        length = struct.unpack('B', length_data)[0]
-
-        data = self.serial_connection.read(length)
-        if not data:
-            return None
-
-        return MessageHeader(length, data)
-
+  
     def close(self):
         if self.serial_connection and self.serial_connection.is_open:
             self.serial_connection.close()
@@ -125,14 +97,10 @@ if __name__ == "__main__":
         while True:
             message = arduino.read_data()
             if message:
-                print(f"Tipo di messaggio: {message.type}")
-                if isinstance(message, DataHeader):
-                    print(f"ID del messaggio: {message.id}")
-                    print(f"Tipo di variabile: {message.var_type}")
-                    print(f"Dati ricevuti: {message.data}")
-                elif isinstance(message, MessageHeader):
-                    print(f"Lunghezza del messaggio: {message.length}")
-                    print(f"Dati ricevuti: {message.data}")
+                print(f"ID del messaggio: {message.id}")
+                print(f"Tipo di variabile: {message.var_type}")
+                print(f"Dimensione del messaggio: {message.size}")
+                print(f"Dati ricevuti: {message.data}")
     except KeyboardInterrupt:
         print("Interruzione da tastiera rilevata. Chiudo la connessione...")
     finally:

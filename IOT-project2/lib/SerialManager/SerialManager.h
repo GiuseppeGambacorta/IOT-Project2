@@ -2,12 +2,6 @@
 
 #include <Arduino.h>
 
-enum class MessageType : byte
-{
-    DATA,
-    MESSAGE
-};
-
 enum class Type : byte
 {
     BYTE,
@@ -16,17 +10,9 @@ enum class Type : byte
 
 struct DataHeader
 {
-    MessageType type = MessageType::DATA;
     byte id;
     Type varType;
     byte size;
-    byte *data;
-};
-
-struct MessageHeader
-{
-    MessageType type = MessageType::MESSAGE;
-    byte length;
     byte *data;
 };
 
@@ -42,7 +28,6 @@ public:
 
     void addVariable(byte* var, Type varType) {
         if (count < MAX_VARIABLES) {
-            headers[count].type = MessageType::DATA;
             headers[count].id = count;
             headers[count].varType = varType;
             headers[count].data = var;
@@ -103,7 +88,6 @@ class SerialManager{
             Serial.write((byte*)&numberOfVariables, sizeof(numberOfVariables));
             for (int i = 0; i < internalRegister.getCount(); i++) {
                 DataHeader* header = internalRegister.getHeader(i);
-                Serial.write((byte*)&header->type, sizeof(header->type));
                 Serial.write((byte*)&header->id, sizeof(header->id));
                 Serial.write((byte*)&header->varType, sizeof(header->varType));
                 Serial.write((byte*)&header->size, sizeof(header->size));
