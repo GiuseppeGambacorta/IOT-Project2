@@ -16,37 +16,23 @@ private:
     Pir& userDetector;
     Sonar& levelDetector;
     TemperatureSensor& tempSensor;
-    Door& door;
-    LiquidCrystal_I2C& display;
     DigitalInput& openButton;
     DigitalInput& closeButton;
-    DigitalOutput& ledGreen;
-    DigitalOutput& ledRed;
 
 public:
     InputTask(Pir& userDetector, 
               Sonar& levelDetector, 
-              TemperatureSensor& tempSensor, 
-              Door& door, 
-              LiquidCrystal_I2C& display, 
+              TemperatureSensor& tempSensor,  
               DigitalInput& openButton, 
-              DigitalInput& closeButton, 
-              DigitalOutput& ledGreen, 
-              DigitalOutput& ledRed)
+              DigitalInput& closeButton) 
         : userDetector(userDetector), 
           levelDetector(levelDetector), 
           tempSensor(tempSensor), 
-          door(door), 
-          display(display), 
           openButton(openButton), 
-          closeButton(closeButton), 
-          ledGreen(ledGreen), 
-          ledRed(ledRed) {
+          closeButton(closeButton){
             this->type = IN;
           }
-
     void tick() override {}
-
     void reset() override {}
 };
 
