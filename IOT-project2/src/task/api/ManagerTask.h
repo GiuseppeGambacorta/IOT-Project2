@@ -5,9 +5,9 @@
 #include "ArduinoStandardLibrary.h"
 #include "task/TasksType.h"
 
-#include "task/api/Pir.h"
-#include "task/api/Sonar.h"
-#include "task/api/TemperatureSensor.h"
+#include "Components/Pir/Api/Pir.h"
+#include "Components/Sonar/Api/Sonar.h"
+#include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 
 #define MAX_TASKS 10 //da rendere globale
 

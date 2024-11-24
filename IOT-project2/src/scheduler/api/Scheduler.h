@@ -2,15 +2,14 @@
 #define __SCHEDULER__
 
 #include "ArduinoStandardLibrary.h"
-#include "task/api/Pir.h"
-#include "task/api/Sonar.h"
-#include "task/api/TemperatureSensor.h"
+#include "Components/Pir/Api/Pir.h"
+#include "Components/Sonar/Api/Sonar.h"
+#include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
 #include <Servo.h>
 #include <LiquidCrystal_I2C.h>
 
 #include "task/api/Task.h"
-#include "task/api/ManagerTask.h"
 
 #define MAX_TASKS 10
 
