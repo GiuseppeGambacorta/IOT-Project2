@@ -2,15 +2,21 @@ import serial
 import struct
 from enum import Enum
 
+
+class MessageType(Enum):
+    VAR = 0
+    DEBUG = 1
+    EVENT = 2
+
 class VarType(Enum):
     BYTE = 0
     INT = 1
     STRING = 2
-    # Aggiungi altri tipi di variabili se necessario
+    
 
 class DataHeader:
-    def __init__(self, id, var_type, size, data):
-        self.id = id
+    def __init__(self, message_type, var_type, size, data):
+        self.message_type = message_type
         self.var_type = var_type
         self.size = size
         self.data = data
@@ -27,7 +33,7 @@ class ArduinoReader:
 
     def connect(self):
         try:
-            # Configura la connessione seriale
+           
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
             print(f"Connesso ad Arduino su {self.port} a {self.baudrate} baud.")
             self.serial_connection.reset_input_buffer()
@@ -101,10 +107,10 @@ class ArduinoReader:
     def _read_data(self):
 
 
-        id_data = self.serial_connection.read(1)
-        if not id_data:
+        message_type = self.serial_connection.read(1)
+        if not message_type:
             return None
-        id = struct.unpack('B', id_data)[0]
+        message_type = struct.unpack('B', message_type)[0]
 
         var_type_data = self.serial_connection.read(1)
         if not var_type_data:
@@ -123,14 +129,14 @@ class ArduinoReader:
             if not data:
                 return None
             value = struct.unpack('h', data)[0]
-            return DataHeader(id, var_type, data, value)
+            return DataHeader(message_type, var_type, data, value)
         
         if var_type == VarType.STRING.value:
             data = self.serial_connection.read(size)
             if not data:
                 return None
             value = data.decode('utf-8')
-            return DataHeader(id, var_type, data, value)
+            return DataHeader(message_type, var_type, data, value)
         
         return None
 
