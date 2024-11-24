@@ -2,7 +2,7 @@
 #define __TEMPERATURECHECK__
 
 #include "Task.h"
-#include "TemperatureSensor.h"
+#include "../../Components/TemperatureSensor/api/TemperatureSensor.h"
 
 class TemperatureCheckTask : public Task {
   TemperatureSensor& tempSensor;

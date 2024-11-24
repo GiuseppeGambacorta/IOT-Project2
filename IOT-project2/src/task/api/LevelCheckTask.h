@@ -2,7 +2,7 @@
 #define __LEVELCHECKTASK__
 
 #include "Task.h"
-#include "Sonar.h"
+#include "../../Components/Sonar/api/Sonar.h"
 
 class LevelCheckTask : public Task {
   Sonar& sonar;
