@@ -19,6 +19,7 @@ struct DataHeader
     MessageType type = MessageType::DATA;
     byte id;
     Type varType;
+    byte size;
     byte *data;
 };
 
@@ -44,6 +45,7 @@ public:
             headers[count].type = MessageType::DATA;
             headers[count].id = count;
             headers[count].varType = varType;
+            headers[count].size = sizeof(int);
             headers[count].data = var;
             count++;
         }
@@ -95,7 +97,8 @@ class SerialManager{
                 Serial.write((byte*)&header->type, sizeof(header->type));
                 Serial.write((byte*)&header->id, sizeof(header->id));
                 Serial.write((byte*)&header->varType, sizeof(header->varType));
-                Serial.write(header->data, sizeof(int)); // for now we assume that the data are only integers
+                Serial.write((byte*)&header->size, sizeof(header->size));
+                Serial.write(header->data, header->size); // for now we assume that the data are only integers
             }
             Serial.flush();
         }
