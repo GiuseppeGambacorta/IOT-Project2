@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import time
 import threading
 from components.button_frame import ButtonFrame
+from components.double_plot import create_real_time_plots
 from arduino import ArduinoReader
 import tkinter as tk
 
@@ -31,7 +32,7 @@ class RealTimePlotApp(ctk.CTk):
         self.frame.pack(fill="both", expand=True, padx=20, pady=20)
         
         # Crea i grafici matplotlib (due grafici affiancati)
-        self.fig, (self.ax1, self.ax2) = self.create_real_time_plots()
+        self.fig, (self.ax1, self.ax2) = create_real_time_plots()
 
         # Crea il canvas per i grafici
         self.canvas = FigureCanvasTkAgg(self.fig, master=self.frame)
@@ -72,17 +73,6 @@ class RealTimePlotApp(ctk.CTk):
         # Gestione della chiusura della finestra
         self.protocol("WM_DELETE_WINDOW", self.on_close)
     
-    def create_real_time_plots(self):
-        fig, (ax1, ax2) = plt.subplots(figsize=(12, 6), ncols=2)
-        ax1.set_title("Temperature")
-        ax1.set_xlabel("Time")
-        ax1.set_ylabel("Value")
-
-        ax2.set_title("Temperature")
-        ax2.set_xlabel("Time")
-        ax2.set_ylabel("Value")
-
-        return fig, (ax1, ax2)
     
     def update_graph(self):
         self.ax1.clear()
