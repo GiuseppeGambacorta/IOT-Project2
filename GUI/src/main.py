@@ -61,6 +61,8 @@ class RealTimePlotApp(ctk.CTk):
         self.x2_data = []
         self.y2_data = []
 
+        self.data_to_read = {"temperature": 0, "level": 1}
+        self.data_to_write = {"restore": 0, "empty": 1}
 
         self.var = []
         self.debug = []
@@ -75,7 +77,6 @@ class RealTimePlotApp(ctk.CTk):
         self.update_thread.daemon = True
         self.update_thread.start()
         
-        # Gestione della chiusura della finestra
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         
     def update_data(self):
@@ -91,16 +92,16 @@ class RealTimePlotApp(ctk.CTk):
                     self.var, self.debug, self.event = result
 
                     for var in self.var:
-                        if var.id == 0:
+                        if var.id == self.data_to_read["temperature"]:
                             temperature = var
 
                     if temperature is None:
                         continue
 
-
                     for var in self.var:
-                        if var.id == 1:
+                        if var.id == self.data_to_read["level"]:
                             level = var
+
                     if level is None:
                         continue
 
@@ -122,7 +123,7 @@ class RealTimePlotApp(ctk.CTk):
                         self.x2_data = self.x2_data[-50:]
                         self.y2_data = self.y2_data[-50:]
                     
-                    # Aggiorna il grafico usando after() per thread safety
+                    # Aggiorna la gui in modo sicuro dal thread principale
                     self.after(0, self.safe_update)
                     
                     time.sleep(1)
@@ -130,8 +131,18 @@ class RealTimePlotApp(ctk.CTk):
                     self.arduino.connect()
             except RuntimeError:
                 pass
+    
+    def safe_update(self):
+        if self.is_running:
+            self.update_graph()
 
-            
+            for debug_message in self.debug:
+                self.update_debug_text(f"DEBUG: {debug_message.data}")
+
+            for event_message in self.event:
+                self.update_event_text(f"EVENT: {event_message.data}")
+
+
     def update_graph(self):
         self.ax1.clear()
         self.ax1.plot(self.x_data, self.y_data, label="Data", color="blue")
@@ -147,16 +158,6 @@ class RealTimePlotApp(ctk.CTk):
         self.ax2.set_ylabel("Value")
         self.ax2.legend()
         self.canvas.draw()
-    
-    def safe_update(self):
-        if self.is_running:
-            self.update_graph()
-
-            for debug_message in self.debug:
-                self.update_debug_text(f"DEBUG: {debug_message.data}")
-
-            for event_message in self.event:
-                self.update_event_text(f"EVENT: {event_message.data}")
 
     def update_debug_text(self, text):
         self.text_debug.insert(tk.END, text + "\n")
@@ -173,6 +174,17 @@ class RealTimePlotApp(ctk.CTk):
         if len(lines) > max_lines:
             text_widget.delete(1.0, f"{len(lines) - max_lines + 1}.0")
     
+
+    def restore(self):
+        if self.arduino.is_connected():
+            self.arduino.write_data(1,self.data_to_write["restore"])
+        
+
+    def empty(self):
+        if self.arduino.is_connected():
+            self.arduino.write_data(1,self.data_to_write["empty"])
+
+
     def start_plotting(self):
         self.is_running = True
         if not self.update_thread.is_alive():
@@ -185,16 +197,6 @@ class RealTimePlotApp(ctk.CTk):
         self.update_thread.join(timeout=1.0)
         self.x_data.clear()
         self.y_data.clear()
-
-    def restore(self):
-        if self.arduino.is_connected():
-            
-            self.arduino.write_data(75,0)
-        
-
-    def empty(self):
-        # Implementa la logica per il pulsante Empty
-        pass
 
 
     

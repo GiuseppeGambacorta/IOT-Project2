@@ -34,6 +34,7 @@ class ArduinoReader:
         self.debugs = []
         self.events = []
 
+    # Connect to the Arduino, check for handshake and wait for the connection
     def connect(self):
         try:
            
@@ -43,11 +44,11 @@ class ArduinoReader:
             self.serial_connection.reset_output_buffer()
 
             response = None
-            while response != 10:  # Aspetto il byte 0x0A (10 in decimale)
+            while response != 10: 
                 print("Aspetto che Arduino si connetta...")
                 value_to_send = 255
                 self.serial_connection.write(value_to_send.to_bytes(1, 'big'))
-                response = self.serial_connection.read(1)  # Leggo un byte
+                response = self.serial_connection.read(1)  
                 if not response:
                     continue
                 response = struct.unpack('B', response)[0]
@@ -57,6 +58,7 @@ class ArduinoReader:
         except Exception as e:
             print(f"Errore nella connessione: {e}")
 
+    # Check for handshake and after for the number of messages that are coming
     def read_communication_data(self):
             starthead = self.serial_connection.read(1)
             if not starthead:
@@ -83,7 +85,7 @@ class ArduinoReader:
             return number_of_messages
             
 
-
+    # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
     def read_data(self):
         if self.serial_connection and self.serial_connection.is_open:
             self.variables.clear()
@@ -111,22 +113,6 @@ class ArduinoReader:
                 
                 self.serial_connection.reset_input_buffer()
 
-                '''
-                if len(self.variables) > 0:
-                    print("Variabili lette:")
-                    for reading in self.variables:
-                        print(reading.data)
-
-                if len(self.debugs) > 0:
-                    print("Debug letti:")
-                    for reading in self.debugs:
-                        print(reading.data)
-                
-                if len(self.events) > 0:
-                    print("Eventi letti:")
-                    for reading in self.events:
-                        print(reading.data)
-                '''
                 return self.variables.copy(), self.debugs.copy(), self.events.copy()
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
@@ -134,7 +120,7 @@ class ArduinoReader:
         else:
             print("Connessione seriale non aperta.")
             return None
-
+    # Read a single message from the serial connection
     def read_message(self):
 
 
@@ -163,7 +149,7 @@ class ArduinoReader:
             data = self.serial_connection.read(size)
             if not data:
                 return None
-            value = struct.unpack('h', data)[0]
+            value = struct.unpack('h', data)[0] # h is for short int
             return DataHeader(message_type, var_type, id, data, value)
         
         if var_type == VarType.STRING.value:
@@ -179,13 +165,15 @@ class ArduinoReader:
     def is_connected(self):
         return self.serial_connection and self.serial_connection.is_open
     
-    def write_data(self, value,id):
+    # Write data to the serial connection. before writing the data an handshake is made
+    def write_data(self, value, id):
         if self.serial_connection and self.serial_connection.is_open:
             try:
-
-               
+                #handshake
                 self.serial_connection.write((255).to_bytes(1, 'big'))
                 self.serial_connection.write((0).to_bytes(1, 'big'))
+
+
                 message_type = MessageType.VAR.value.to_bytes(1, 'big')
                 var_type = VarType.INT.value.to_bytes(1, 'big')
                 id = id.to_bytes(1, 'big')
@@ -196,7 +184,6 @@ class ArduinoReader:
                 self.serial_connection.write(id)
                 self.serial_connection.write(size)
                 self.serial_connection.write(value)
-                print("Dato scritto.")
             except serial.SerialException as e:
                 print(f"Errore di scrittura: {e}")
         else:
