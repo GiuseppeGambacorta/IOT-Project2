@@ -61,10 +61,15 @@ class RealTimePlotApp(ctk.CTk):
         self.x2_data = []
         self.y2_data = []
 
+
+        self.var = []
+        self.debug = []
+        self.event = []
+
         self.arduino = ArduinoReader(port='COM3')
         self.arduino.connect()
         
-        # Avvia un thread per simulare l'aggiornamento dei dati
+
         self.is_running = True
         self.update_thread = threading.Thread(target=self.update_data)
         self.update_thread.daemon = True
@@ -72,8 +77,46 @@ class RealTimePlotApp(ctk.CTk):
         
         # Gestione della chiusura della finestra
         self.protocol("WM_DELETE_WINDOW", self.on_close)
-    
-    
+        
+    def update_data(self):
+        while self.is_running:
+            try:
+                result = self.arduino.read_data()
+
+                if result is None:
+                    continue
+
+                self.var, self.debug, self.event = result
+                message = self.var[0]
+
+                # Aggiungi un nuovo punto ai dati
+                self.x_data.append(time.time())
+                self.y_data.append(int(message.data))
+
+
+                message = self.var[1]
+                self.x2_data.append(time.time())
+                self.y2_data.append(int(message.data))
+                
+             
+                # Mantieni solo gli ultimi 50 punti
+                if len(self.x_data) > 50:
+                    self.x_data = self.x_data[-50:]
+                    self.y_data = self.y_data[-50:]
+
+                if len(self.x2_data) > 50:
+                    self.x2_data = self.x2_data[-50:]
+                    self.y2_data = self.y2_data[-50:]
+                
+                # Aggiorna il grafico usando after() per thread safety
+                self.after(0, self.safe_update)
+                
+                time.sleep(1)
+
+            except RuntimeError:
+                pass
+
+            
     def update_graph(self):
         self.ax1.clear()
         self.ax1.plot(self.x_data, self.y_data, label="Data", color="blue")
@@ -88,52 +131,18 @@ class RealTimePlotApp(ctk.CTk):
         self.ax2.set_xlabel("Time")
         self.ax2.set_ylabel("Value")
         self.ax2.legend()
+        self.canvas.draw()
     
-    def update_data(self):
-        while self.is_running:
-            try:
-                result = self.arduino.read_data()
+    def safe_update(self):
+        if self.is_running:
+            self.update_graph()
 
-                if result is None:
-                    continue
+            for debug_message in self.debug:
+                self.update_debug_text(f"DEBUG: {debug_message.data}")
 
-                var, debug, event = result
-                message = var[0]
+            for event_message in self.event:
+                self.update_event_text(f"EVENT: {event_message.data}")
 
-                # Aggiungi un nuovo punto ai dati
-                self.x_data.append(time.time())
-                self.y_data.append(int(message.data))
-
-
-                message = var[1]
-                self.x2_data.append(time.time())
-                self.y2_data.append(int(message.data))
-                
-                # Aggiorna il testo visualizzato
-                for debug_message in debug:
-                    self.update_debug_text(f"DEBUG: {debug_message.data}")
-
-                for event_message in event:
-                    self.update_event_text(f"EVENT: {event_message.data}")
-                
-                # Mantieni solo gli ultimi 50 punti
-                if len(self.x_data) > 50:
-                    self.x_data = self.x_data[-50:]
-                    self.y_data = self.y_data[-50:]
-
-
-                if len(self.x2_data) > 50:
-                    self.x2_data = self.x2_data[-50:]
-                    self.y2_data = self.y2_data[-50:]
-                
-                # Aggiorna il grafico usando after() per thread safety
-                self.after(0, self.safe_update)
-                
-                time.sleep(1)
-
-            except RuntimeError:
-                pass
-    
     def update_debug_text(self, text):
         self.text_debug.insert(tk.END, text + "\n")
         self.text_debug.see(tk.END)
@@ -148,12 +157,6 @@ class RealTimePlotApp(ctk.CTk):
         lines = text_widget.get(1.0, tk.END).splitlines()
         if len(lines) > max_lines:
             text_widget.delete(1.0, f"{len(lines) - max_lines + 1}.0")
-
-    
-    def safe_update(self):
-        if self.is_running:
-            self.update_graph()
-            self.canvas.draw()
     
     def start_plotting(self):
         self.is_running = True
@@ -177,13 +180,8 @@ class RealTimePlotApp(ctk.CTk):
         pass
     
     def on_close(self):
-        # Ferma il thread
         self.is_running = False
-        
-        # Aspetta che il thread termini
         self.update_thread.join(timeout=1.0)
-        
-        # Chiude la finestra e termina l'applicazione
         self.quit()
         self.destroy()
 
