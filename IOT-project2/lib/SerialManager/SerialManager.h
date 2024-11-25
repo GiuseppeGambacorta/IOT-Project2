@@ -378,6 +378,7 @@ public:
         }
     }
 
+    //for now only int are supported
     int* getvar(unsigned int index)
     {
         return internalRegister.getIncomingDataHeader(index);
