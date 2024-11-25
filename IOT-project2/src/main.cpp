@@ -62,6 +62,7 @@ void setup() {
   scheduler.addTask(&stdExecTask);
   
   scheduler.init(calculateOptimalPeriod(scheduler));
+
 }
 
 void loop() {
