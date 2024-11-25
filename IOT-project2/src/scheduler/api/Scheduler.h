@@ -21,6 +21,8 @@ public:
   bool addTask(Task* task);  
   void schedule();
   Task** getTaskList();
+  int getNumTask();
+  Task* getTask(int index);
 };
 
 #endif

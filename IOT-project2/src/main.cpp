@@ -13,6 +13,8 @@
 #include "task/api/ManagerTask.h"
 #include "task/api/StdExecTask.h"
 
+#define SECURITY_MARGIN (maxTime/10)
+
 // Componenti I/O
 Pir userDetector = Pir(9);
 Sonar levelDetector = Sonar(13, 12);
@@ -31,17 +33,35 @@ Scheduler scheduler;
 ManagerTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
 
+unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
+    unsigned long maxTime = 0;
+
+    for (int i = 0; i < scheduler.getNumTask(); i++) {
+        Task* task = scheduler.getTask(i);
+
+        if (task != nullptr) {
+            unsigned long startTime = micros();
+            task->tick(); 
+            unsigned long elapsedTime = micros() - startTime;
+
+            if (elapsedTime > maxTime) {
+                maxTime = elapsedTime;
+            }
+        }
+    }
+    maxTime += SECURITY_MARGIN;
+    return maxTime;
+}
+
+
 void setup() {
   Serial.begin(9600);
-
-  // conto del tempo ottimale per i task
-  
-  scheduler.init(10); //inserire tempo ricavato opportunamente
 
   //inserimento tank in list
   scheduler.addTask(&managerTask);
   scheduler.addTask(&stdExecTask);
-
+  
+  scheduler.init(calculateOptimalPeriod(scheduler));
 }
 
 void loop() {
