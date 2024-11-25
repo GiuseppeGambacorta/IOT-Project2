@@ -7,34 +7,42 @@
 #include "Components/Door/Api/Door.h"
 #include <LiquidCrystal_I2C.h>
 
+#define OPEN_WAITING_TIME 5000
+
 enum StdExecState{
     READY,
-    OPENING,
-    OPEN,
-    CLOSING
+    OPEN
 };
 
 class StdExecTask : public Task {
     
-private:
-    StdExecState state;
+    private:
+        StdExecState state;
 
-    Door door;
-    LiquidCrystal_I2C display;
-    DigitalInput openButton;
-    DigitalInput closeButton;
-    DigitalOutput ledGreen;
-    DigitalOutput ledRed;
+        Timer timer;
 
-public:
-    StdExecTask(Door door,
-                LiquidCrystal_I2C display,
-                DigitalInput openButton,
-                DigitalInput closeButton,
-                DigitalOutput ledGreen,
-                DigitalOutput ledRed);
-    void tick();
-    void reset();
+        Door door;
+        LiquidCrystal_I2C display;
+        DigitalInput openButton;
+        DigitalInput closeButton;
+        DigitalOutput ledGreen;
+        DigitalOutput ledRed;
+
+        void homingReady();
+        void homingOpen();
+
+        void execReady();
+        void execOpen();
+
+    public:
+        StdExecTask(Door& door,
+                    LiquidCrystal_I2C& display,
+                    DigitalInput& openButton,
+                    DigitalInput& closeButton,
+                    DigitalOutput& ledGreen,
+                    DigitalOutput& ledRed);
+        void tick();
+        void reset();
 };
 
 #endif 
