@@ -20,6 +20,7 @@ struct DataHeader
 {
     MessageType messageType;
     VarType varType;
+    byte id;
     byte size;
     byte *data;
 };
@@ -47,6 +48,7 @@ public:
         {
             variables[variablesCount].messageType = MessageType::VAR;
             variables[variablesCount].varType = varType;
+            variables[variablesCount].id = variablesCount;
             variables[variablesCount].data = var;
             switch (varType)
             {
@@ -67,6 +69,7 @@ public:
         {
             variables[variablesCount].messageType = MessageType::VAR;
             variables[variablesCount].varType = VarType::STRING;
+            variables[variablesCount].id = variablesCount;
             variables[variablesCount].data = (byte *)string;
             variables[variablesCount].size = string->length() + 1;
             Serial.println(variables[variablesCount].size);
@@ -89,6 +92,7 @@ public:
         {
             debugMessage[debugCount].messageType = MessageType::DEBUG;
             debugMessage[debugCount].varType = VarType::STRING;
+            debugMessage[debugCount].id = 0;
             debugMessage[debugCount].data = (byte *)message;
             debugMessage[debugCount].size = strlen(message) + 1;
             debugCount++;
@@ -110,6 +114,7 @@ public:
         {
             eventMessage[eventCount].messageType = MessageType::EVENT;
             eventMessage[eventCount].varType = VarType::STRING;
+            eventMessage[eventCount].id = 0;
             eventMessage[eventCount].data = (byte *)message;
             eventMessage[eventCount].size = strlen(message) + 1;
             eventCount++;
@@ -213,6 +218,7 @@ private:
 
                 Serial.write((byte *)&header->messageType, sizeof(header->messageType));
                 Serial.write((byte *)&header->varType, sizeof(header->varType));
+                Serial.write((byte *)&header->id, sizeof(header->id));
 
                 if (header->varType == VarType::STRING)
                 {
@@ -239,6 +245,7 @@ private:
 
             Serial.write((byte *)&header->messageType, sizeof(header->messageType));
             Serial.write((byte *)&header->varType, sizeof(header->varType));
+            Serial.write((byte *)&header->id, sizeof(header->id));
             Serial.write((byte *)&header->size, sizeof(header->size));
             Serial.write(header->data, header->size);
         }
@@ -252,6 +259,7 @@ private:
 
             Serial.write((byte *)&header->messageType, sizeof(header->messageType));
             Serial.write((byte *)&header->varType, sizeof(header->varType));
+            Serial.write((byte *)&header->id, sizeof(header->id));
             Serial.write((byte *)&header->size, sizeof(header->size));
             Serial.write(header->data, header->size);
         }

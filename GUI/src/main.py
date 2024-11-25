@@ -89,16 +89,28 @@ class RealTimePlotApp(ctk.CTk):
                         continue
 
                     self.var, self.debug, self.event = result
-                    message = self.var[0]
+
+                    for var in self.var:
+                        if var.id == 0:
+                            temperature = var
+
+                    if temperature is None:
+                        continue
+
+
+                    for var in self.var:
+                        if var.id == 1:
+                            level = var
+                    if level is None:
+                        continue
 
                     # Aggiungi un nuovo punto ai dati
                     self.x_data.append(time.time())
-                    self.y_data.append(int(message.data))
+                    self.y_data.append(int(temperature.data))
 
 
-                    message = self.var[1]
                     self.x2_data.append(time.time())
-                    self.y2_data.append(int(message.data))
+                    self.y2_data.append(int(level.data))
                     
                 
                     # Mantieni solo gli ultimi 50 punti
@@ -177,7 +189,7 @@ class RealTimePlotApp(ctk.CTk):
     def restore(self):
         if self.arduino.is_connected():
             
-            self.arduino.write_data(43)
+            self.arduino.write_data(75)
         
 
     def empty(self):

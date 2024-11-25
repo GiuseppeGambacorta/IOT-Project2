@@ -15,9 +15,10 @@ class VarType(Enum):
     
 
 class DataHeader:
-    def __init__(self, message_type, var_type, size, data):
+    def __init__(self, message_type, var_type, id, size, data):
         self.message_type = message_type
         self.var_type = var_type
+        self.id = id
         self.size = size
         self.data = data
 
@@ -62,7 +63,6 @@ class ArduinoReader:
                 return None
             
             starthead = struct.unpack('B', starthead)[0]
-            print(f'header {starthead}')
             if starthead != 255:
                 print("Errore di sincronizzazione.")
                 return None
@@ -111,7 +111,7 @@ class ArduinoReader:
                 
                 self.serial_connection.reset_input_buffer()
 
-                
+                '''
                 if len(self.variables) > 0:
                     print("Variabili lette:")
                     for reading in self.variables:
@@ -126,7 +126,7 @@ class ArduinoReader:
                     print("Eventi letti:")
                     for reading in self.events:
                         print(reading.data)
-            
+                '''
                 return self.variables.copy(), self.debugs.copy(), self.events.copy()
             except serial.SerialException as e:
                     print(f"Errore di lettura: {e}")
@@ -148,6 +148,11 @@ class ArduinoReader:
             return None
         var_type = struct.unpack('B', var_type_data)[0]
 
+        id = self.serial_connection.read(1)
+        if not id:
+            return None
+        id = struct.unpack('B', id)[0]
+
         size = self.serial_connection.read(1)
         if not size:
             return None
@@ -159,14 +164,14 @@ class ArduinoReader:
             if not data:
                 return None
             value = struct.unpack('h', data)[0]
-            return DataHeader(message_type, var_type, data, value)
+            return DataHeader(message_type, var_type, id, data, value)
         
         if var_type == VarType.STRING.value:
             data = self.serial_connection.read(size)
             if not data:
                 return None
             value = data.decode('utf-8')
-            return DataHeader(message_type, var_type, data, value)
+            return DataHeader(message_type, var_type, id, data, value)
         
         return None
     
