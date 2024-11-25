@@ -33,8 +33,15 @@ StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed
 
 void setup() {
   Serial.begin(9600);
+
   // conto del tempo ottimale per i task
+  
   scheduler.init(10); //inserire tempo ricavato opportunamente
+
+  //inserimento tank in list
+  scheduler.addTask(&managerTask);
+  scheduler.addTask(&stdExecTask);
+
 }
 
 void loop() {
