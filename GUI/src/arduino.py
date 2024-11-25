@@ -41,7 +41,6 @@ class ArduinoReader:
             self.serial_connection.reset_input_buffer()
             self.serial_connection.reset_output_buffer()
 
-        
             response = None
             while response != 10:  # Aspetto il byte 0x0A (10 in decimale)
                 print("Aspetto che Arduino si connetta...")
@@ -57,6 +56,32 @@ class ArduinoReader:
         except Exception as e:
             print(f"Errore nella connessione: {e}")
 
+    def read_communication_data(self):
+            starthead = self.serial_connection.read(1)
+            if not starthead:
+                return None
+            
+            starthead = struct.unpack('B', starthead)[0]
+            print(f'header {starthead}')
+            if starthead != 255:
+                print("Errore di sincronizzazione.")
+                return None
+            
+            starthead = self.serial_connection.read(1)
+            if not starthead:
+                return None
+            starthead = struct.unpack('B', starthead)[0]
+            if starthead != 0:
+                print("Errore di sincronizzazione.")
+                return None
+
+            number_of_messages = self.serial_connection.read(1)
+        
+            if not number_of_messages:
+                return None
+            number_of_messages = struct.unpack('B', number_of_messages)[0]
+            return number_of_messages
+            
 
 
     def read_data(self):
@@ -67,32 +92,13 @@ class ArduinoReader:
 
             try:
 
-                starthead = self.serial_connection.read(1)
-                if not starthead:
-                    return None
-                
-                starthead = struct.unpack('B', starthead)[0]
-                print(f'header {starthead}')
-                if starthead != 255:
-                    print("Errore di sincronizzazione.")
-                    return None
-                
-                starthead = self.serial_connection.read(1)
-                if not starthead:
-                    return None
-                starthead = struct.unpack('B', starthead)[0]
-                if starthead != 0:
-                    print("Errore di sincronizzazione.")
+                number_of_messages = self.read_communication_data()   
+                if number_of_messages is None:
+                    print("Errore di lettura.")
                     return None
 
-                number_of_messages = self.serial_connection.read(1)
-           
-                if not number_of_messages:
-                    return None
-                number_of_messages = struct.unpack('B', number_of_messages)[0]
-                print(f'lunghezza messaggi {number_of_messages}')
                 for i in range(number_of_messages):
-                    temp_message = self._read_data()
+                    temp_message = self.read_message()
                     if temp_message is None:
                         print("Errore di lettura.")
                         return None
@@ -104,9 +110,7 @@ class ArduinoReader:
                         self.events.append(temp_message)
                 
                 self.serial_connection.reset_input_buffer()
-                if self.variables == [] or None in self.variables:
-                    print("Errore di lettura.")
-                    return None
+
                 
                 if len(self.variables) > 0:
                     print("Variabili lette:")
@@ -131,7 +135,7 @@ class ArduinoReader:
             print("Connessione seriale non aperta.")
             return None
 
-    def _read_data(self):
+    def read_message(self):
 
 
         message_type = self.serial_connection.read(1)
@@ -148,7 +152,6 @@ class ArduinoReader:
         if not size:
             return None
         size = struct.unpack('B', size)[0]
-
 
 
         if var_type == VarType.INT.value:
