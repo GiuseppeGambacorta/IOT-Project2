@@ -33,6 +33,7 @@ public:
                 Task* taskList[MAX_TASKS]);
 
     void tick() override;
+    void reset() override;
 };
 
 #endif

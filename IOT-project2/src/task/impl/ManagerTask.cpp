@@ -84,3 +84,11 @@ void ManagerTask::tick() {
     }
   }
 }
+
+void ManagerTask::reset() {
+  tempAlarm = false;
+  levelAlarm = false;
+  userStatus = true;
+  tempTimer = new Timer(MAXTEMPTIME);
+  userTimer = new Timer(TSleep);
+}

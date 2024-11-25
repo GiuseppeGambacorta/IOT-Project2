@@ -63,6 +63,11 @@ void setup() {
   
   scheduler.init(calculateOptimalPeriod(scheduler));
 
+  for (int i = 0; i < scheduler.getNumTask(); i++) {
+    Task* task = scheduler.getTask(i);
+    task->reset();
+  }
+
 }
 
 void loop() {

@@ -41,8 +41,8 @@ class StdExecTask : public Task {
                     DigitalInput& closeButton,
                     DigitalOutput& ledGreen,
                     DigitalOutput& ledRed);
-        void tick();
-        void reset();
+        void tick() override;
+        void reset() override;
 };
 
 #endif 
