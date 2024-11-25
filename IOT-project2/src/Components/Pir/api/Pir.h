@@ -10,6 +10,9 @@ class Pir{
         void calibrate();
         void update();
         bool isDetected();
+        int getPin(){
+            return pin;
+        }
     private:
         DigitalInput* pir;
         bool calibrated;
