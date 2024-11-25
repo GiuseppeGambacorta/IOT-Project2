@@ -189,7 +189,7 @@ class RealTimePlotApp(ctk.CTk):
     def restore(self):
         if self.arduino.is_connected():
             
-            self.arduino.write_data(75)
+            self.arduino.write_data(75,0)
         
 
     def empty(self):

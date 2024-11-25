@@ -12,6 +12,9 @@ bool start = false;
 SerialManager serialManager(9600);
 bool toggle = false;
 
+
+int datiInArrivo[2] = {0,0};
+
 void setup()
 {
     serialManager.init();
@@ -34,9 +37,10 @@ void loop()
 
         serialManager.sendData();
 
-        int number = serialManager.getData();
-        if (number !=-1){
-            i2 = number;
+        serialManager.getData(datiInArrivo);
+        if (datiInArrivo[0] != 0){
+            i2 = datiInArrivo[0];
+            i = 0;
         }
 
         s = "gambacorta " + String(i);

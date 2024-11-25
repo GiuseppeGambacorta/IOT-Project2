@@ -341,7 +341,7 @@ public:
         }
     }
 
-    int getData()
+    void getData(int* data)
     {
         if (Serial.available() > 0)
         {
@@ -354,15 +354,16 @@ public:
                 {
                     byte message_type = Serial.read();
                     byte var_type = Serial.read();
+                    byte id = Serial.read();
                     byte size = Serial.read();
-                    byte data[size];
-                    Serial.readBytes(data, size);
-                    int number = (data[0] << 8) | data[1];
+                    byte bytes[size];
+                    Serial.readBytes(bytes, size);
+                    int number = (bytes[0] << 8) | bytes[1];
 
-                    return number;
+                    data[id] = number;
+                   
                 }
             }
         }
-        return -1;
     }
 };
