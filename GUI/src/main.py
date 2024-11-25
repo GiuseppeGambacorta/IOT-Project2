@@ -153,7 +153,7 @@ class RealTimePlotApp(ctk.CTk):
 
         self.ax2.clear()
         self.ax2.plot(self.x2_data, self.y2_data, label="Data", color="green")
-        self.ax2.set_title("waste level")
+        self.ax2.set_title("Waste Level")
         self.ax2.set_xlabel("Time")
         self.ax2.set_ylabel("Value")
         self.ax2.legend()

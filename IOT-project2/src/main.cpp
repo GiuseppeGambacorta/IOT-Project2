@@ -13,7 +13,7 @@ SerialManager serialManager(9600);
 bool toggle = false;
 
 
-int datiInArrivo[2] = {0,0};
+
 
 void setup()
 {
@@ -37,11 +37,9 @@ void loop()
 
         serialManager.sendData();
 
-        serialManager.getData(datiInArrivo);
-        if (datiInArrivo[0] != 0){
-            i2 = datiInArrivo[0];
-            i = 0;
-        }
+        serialManager.getData();
+    
+        i2 = serialManager.getLevel();
 
         s = "gambacorta " + String(i);
         delay(1000);

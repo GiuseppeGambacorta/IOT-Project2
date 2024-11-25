@@ -39,6 +39,8 @@ private:
     DataHeader eventMessage[MAX_EVENTS];
     unsigned int eventCount = 0;
 
+    static const int NUMBER_OF_INCOMING_DATA = 2;
+    DataHeader datiInArrivo[NUMBER_OF_INCOMING_DATA];
 public:
     Register() {}
 
@@ -158,6 +160,18 @@ public:
         if (index >= 0 && index < variablesCount)
         {
             return &eventMessage[index];
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+
+    DataHeader *getIncomingDataHeader(unsigned int index)
+    {
+        if (index >= 0 && index < NUMBER_OF_INCOMING_DATA)
+        {
+            return &datiInArrivo[index];
         }
         else
         {
@@ -341,7 +355,7 @@ public:
         }
     }
 
-    void getData(int* data)
+    void getData()
     {
         if (Serial.available() > 0)
         {
@@ -356,14 +370,30 @@ public:
                     byte var_type = Serial.read();
                     byte id = Serial.read();
                     byte size = Serial.read();
-                    byte bytes[size];
-                    Serial.readBytes(bytes, size);
-                    int number = (bytes[0] << 8) | bytes[1];
+                    byte buffer[size];
+                    Serial.readBytes(buffer, size);
 
-                    data[id] = number;
-                   
+                    DataHeader *var = internalRegister.getIncomingDataHeader(int(id));
+                    var->messageType = (MessageType)message_type;
+                    var->varType = (VarType)var_type;
+                    var->id = id;
+                    var->size = size;
+                    var->data = new byte[size];
+                    memcpy(var->data, buffer, size);
                 }
             }
         }
+    }
+
+
+    int getLevel(){
+        DataHeader *var = internalRegister.getIncomingDataHeader(0);
+        if (var->data != nullptr){
+            if (var->size >= 2) {
+                return (int(var->data[0]) << 8) | int(var->data[1]);
+        }
+        }
+   
+    return 20;
     }
 };
