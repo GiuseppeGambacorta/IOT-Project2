@@ -1,6 +1,7 @@
 #include "task/api/ManagerTask.h"
 
 #define IS_ESSENTIAL_TASK taskList[i]->getType() == IN || taskList[i]->getType() == MANAGER
+#define MAXTEMPTIME 10000
 
 ManagerTask::ManagerTask(Sonar& levelDetector,
                          TemperatureSensor& tempSensor,
@@ -9,7 +10,11 @@ ManagerTask::ManagerTask(Sonar& levelDetector,
     : levelDetector(levelDetector),
       tempSensor(tempSensor), 
       userDetector(userDetector) {
-  this->type = MANAGER;
+  tempAlarm = false;
+  levelAlarm = false;
+  userStatus = true;
+  tempTimer = new Timer(MAXTEMPTIME);
+  userTimer = new Timer(TSleep);
   for (int i = 0; i < MAX_TASKS; i++) {
     this->taskList[i] = taskList[i];
   }
@@ -21,7 +26,27 @@ void ManagerTask::tick() {
   int temp = tempSensor.readTemperature();
   bool user = userDetector.isDetected();
 
-  if (level > LEVEL_MAX) {
+  if (level < LEVEL_MAX) {
+    levelAlarm = true;
+  } else {
+    levelAlarm = false;
+  }
+
+  tempTimer->active(temp > TEMP_MAX);
+  if (tempTimer->isTimeElapsed()) {
+    tempAlarm = true;
+  } else {
+    tempAlarm = false;
+  }
+
+  userTimer->active(user);
+  if (userTimer->isTimeElapsed()) {
+    userStatus = false;
+  } else {
+    userStatus = true;
+  }
+
+  if (levelAlarm) {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
@@ -30,7 +55,7 @@ void ManagerTask::tick() {
         }
       }
     }
-  } else if (temp > TEMP_MAX) {
+  } else if (tempAlarm) {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
@@ -39,7 +64,7 @@ void ManagerTask::tick() {
         }
       }
     }
-  } else if (!user) {
+  } else if (!userStatus) {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
