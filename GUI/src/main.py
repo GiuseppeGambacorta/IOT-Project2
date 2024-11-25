@@ -108,7 +108,6 @@ class RealTimePlotApp(ctk.CTk):
                     continue
 
                 var, debug, event = result
-
                 message = var[0]
 
                 # Aggiungi un nuovo punto ai dati

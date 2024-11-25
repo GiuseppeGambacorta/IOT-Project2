@@ -34,21 +34,12 @@ void loop() {
         delay(1000);
     }
 
-      while (!start) {
-        if (Serial.available() > 0) {
-            byte received =(short unsigned int) Serial.read(); // Leggo il byte come valore grezzo
-            if (received == 255) {          // Controllo se è il byte 0x01
-                Serial.write(10);          // Invio il byte 0x0A (10 in decimale)
-                start = true;
-            }
-        }
-    }
+    
     //scheduler.schedule();
 
-
+    serialManager.doHandshake();
    //Serial.println(s.length());
    // Serial.println(s.c_str());
-    if (start) {
         serialManager.addDebugMessage("prova debug seriale");
         serialManager.addDebugMessage("prova debug seriale");
         serialManager.addEventMessage("prova evento seriale");
@@ -61,7 +52,7 @@ void loop() {
         s = "gambacorta " + String(i);
         delay(1000);
         
-    }
+    
 
       digitalWrite(2, !start);
 
