@@ -26,7 +26,10 @@ void Scheduler::schedule() {
   }
 }
 
-//TODO : get task list
+Task** Scheduler::getTaskList(){
+  Task** retTaskList;
+  return retTaskList = this->taskList;
+}
 
 int Scheduler::getNumTask(){
   int retNumTask;
