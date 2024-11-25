@@ -39,7 +39,18 @@ void loop()
 
         serialManager.getData();
     
-        i2 = serialManager.getLevel();
+
+        int* restore = serialManager.getvar(0);
+        if (*restore == 1) {
+            serialManager.addEventMessage("restore arrivato");
+            *restore = 0;
+        }
+
+        int* empty = serialManager.getvar(1);
+        if (*empty == 1) {
+            serialManager.addEventMessage("svuota arrivato");
+            *empty = 0;
+        }
 
         s = "gambacorta " + String(i);
         delay(1000);

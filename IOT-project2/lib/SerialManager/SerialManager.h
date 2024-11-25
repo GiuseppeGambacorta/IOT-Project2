@@ -40,7 +40,8 @@ private:
     unsigned int eventCount = 0;
 
     static const int NUMBER_OF_INCOMING_DATA = 2;
-    DataHeader datiInArrivo[NUMBER_OF_INCOMING_DATA];
+    int datiInArrivo[NUMBER_OF_INCOMING_DATA]; //for now only int are supported
+
 public:
     Register() {}
 
@@ -74,7 +75,6 @@ public:
             variables[variablesCount].id = variablesCount;
             variables[variablesCount].data = (byte *)string;
             variables[variablesCount].size = string->length() + 1;
-            Serial.println(variables[variablesCount].size);
             variablesCount++;
         }
     }
@@ -167,7 +167,7 @@ public:
         }
     }
 
-    DataHeader *getIncomingDataHeader(unsigned int index)
+    int *getIncomingDataHeader(unsigned int index)
     {
         if (index >= 0 && index < NUMBER_OF_INCOMING_DATA)
         {
@@ -214,42 +214,41 @@ private:
     unsigned int baudRate;
     bool connectionEstablished = false;
 
-
-    void sendinitCommunicationData(){
-            byte numberOfVariables = internalRegister.getVariableCount() + internalRegister.getDebugMessageCount() + internalRegister.getEventMessageCount();
-            byte header = 255;
-            Serial.write(header);
-            header = 0;
-            Serial.write(header);
-            Serial.write((byte *)&numberOfVariables, sizeof(numberOfVariables));
+    void sendinitCommunicationData()
+    {
+        byte numberOfVariables = internalRegister.getVariableCount() + internalRegister.getDebugMessageCount() + internalRegister.getEventMessageCount();
+        byte header = 255;
+        Serial.write(header);
+        header = 0;
+        Serial.write(header);
+        Serial.write((byte *)&numberOfVariables, sizeof(numberOfVariables));
     }
 
+    void sendVariables()
+    {
+        for (unsigned int i = 0; i < internalRegister.getVariableCount(); i++)
+        {
+            DataHeader *header = internalRegister.getVariableHeader(i);
 
-    void sendVariables(){
-            for (unsigned int i = 0; i < internalRegister.getVariableCount(); i++)
+            Serial.write((byte *)&header->messageType, sizeof(header->messageType));
+            Serial.write((byte *)&header->varType, sizeof(header->varType));
+            Serial.write((byte *)&header->id, sizeof(header->id));
+
+            if (header->varType == VarType::STRING)
             {
-                DataHeader *header = internalRegister.getVariableHeader(i);
-
-                Serial.write((byte *)&header->messageType, sizeof(header->messageType));
-                Serial.write((byte *)&header->varType, sizeof(header->varType));
-                Serial.write((byte *)&header->id, sizeof(header->id));
-
-                if (header->varType == VarType::STRING)
-                {
-                    internalRegister.updateStringLength(i, (String *)header->data);
-                    Serial.write((byte *)&header->size, sizeof(header->size));
-                    String *string = (String *)header->data;
-                    Serial.write(string->c_str(), header->size);
-                }
-                else
-                {
-
-                    Serial.write((byte *)&header->size, sizeof(header->size));
-                    Serial.write(header->data, header->size);
-                }
+                internalRegister.updateStringLength(i, (String *)header->data);
+                Serial.write((byte *)&header->size, sizeof(header->size));
+                String *string = (String *)header->data;
+                Serial.write(string->c_str(), header->size);
             }
-    }
+            else
+            {
 
+                Serial.write((byte *)&header->size, sizeof(header->size));
+                Serial.write(header->data, header->size);
+            }
+        }
+    }
 
     void sendDebugMessages()
     {
@@ -336,14 +335,11 @@ public:
         internalRegister.addEventMessage(message);
     }
 
-
-    
-
     void sendData()
     {
         if (isConnectionEstablished())
         {
-            sendinitCommunicationData();    
+            sendinitCommunicationData();
             sendVariables();
             sendDebugMessages();
             sendEventMessages();
@@ -372,28 +368,19 @@ public:
                     byte size = Serial.read();
                     byte buffer[size];
                     Serial.readBytes(buffer, size);
-
-                    DataHeader *var = internalRegister.getIncomingDataHeader(int(id));
-                    var->messageType = (MessageType)message_type;
-                    var->varType = (VarType)var_type;
-                    var->id = id;
-                    var->size = size;
-                    var->data = new byte[size];
-                    memcpy(var->data, buffer, size);
+                    int *var = internalRegister.getIncomingDataHeader(int(id));
+                    if (var != nullptr)
+                    {
+                        *var = (int(buffer[0]) << 8) | int(buffer[1]);
+                    }
                 }
             }
         }
     }
 
-
-    int getLevel(){
-        DataHeader *var = internalRegister.getIncomingDataHeader(0);
-        if (var->data != nullptr){
-            if (var->size >= 2) {
-                return (int(var->data[0]) << 8) | int(var->data[1]);
-        }
-        }
-   
-    return 20;
+    int* getvar(unsigned int index)
+    {
+        return internalRegister.getIncomingDataHeader(index);
     }
+   
 };
