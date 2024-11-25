@@ -8,7 +8,9 @@
 
 #define MAX_TASKS 10 //da rendere globale
 
-#define LEVEL_MAX 100
+#define MAXTEMPTIME 10000
+#define TSleep 10000
+#define LEVEL_MAX 10
 #define TEMP_MAX 100
 
 class ManagerTask : public Task {
@@ -18,6 +20,11 @@ private:
     TemperatureSensor& tempSensor;
     Pir& userDetector;
     Task* taskList[MAX_TASKS];
+    bool tempAlarm;
+    bool levelAlarm;
+    bool userStatus;
+    Timer* tempTimer;
+    Timer* userTimer;
     
 public:
     ManagerTask(Sonar& levelDetector,

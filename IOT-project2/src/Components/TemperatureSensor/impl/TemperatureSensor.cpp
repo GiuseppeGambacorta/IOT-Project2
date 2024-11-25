@@ -20,5 +20,5 @@ int TemperatureSensor::readTemperature() {
 }
 
 bool TemperatureSensor::isThresholdExceeded() {
-    return readTemperature() > MAXTEMP;
+    return this->temperature > MAXTEMP;
 }
