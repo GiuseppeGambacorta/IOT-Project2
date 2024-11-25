@@ -64,7 +64,7 @@ void ManagerTask::tick() {
         }
       }
     }
-  } else if (!user) {
+  } else if (!userStatus) {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
