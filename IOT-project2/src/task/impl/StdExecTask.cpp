@@ -2,10 +2,9 @@
 
 
 StdExecTask ::StdExecTask(){
-    state = READY;
+    this->type = STD_EXEC;
+    this->state = READY;
 }
-
-//void Task::init(int period){}
 
 void StdExecTask ::tick(){
     switch (state)

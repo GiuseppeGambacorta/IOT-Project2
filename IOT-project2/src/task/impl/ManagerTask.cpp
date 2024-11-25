@@ -9,6 +9,7 @@ ManagerTask::ManagerTask(Sonar& levelDetector,
     : levelDetector(levelDetector),
       tempSensor(tempSensor), 
       userDetector(userDetector) {
+  this->type = MANAGER;
   for (int i = 0; i < MAX_TASKS; i++) {
     this->taskList[i] = taskList[i];
   }
