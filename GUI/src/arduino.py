@@ -169,6 +169,30 @@ class ArduinoReader:
             return DataHeader(message_type, var_type, data, value)
         
         return None
+    
+
+    def is_connected(self):
+        return self.serial_connection and self.serial_connection.is_open
+    
+    def write_data(self, value):
+        if self.serial_connection and self.serial_connection.is_open:
+            try:
+
+               
+                self.serial_connection.write((255).to_bytes(1, 'big'))
+                self.serial_connection.write((0).to_bytes(1, 'big'))
+                message_type = MessageType.VAR.value.to_bytes(1, 'big')
+                var_type = VarType.INT.value.to_bytes(1, 'big')
+                size = (2).to_bytes(1, 'big')
+                value = value.to_bytes(2, 'big')
+                self.serial_connection.write(message_type)
+                self.serial_connection.write(var_type)
+                self.serial_connection.write(size)
+                self.serial_connection.write(value)
+            except serial.SerialException as e:
+                print(f"Errore di scrittura: {e}")
+        else:
+            print("Connessione seriale non aperta.")
 
   
     def close(self):

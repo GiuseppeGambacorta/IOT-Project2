@@ -332,4 +332,29 @@ public:
             Serial.flush();
         }
     }
+
+    int getData()
+    {
+        if (Serial.available() > 0)
+        {
+
+            byte header = Serial.read();
+            if (header == 255)
+            {
+                byte command = Serial.read();
+                if (command == 0)
+                {
+                    byte message_type = Serial.read();
+                    byte var_type = Serial.read();
+                    byte size = Serial.read();
+                    byte data[size];
+                    Serial.readBytes(data, size);
+                    int number = (data[0] << 8) | data[1];
+
+                    return number;
+                }
+            }
+        }
+        return -1;
+    }
 };

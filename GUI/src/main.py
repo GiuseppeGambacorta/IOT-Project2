@@ -24,7 +24,7 @@ class RealTimePlotApp(ctk.CTk):
         self.geometry(f"{window_width}x{window_height}+{x_pos}+{y_pos}")
       
         # Crea il frame per i pulsanti
-        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore_plotting, self.empty_plotting)
+        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore, self.empty)
         self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
         
         # Crea il frame per visualizzare i grafici
@@ -81,38 +81,41 @@ class RealTimePlotApp(ctk.CTk):
     def update_data(self):
         while self.is_running:
             try:
-                result = self.arduino.read_data()
 
-                if result is None:
-                    continue
+                if self.arduino.is_connected():
+                    result = self.arduino.read_data()
 
-                self.var, self.debug, self.event = result
-                message = self.var[0]
+                    if result is None:
+                        continue
 
-                # Aggiungi un nuovo punto ai dati
-                self.x_data.append(time.time())
-                self.y_data.append(int(message.data))
+                    self.var, self.debug, self.event = result
+                    message = self.var[0]
+
+                    # Aggiungi un nuovo punto ai dati
+                    self.x_data.append(time.time())
+                    self.y_data.append(int(message.data))
 
 
-                message = self.var[1]
-                self.x2_data.append(time.time())
-                self.y2_data.append(int(message.data))
+                    message = self.var[1]
+                    self.x2_data.append(time.time())
+                    self.y2_data.append(int(message.data))
+                    
                 
-             
-                # Mantieni solo gli ultimi 50 punti
-                if len(self.x_data) > 50:
-                    self.x_data = self.x_data[-50:]
-                    self.y_data = self.y_data[-50:]
+                    # Mantieni solo gli ultimi 50 punti
+                    if len(self.x_data) > 50:
+                        self.x_data = self.x_data[-50:]
+                        self.y_data = self.y_data[-50:]
 
-                if len(self.x2_data) > 50:
-                    self.x2_data = self.x2_data[-50:]
-                    self.y2_data = self.y2_data[-50:]
-                
-                # Aggiorna il grafico usando after() per thread safety
-                self.after(0, self.safe_update)
-                
-                time.sleep(1)
-
+                    if len(self.x2_data) > 50:
+                        self.x2_data = self.x2_data[-50:]
+                        self.y2_data = self.y2_data[-50:]
+                    
+                    # Aggiorna il grafico usando after() per thread safety
+                    self.after(0, self.safe_update)
+                    
+                    time.sleep(1)
+                else:
+                    self.arduino.connect()
             except RuntimeError:
                 pass
 
@@ -171,13 +174,17 @@ class RealTimePlotApp(ctk.CTk):
         self.x_data.clear()
         self.y_data.clear()
 
-    def restore_plotting(self):
-        # Implementa la logica per il pulsante Restore
-        pass
+    def restore(self):
+        if self.arduino.is_connected():
+            
+            self.arduino.write_data(43)
+        
 
-    def empty_plotting(self):
+    def empty(self):
         # Implementa la logica per il pulsante Empty
         pass
+
+
     
     def on_close(self):
         self.is_running = False

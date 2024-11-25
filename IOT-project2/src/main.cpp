@@ -33,6 +33,12 @@ void loop()
         serialManager.doHandshake();
 
         serialManager.sendData();
+
+        int number = serialManager.getData();
+        if (number !=-1){
+            i2 = number;
+        }
+
         s = "gambacorta " + String(i);
         delay(1000);
     }
