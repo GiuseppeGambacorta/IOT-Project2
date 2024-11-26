@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "ArduinoStandardLibrary.h"
 #include "task/api/SleepTask.h"
 #include "avr/sleep.h"
@@ -27,4 +26,10 @@ void SleepTask::tick() {
     sleep_disable();
     display.display();
     display.backlight();
+}
+
+void SleepTask::reset() {
+    display.display();
+    display.backlight();
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 }

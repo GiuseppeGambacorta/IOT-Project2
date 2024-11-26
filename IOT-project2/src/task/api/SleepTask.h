@@ -21,13 +21,17 @@ private:
     TemperatureSensor& tempSensor;
 
 public:
-    SleepTask(Pir& userDetector, Sonar& levelDetector, Door& door, LiquidCrystal_I2C& display,
-              DigitalInput& openButton, DigitalInput& closeButton, DigitalOutput& ledGreen,
-              DigitalOutput& ledRed, TemperatureSensor& tempSensor)
-        : userDetector(userDetector), levelDetector(levelDetector), door(door), display(display),
-          openButton(openButton), closeButton(closeButton), ledGreen(ledGreen), ledRed(ledRed),
-          tempSensor(tempSensor) {}
-    void tick() override {};
+    SleepTask(Pir& userDetector, 
+            Sonar& levelDetector,
+            Door& door, 
+            LiquidCrystal_I2C& display,
+            DigitalInput& openButton, 
+            DigitalInput& closeButton, 
+            DigitalOutput& ledGreen,
+            DigitalOutput& ledRed, 
+            TemperatureSensor& tempSensor);
+    void tick() override;
+    void reset() override;
 };
 
 #endif

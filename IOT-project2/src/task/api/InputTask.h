@@ -24,15 +24,9 @@ public:
               Sonar& levelDetector, 
               TemperatureSensor& tempSensor,  
               DigitalInput& openButton, 
-              DigitalInput& closeButton) 
-        : userDetector(userDetector), 
-          levelDetector(levelDetector), 
-          tempSensor(tempSensor), 
-          openButton(openButton), 
-          closeButton(closeButton){
-            this->type = IN;
-          }
-    void tick() override {}
+              DigitalInput& closeButton);
+    void tick() override;
+    void reset() override;
 };
 
 #endif
