@@ -37,6 +37,7 @@ InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeBu
 ManagerTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
 SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
+OutputTask outputTask(door, display, ledGreen, ledRed);
 
 unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     unsigned long maxTime = 0;
@@ -63,10 +64,11 @@ void setup() {
   Serial.begin(9600);
 
   //inserimento tank in list
-  scheduler.addTask(&inputTask);
-  scheduler.addTask(&managerTask);
+  scheduler.addInputTask(&inputTask);
+  scheduler.addManagerTask(&managerTask);
   scheduler.addTask(&stdExecTask);
   scheduler.addTask(&sleepTask);
+  scheduler.addOutputTask(&outputTask);
   
   scheduler.init(calculateOptimalPeriod(scheduler));
 

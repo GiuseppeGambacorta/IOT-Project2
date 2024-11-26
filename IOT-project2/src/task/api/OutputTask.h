@@ -12,14 +12,14 @@ class OutputTask : public Task {
 private:
     Door& door;
     LiquidCrystal_I2C& dysplay;
-    DigitalInput& ledGreen;
-    DigitalInput& ledRed;
+    DigitalOutput& ledGreen;
+    DigitalOutput& ledRed;
 
 public:
     OutputTask(Door& door, 
               LiquidCrystal_I2C& dysplay, 
-              DigitalInput& ledGreen, 
-              DigitalInput& ledRed);
+              DigitalOutput& ledGreen, 
+              DigitalOutput& ledRed);
     void tick() override;
     void reset() override;
 };

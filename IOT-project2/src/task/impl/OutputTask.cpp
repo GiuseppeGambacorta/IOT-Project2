@@ -2,8 +2,8 @@
 
 OutputTask::OutputTask(Door& door, 
               LiquidCrystal_I2C& dysplay, 
-              DigitalInput& ledGreen, 
-              DigitalInput& ledRed)
+              DigitalOutput& ledGreen, 
+              DigitalOutput& ledRed)
     : door(door),
     dysplay(dysplay),
     ledGreen(ledGreen),
