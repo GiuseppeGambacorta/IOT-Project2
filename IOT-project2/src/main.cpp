@@ -10,8 +10,10 @@
 #include <LiquidCrystal_I2C.h>
 
 #include "task/api/Task.h"
+#include "task/api/InputTask.h"
 #include "task/api/ManagerTask.h"
 #include "task/api/StdExecTask.h"
+#include "task/api/SleepTask.h"
 
 #define SECURITY_MARGIN (maxTime/10)
 
@@ -30,8 +32,10 @@ TemperatureSensor tempSensor = TemperatureSensor(2);
 Scheduler scheduler;
 
 // Tasks
+InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
 ManagerTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
+SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
 
 unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     unsigned long maxTime = 0;
@@ -58,8 +62,10 @@ void setup() {
   Serial.begin(9600);
 
   //inserimento tank in list
+  scheduler.addTask(&inputTask);
   scheduler.addTask(&managerTask);
   scheduler.addTask(&stdExecTask);
+  scheduler.addTask(&sleepTask);
   
   scheduler.init(calculateOptimalPeriod(scheduler));
 
