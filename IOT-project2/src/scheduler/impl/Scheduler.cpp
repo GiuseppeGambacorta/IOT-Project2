@@ -1,5 +1,7 @@
 #include "scheduler/api/Scheduler.h"
 
+Scheduler::Scheduler() {}
+
 void Scheduler::init(int basePeriod) {
   this->basePeriod = basePeriod;
   this->nTasks = 0;

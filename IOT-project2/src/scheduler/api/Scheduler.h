@@ -12,11 +12,10 @@ private:
   int basePeriod;
   int nTasks;
   Task* taskList[MAX_TASKS];  
-  SchedulerTimer timer;
+  SchedulerTimer timer = SchedulerTimer();
 
 public:
   Scheduler();
-
   void init(int basePeriod);  
   bool addTask(Task* task);  
   void schedule();
