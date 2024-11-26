@@ -16,6 +16,7 @@ void AllarmTempTask::tick() {
     ledRed.turnOn();
     if (door.isOpened()) {
         door.close();
+        door.update();
     }
     // a sleep could be used to turn off the system
     // until the operator presses reset on the GUI
