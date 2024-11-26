@@ -11,7 +11,9 @@ class Scheduler {
 private: 
   int basePeriod;
   int nTasks;
-  Task* taskList[MAX_TASKS];  
+  InputTask inputTask;
+  ManagerTask managerTask;
+  Task* taskExchangeableList[MAX_TASKS];  
   SchedulerTimer timer = SchedulerTimer();
 
 public:

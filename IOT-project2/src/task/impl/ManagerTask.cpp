@@ -1,6 +1,5 @@
 #include "task/api/ManagerTask.h"
 
-#define IS_ESSENTIAL_TASK taskList[i]->getType() == IN || taskList[i]->getType() == MANAGER
 #define MAXTEMPTIME 10000
 
 ManagerTask::ManagerTask(Sonar& levelDetector,
@@ -50,7 +49,7 @@ void ManagerTask::tick() {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
-        if (taskList[i]->getType() == ALLARM_LEVEL || IS_ESSENTIAL_TASK) {
+        if (taskList[i]->getType() == ALLARM_LEVEL) {
           taskList[i]->setActive(true);
         }
       }
@@ -59,7 +58,7 @@ void ManagerTask::tick() {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
-        if (taskList[i]->getType() == ALLARM_TMP || IS_ESSENTIAL_TASK) {
+        if (taskList[i]->getType() == ALLARM_TMP) {
           taskList[i]->setActive(true);
         }
       }
@@ -68,7 +67,7 @@ void ManagerTask::tick() {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
-        if (taskList[i]->getType() == SLEEP || IS_ESSENTIAL_TASK) {
+        if (taskList[i]->getType() == SLEEP) {
           taskList[i]->setActive(true);
         }
       }
@@ -77,7 +76,7 @@ void ManagerTask::tick() {
     for (int i = 0; i < MAX_TASKS; i++) {
       if (taskList[i] != nullptr) {
         taskList[i]->setActive(false);
-        if (taskList[i]->getType() == STD_EXEC || IS_ESSENTIAL_TASK) {
+        if (taskList[i]->getType() == STD_EXEC) {
           taskList[i]->setActive(true);
         }
       }

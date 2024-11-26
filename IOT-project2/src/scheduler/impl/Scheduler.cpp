@@ -9,8 +9,14 @@ void Scheduler::init(int basePeriod) {
 }
 
 bool Scheduler::addTask(Task* task) {
+  if (task->getType() == IN) {
+    this->inputTask = &task;
+  }
+  if (task->getType() == MANAGER) {
+    this->managerTask = &task;
+  }
   if (nTasks < MAX_TASKS) {
-    taskList[nTasks] = task;
+    taskExchangeableList[nTasks] = task;
     nTasks++;
     return true;
   } else {
@@ -20,17 +26,19 @@ bool Scheduler::addTask(Task* task) {
 
 void Scheduler::schedule() {
   timer.waitForNextTick();
+  inputTask.tick();
+  managerTask.tick();
   for (int i = 0; i < nTasks; i++) {
-    if (taskList[i]->updateAndCheckTime(basePeriod) 
-      && taskList[i]->isActive()) {
-      taskList[i]->tick();
+    if (taskExchangeableList[i]->updateAndCheckTime(basePeriod) 
+      && taskExchangeableList[i]->isActive()) {
+      taskExchangeableList[i]->tick();
     }
   }
 }
 
 Task** Scheduler::getTaskList(){
   Task** retTaskList;
-  return retTaskList = this->taskList;
+  return retTaskList = this->taskExchangeableList;
 }
 
 int Scheduler::getNumTask(){
@@ -40,5 +48,5 @@ int Scheduler::getNumTask(){
 
 Task* Scheduler::getTask(int index){
   Task* retTask;
-  return retTask = this->taskList[index];
+  return retTask = this->taskExchangeableList[index];
 }
