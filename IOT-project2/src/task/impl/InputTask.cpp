@@ -22,10 +22,6 @@ void InputTask::tick(){
 }
 
 void InputTask::reset(){
-    userDetector.update();
-    levelDetector.update();
-    tempSensor.update();
-    openButton.update();
-    closeButton.update();
+    
 }
 
