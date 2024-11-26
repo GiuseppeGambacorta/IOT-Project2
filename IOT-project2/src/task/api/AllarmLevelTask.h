@@ -10,13 +10,17 @@
 class AllarmLevelTask : public Task {
 
 private:
-
+    Door& door;
+    LiquidCrystal_I2C& display;
+    DigitalOutput& ledGreen;
+    DigitalOutput& ledRed;
 public:
-    AllarmLevelTask(Door door,
-                    LiquidCrystal_I2C display,
-                    DigitalOutput ledGreen,
-                    DigitalOutput ledRed);
+    AllarmLevelTask(Door& door,
+                    LiquidCrystal_I2C& display,
+                    DigitalOutput& ledGreen,
+                    DigitalOutput& ledRed);
     void tick() override;
+    void reset() override;
 };
 
 #endif
