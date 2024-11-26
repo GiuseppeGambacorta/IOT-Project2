@@ -26,4 +26,5 @@ void AllarmLevelTask::reset() {
     ledRed.turnOff();
     display.clear();
     // should it open the door in reverse here?
+    door.empty();
 }
