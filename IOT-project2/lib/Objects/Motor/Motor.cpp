@@ -10,7 +10,7 @@ void Motor::setPosition(int value)
 
     if (value >= lowerLimit && value <= upperLimit)
     {
-        motor.write(value + offsetPosition);
+        commandPosition = value + offsetPosition;
         this->lastCommandPosition = value;
     }
 }
@@ -45,4 +45,9 @@ bool Motor::isAtLowerLimit()
 void Motor::init()
 {
     motor.attach(pin);
+}
+
+void Motor::update()
+{
+    motor.write(commandPosition);
 }

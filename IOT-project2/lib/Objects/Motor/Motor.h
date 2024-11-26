@@ -14,6 +14,7 @@ private:
     int upperLimit;
     int lowerLimit;
     bool initialized = false;
+    int commandPosition = 0;
     int lastCommandPosition = 0;
     int lastPosition = 0;
     Servo motor;
@@ -27,5 +28,6 @@ public:
     bool isInPosition();
     bool isAtUpperLimit();
     bool isAtLowerLimit();
+    void update();
 };
 

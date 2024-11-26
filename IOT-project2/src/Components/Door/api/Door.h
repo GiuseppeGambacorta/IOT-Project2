@@ -14,4 +14,5 @@ public:
     bool isClosed();
     bool isOpened();
     bool isInEmptyPosition();
+    void update();
 };
