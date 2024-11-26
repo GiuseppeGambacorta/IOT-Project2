@@ -12,15 +12,15 @@ void ManagerTask::tick() {
         levelAlarm = false;
     }
 
-    tempTimer->active(temp > TEMP_MAX);
-    if (tempTimer->isTimeElapsed()) {
+    tempTimer.active(temp > TEMP_MAX);
+    if (tempTimer.isTimeElapsed()) {
         tempAlarm = true;
     } else {
         tempAlarm = false;
     }
 
-    userTimer->active(user);
-    if (userTimer->isTimeElapsed()) {
+    userTimer.active(user);
+    if (userTimer.isTimeElapsed()) {
         userStatus = false;
     } else {
         userStatus = true;
@@ -49,8 +49,7 @@ void ManagerTask::reset() {
     tempAlarm = false;
     levelAlarm = false;
     userStatus = true;
-    delete tempTimer;
-    delete userTimer;
-    tempTimer = new Timer(MAXTEMPTIME);
-    userTimer = new Timer(TSleep);
+
+    tempTimer.reset();
+    userTimer.reset();
 }

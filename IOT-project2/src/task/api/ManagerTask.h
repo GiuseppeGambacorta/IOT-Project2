@@ -23,8 +23,8 @@ private:
     bool tempAlarm;
     bool levelAlarm;
     bool userStatus;
-    Timer* tempTimer;
-    Timer* userTimer;
+    Timer tempTimer = Timer(MAXTEMPTIME);
+    Timer userTimer = Timer(TSleep);
     
 public:
     ManagerTask(Sonar& levelDetector,
