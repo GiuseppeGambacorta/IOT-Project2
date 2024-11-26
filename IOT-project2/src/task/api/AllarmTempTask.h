@@ -8,11 +8,19 @@
 #include <LiquidCrystal_I2C.h>
 
 class AllarmTempTask : public Task {
-    AllarmTempTask(DigitalOutput ledGreen,
-                          DigitalOutput ledRed,
-                          LiquidCrystal_I2C display,
-                          Door door);
-    void tick() override;
+
+    private:
+        DigitalOutput& ledGreen;
+        DigitalOutput& ledRed;
+        LiquidCrystal_I2C& display;
+        Door& door;
+    public:
+        AllarmTempTask(DigitalOutput& ledGreen,
+                                DigitalOutput& ledRed,
+                                LiquidCrystal_I2C& display,
+                                Door& door);
+        void tick() override;
+        void reset() override;
 };
 
 #endif
