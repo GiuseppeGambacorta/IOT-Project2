@@ -1,5 +1,21 @@
 #include "task/api/ManagerTask.h"
 
+ManagerTask::ManagerTask(Sonar& levelDetector,
+                         TemperatureSensor& tempSensor,
+                         Pir& userDetector,
+                         Task* taskList[MAX_TASKS])
+    : levelDetector(levelDetector),
+      tempSensor(tempSensor),
+      userDetector(userDetector) {
+    this->type = MANAGER;
+    this->tempAlarm = false;
+    this->levelAlarm = false;
+    this->userStatus = true;
+    for (int i = 0; i < MAX_TASKS; i++) {
+        this->taskList[i] = taskList[i];
+    }
+}
+
 void ManagerTask::tick() {
     int level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
