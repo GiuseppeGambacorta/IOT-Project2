@@ -14,6 +14,7 @@ private:
   InputTask inputTask;
   ManagerTask managerTask;
   Task* taskExchangeableList[MAX_TASKS];  
+  OutputTask outputTask;
   SchedulerTimer timer = SchedulerTimer();
 
 public:

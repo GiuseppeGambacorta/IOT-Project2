@@ -14,6 +14,7 @@
 #include "task/api/ManagerTask.h"
 #include "task/api/StdExecTask.h"
 #include "task/api/SleepTask.h"
+#include "task/api/OutputTask.h"
 
 #define SECURITY_MARGIN (maxTime/10)
 

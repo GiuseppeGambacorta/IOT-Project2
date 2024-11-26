@@ -15,6 +15,9 @@ bool Scheduler::addTask(Task* task) {
   if (task->getType() == MANAGER) {
     this->managerTask = &task;
   }
+  if (task->getType() == OUT) {
+    this->outputTask = &task;
+  }
   if (nTasks < MAX_TASKS) {
     taskExchangeableList[nTasks] = task;
     nTasks++;
@@ -34,6 +37,7 @@ void Scheduler::schedule() {
       taskExchangeableList[i]->tick();
     }
   }
+  outputTask.tick();
 }
 
 Task** Scheduler::getTaskList(){

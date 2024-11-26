@@ -8,7 +8,7 @@ enum TaskType {
     ALLARM_LEVEL,
     ALLARM_TMP,
     SLEEP,
-    HOMING
+    OUT
 };
 
 #endif
