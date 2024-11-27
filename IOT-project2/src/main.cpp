@@ -19,7 +19,7 @@
 #define SECURITY_MARGIN (maxTime/10)
 
 // Componenti I/O
-Pir userDetector = Pir(9);
+Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
 Door door = Door(9);
 LiquidCrystal_I2C display = LiquidCrystal_I2C(0x27, 16, 2);
