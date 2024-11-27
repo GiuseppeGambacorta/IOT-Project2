@@ -15,23 +15,14 @@ class Scheduler {
 private: 
   int basePeriod;
   int nTasks;
-  InputTask* inputTask;
-  ManagerTask* managerTask;
-  Task* taskExchangeableList[MAX_TASKS];  
-  OutputTask* outputTask;
+  Task* taskList[MAX_TASKS];  
   SchedulerTimer timer = SchedulerTimer();
 
 public:
   Scheduler();
   void init(int basePeriod); 
-  bool addInputTask(InputTask* inputTask);
-  bool addManagerTask(ManagerTask* managerTask); 
   bool addTask(Task* task); 
-  bool addOutputTask(OutputTask* outputTask); 
   void schedule();
-  Task** getTaskList();
-  int getNumTask();
-  Task* getTask(int index);
 };
 
 #endif
