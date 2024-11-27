@@ -69,7 +69,7 @@ private:
 
 
 
-    Task& ActualTask;
+    Task& ActualTask = homingTask;
 
     WasteDisposalState state = WasteDisposalState::Homing;
     WasteDisposalCommunication communication;

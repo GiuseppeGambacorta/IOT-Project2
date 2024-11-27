@@ -19,18 +19,18 @@ WasteDisposalTask::WasteDisposalTask(Sonar& levelDetector,
       userDetector(userDetector),
       openButton(openButton),
       closeButton(closeButton),
-      door(door),
+      door(Door),
       display(display),
       ledGreen(ledGreen),
       ledRed(ledRed),
-      alarmLevelTask(door, display, ledGreen, ledRed),
-      alarmTempTask(ledGreen, ledRed, display, door),
-      emptyBinTask(door, display, ledGreen, ledRed),
-      homingTask(door, display, openButton, closeButton, ledGreen, ledRed),
+      alarmLevelTask(Door, display, ledGreen, ledRed),
+      alarmTempTask(ledGreen, ledRed, display, Door),
+      emptyBinTask(Door, display, ledGreen, ledRed),
+      homingTask(Door, display, openButton, closeButton, ledGreen, ledRed),
       inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton),
-      stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed),
-      sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor),
-      outputTask(door, display, ledGreen, ledRed) {}
+      outputTask(Door, display, ledGreen, ledRed),
+      sleepTask(userDetector, levelDetector, Door, display, openButton, closeButton, ledGreen, ledRed, tempSensor),
+      stdExecTask(Door, display, openButton, closeButton, ledGreen, ledRed) {}
 
 
 void WasteDisposalTask::tick() {
