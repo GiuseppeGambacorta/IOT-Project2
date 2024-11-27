@@ -1,7 +1,7 @@
 #ifndef __SLEEPTASK__
 #define __SLEEPTASK__
 
-#include "Task.h"
+#include "../../../Task.h"
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"

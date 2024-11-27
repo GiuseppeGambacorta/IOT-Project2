@@ -1,8 +1,8 @@
 #ifndef __USERDETECTION__
 #define __USERDETECTION__
 
-#include "Task.h"
-#include "../../Components/Pir/api/Pir.h"
+#include "../../../Task.h"
+#include "Components/Pir/api/Pir.h"
 
 class UserDetection : public Task {
   Pir& pir;

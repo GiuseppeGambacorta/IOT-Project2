@@ -1,20 +1,19 @@
-#ifndef __MANAGERTASK__
-#define __MANAGERTASK__
+#pragma once
 
 
 
 
-#include "Task.h"
+#include "../../Task.h"
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
-#include "OutputTask.h"
-#include "SleepTask.h"
-#include "StdExecTask.h"
-#include "InputTask.h"
-#include "EmptyBinTask.h"
-#include "AlarmTempTask.h"
-#include "AlarmLevelTask.h"
+#include "subTask/OutputTask.h"
+#include "subTask/SleepTask.h"
+#include "subTask/StdExecTask.h"
+#include "subTask/InputTask.h"
+#include "subTask/EmptyBinTask.h"
+#include "subTask/AlarmTempTask.h"
+#include "subTask/AlarmLevelTask.h"
 
 
 #define MAX_TASKS 10 //da rendere globale
@@ -88,5 +87,3 @@ public:
     void tick() override;
     void reset() override;
 };
-
-#endif

@@ -1,7 +1,7 @@
 #ifndef __INPUTTASK__
 #define __INPUTTASK__
 
-#include "task/api/Task.h"
+#include "../../../Task.h"
 
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"

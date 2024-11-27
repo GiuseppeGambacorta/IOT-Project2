@@ -1,8 +1,8 @@
 #ifndef __TEMPERATURECHECK__
 #define __TEMPERATURECHECK__
 
-#include "Task.h"
-#include "../../Components/TemperatureSensor/api/TemperatureSensor.h"
+#include "../../../Task.h"
+#include "Components/TemperatureSensor/api/TemperatureSensor.h"
 
 class TemperatureCheck : public Task {
   TemperatureSensor& tempSensor;

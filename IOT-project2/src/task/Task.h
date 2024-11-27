@@ -1,7 +1,4 @@
-#ifndef __TASK__
-#define __TASK__
-
-
+#pragma once
 class Task {
 
   protected:
@@ -43,4 +40,3 @@ class Task {
   
 };
 
-#endif
