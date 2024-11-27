@@ -1,16 +1,16 @@
-#ifndef __LEVELCHECKTASK__
-#define __LEVELCHECKTASK__
+#ifndef __LEVELCHECK__
+#define __LEVELCHECK__
 
 #include "Task.h"
 #include "../../Components/Sonar/api/Sonar.h"
 
-class LevelCheckTask : public Task {
+class LevelCheck : public Task {
   Sonar& sonar;
   enum {OK, HIGH_LEVEL} state;
 
   public:
 
-    LevelCheckTask(Sonar& sensor);
+    LevelCheck(Sonar& sensor);
     void tick();
     void reset();
     int getState();

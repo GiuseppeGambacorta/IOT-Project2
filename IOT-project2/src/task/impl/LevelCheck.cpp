@@ -1,12 +1,12 @@
-#include "task/api/LevelCheckTask.h"
+#include "task/api/LevelCheck.h"
 #include "../../Components/Sonar/api/Sonar.h"
 #include <Arduino.h>
 
-LevelCheckTask::LevelCheckTask(Sonar& sensor) : sonar(sensor) {
+LevelCheck::LevelCheck(Sonar& sensor) : sonar(sensor) {
     state = OK;
 }
 
-void LevelCheckTask::tick() {
+void LevelCheck::tick() {
     if (sonar.isThresholdLower()) {
         state = HIGH_LEVEL;
     } else {
@@ -14,10 +14,10 @@ void LevelCheckTask::tick() {
     }
 }
 
-void LevelCheckTask::reset() {
+void LevelCheck::reset() {
     state = OK;
 }
 
-int LevelCheckTask::getState() {
+int LevelCheck::getState() {
     return state;
 }

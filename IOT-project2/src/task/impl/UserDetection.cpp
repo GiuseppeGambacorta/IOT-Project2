@@ -1,12 +1,12 @@
-#include "task/api/UserDetectionTask.h"
+#include "task/api/UserDetection.h"
 #include "../../Components/Pir/api/Pir.h"
 #include <Arduino.h>
 
-UserDetectionTask::UserDetectionTask(Pir& sensor) : pir(sensor) {
+UserDetection::UserDetection(Pir& sensor) : pir(sensor) {
     state = NO_USER;
 }
 
-void UserDetectionTask::tick() {
+void UserDetection::tick() {
     if (pir.isDetected()) {
         state = USER_DETECTED;
     } else {
@@ -14,10 +14,10 @@ void UserDetectionTask::tick() {
     }
 }
 
-void UserDetectionTask::reset() {
+void UserDetection::reset() {
     state = NO_USER;
 }
 
-int UserDetectionTask::getState() {
+int UserDetection::getState() {
     return state;
 }
