@@ -16,16 +16,27 @@ EmptyBinTask::EmptyBinTask(Door& door,
 }
 
 void EmptyBinTask::tick(){
-    if(this->entry == FIRST){
+     timer.active(this->entry == Entry::WAITING);
+    switch (this->entry) 
+    {
+    case Entry::FIRST:
         door.empty();
-        door.update();
-        this->entry = WAITING;
+        if (door.isInEmptyPosition()){
+            this->entry = WAITING;
+        }
+        break;
+    case Entry::WAITING:
+        if (timer.isTimeElapsed()){
+            ledGreen.turnOn();
+            ledRed.turnOff();
+            display.clear();
+            this->active = false;
+        }
+        break;
+    default:
+        break;
     }
-    else if (timer.isTimeElapsed()){
-        ledGreen.turnOn();
-        ledRed.turnOff();
-        display.clear();
-    }
+
 }
 
 void EmptyBinTask::reset(){

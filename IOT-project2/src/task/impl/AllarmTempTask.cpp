@@ -23,7 +23,8 @@ void AllarmTempTask::tick() {
 }
 
 void AllarmTempTask::reset() {
-    ledGreen.turnOn();
+    // should be done outside this task
+    /*ledGreen.turnOn();
     ledRed.turnOff();
-    display.clear();
+    display.clear();*/
 }
