@@ -6,7 +6,6 @@ AllarmTempTask::AllarmTempTask(DigitalOutput& ledGreen,
                                LiquidCrystal_I2C& display,
                                Door& door) 
                                : ledGreen(ledGreen), ledRed(ledRed), display(display), door(door) {
-    this->type = ALLARM_TMP;
 }
 
 void AllarmTempTask::tick() {

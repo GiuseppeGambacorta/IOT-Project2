@@ -6,7 +6,6 @@ AllarmLevelTask::AllarmLevelTask(Door& door,
                                  DigitalOutput& ledGreen,
                                  DigitalOutput& ledRed) 
                                  : door(door), display(display), ledGreen(ledGreen), ledRed(ledRed) {
-    this->type = ALLARM_LEVEL;
 }
 
 void AllarmLevelTask::tick() {
