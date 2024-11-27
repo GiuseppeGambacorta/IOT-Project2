@@ -28,3 +28,9 @@ void Scheduler::schedule() {
     }
   }
 }
+
+void Scheduler::reset() {
+  for (int i = 0; i < nTasks; i++) {
+    taskList[i]->reset();
+  }
+}

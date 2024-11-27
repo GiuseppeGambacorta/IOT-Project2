@@ -33,13 +33,11 @@ TemperatureSensor tempSensor = TemperatureSensor(2);
 Scheduler scheduler;
 
 // Tasks
-InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
-ManagerTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
-StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
-SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
-OutputTask outputTask(door, display, ledGreen, ledRed);
+// in gui
+// bidone
+// out gui
 
-unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
+/*unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     unsigned long maxTime = 0;
 
     for (int i = 0; i < scheduler.getNumTask(); i++) {
@@ -57,25 +55,15 @@ unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     }
     maxTime += SECURITY_MARGIN;
     return maxTime;
-}
+}*/
 
 
 void setup() {
   Serial.begin(9600);
 
   //inserimento tank in list
-  scheduler.addInputTask(&inputTask);
-  scheduler.addManagerTask(&managerTask);
-  scheduler.addTask(&stdExecTask);
-  scheduler.addTask(&sleepTask);
-  scheduler.addOutputTask(&outputTask);
-  
-  scheduler.init(calculateOptimalPeriod(scheduler));
-
-  for (int i = 0; i < scheduler.getNumTask(); i++) {
-    Task* task = scheduler.getTask(i);
-    task->reset();
-  }
+  scheduler.init(2000);
+  scheduler.reset();
 
 }
 

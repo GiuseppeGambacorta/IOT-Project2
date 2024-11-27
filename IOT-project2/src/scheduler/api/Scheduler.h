@@ -23,6 +23,7 @@ public:
   void init(int basePeriod); 
   bool addTask(Task* task); 
   void schedule();
+  void reset();
 };
 
 #endif
