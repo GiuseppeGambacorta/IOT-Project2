@@ -1,5 +1,4 @@
-#include "task/api/TemperatureCheck.h"
-#include "../../Components/TemperatureSensor/api/TemperatureSensor.h"
+#include "../../api/subTask/TemperatureCheck.h"
 #include <Arduino.h>
 
 #define MAXTEMPTIME 10000

@@ -1,14 +1,14 @@
 #include "ArduinoStandardLibrary.h"
-#include "task/api/AlarmTempTask.h"
+#include "../../api/subTask/AlarmTempTask.h"
 
-AllarmTempTask::AllarmTempTask(DigitalOutput& ledGreen,
+AlarmTempTask::AlarmTempTask(DigitalOutput& ledGreen,
                                DigitalOutput& ledRed,
                                LiquidCrystal_I2C& display,
                                Door& door) 
                                : ledGreen(ledGreen), ledRed(ledRed), display(display), door(door) {
 }
 
-void AllarmTempTask::tick() {
+void AlarmTempTask::tick() {
     display.setCursor(0, 0);
     display.print("PROBLEM DETECTED");
     ledGreen.turnOff();
@@ -21,7 +21,7 @@ void AllarmTempTask::tick() {
     // until the operator presses reset on the GUI
 }
 
-void AllarmTempTask::reset() {
+void AlarmTempTask::reset() {
     // should be done outside this task
     /*ledGreen.turnOn();
     ledRed.turnOff();

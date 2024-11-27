@@ -9,12 +9,7 @@
 #include "Components/Door/Api/Door.h"
 #include <LiquidCrystal_I2C.h>
 
-#include "task/api/Task.h"
-#include "task/api/InputTask.h"
-#include "task/api/ManagerTask.h"
-#include "task/api/StdExecTask.h"
-#include "task/api/SleepTask.h"
-#include "task/api/OutputTask.h"
+#include "task/WasteDisposal/api/WasteDisposalTask.h"
 
 #define SECURITY_MARGIN (maxTime/10)
 
@@ -32,12 +27,8 @@ TemperatureSensor tempSensor = TemperatureSensor(2);
 // Scheduler
 Scheduler scheduler;
 
-// Tasks
-InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
-WasteDisposalTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
-StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
-SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
-OutputTask outputTask(door, display, ledGreen, ledRed);
+WasteDisposalTask wasteDisposalTask = WasteDisposalTask(levelDetector, tempSensor, userDetector, openButton, closeButton, door, display, ledGreen, ledRed);
+
 
 unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     unsigned long maxTime = 0;
@@ -64,11 +55,10 @@ void setup() {
   Serial.begin(9600);
 
   //inserimento tank in list
-  scheduler.addInputTask(&inputTask);
-  scheduler.addManagerTask(&managerTask);
-  scheduler.addTask(&stdExecTask);
-  scheduler.addTask(&sleepTask);
-  scheduler.addOutputTask(&outputTask);
+
+  scheduler.addTask(&wasteDisposalTask);
+
+
   
   scheduler.init(calculateOptimalPeriod(scheduler));
 

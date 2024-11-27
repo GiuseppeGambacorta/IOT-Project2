@@ -22,17 +22,20 @@ WasteDisposalTask::WasteDisposalTask(Sonar& levelDetector,
       door(door),
       display(display),
       ledGreen(ledGreen),
-      ledRed(ledRed) {}
-    //  InputTask(userDetector, levelDetector, tempSensor, openButton, closeButton) 
-     // StdExecTask(door, display, ledGreen, ledRed),
-     // OutputTask(door, display, ledGreen, ledRed) 
+      ledRed(ledRed),
+      alarmLevelTask(door, display, ledGreen, ledRed),
+      alarmTempTask(ledGreen, ledRed, display, door),
+      emptyBinTask(door, display, ledGreen, ledRed),
+      homingTask(door, display, openButton, closeButton, ledGreen, ledRed),
+      inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton),
+      stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed),
+      sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor),
+      outputTask(door, display, ledGreen, ledRed) {}
+
 
 void WasteDisposalTask::tick() {
     
-    InputTask.tick();
-
-
-    // allarm tick
+    this->inputTask.tick();
 
     int level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
@@ -62,38 +65,41 @@ void WasteDisposalTask::tick() {
     switch (this->state)
     {
     case WasteDisposalState::Homing:
-        //ActualTask = InputTask
+        this->ActualTask = this->homingTask;
+        
+        /*
         if homing.done() {
             homing.reset();
             state = 10;
         }
+        */
 
         break;
 
     case WasteDisposalState::Normal:
-        ActualTask = InputTask;
+        this->ActualTask = this->stdExecTask;
 
-        if (levelAlarm) {
-            state = WasteDisposalState::LevelAlarm;
+        if (!userStatus) {
+            state = WasteDisposalState::Sleep;
         } else if (tempAlarm) {
             state = WasteDisposalState::TempAlarm;
-        } else if (!userStatus) {
-            state = WasteDisposalState::Sleep;
+        } else if (levelAlarm) {
+            state = WasteDisposalState::LevelAlarm;
         }
 
         break;
 
-    case WasteDisposalState::LevelAlarm:
-        ActualTask = InputTask;
+        case WasteDisposalState::LevelAlarm:
+        this->ActualTask = this->alarmLevelTask;
 
         if (!levelAlarm) {
-            state = WasteDisposalState::Homing 
+            state = WasteDisposalState::Homing;
         }
 
         break;
 
     case WasteDisposalState::TempAlarm:
-        ActualTask = InputTask;
+        this->ActualTask = this->alarmTempTask;
 
         if (!tempAlarm) {
             state = WasteDisposalState::Homing;
@@ -102,7 +108,7 @@ void WasteDisposalTask::tick() {
         break;
     
     case WasteDisposalState::Sleep:
-        ActualTask = InputTask;
+        this->ActualTask = this->sleepTask;
 
         if (userStatus) {
             state = WasteDisposalState::Homing;
@@ -113,19 +119,19 @@ void WasteDisposalTask::tick() {
         break;
     }
 
-    ActualTask.tick();
-
-    OutputTask.tick();
+    this->ActualTask.tick();
+    this->outputTask.tick();
     
 }
 
 void WasteDisposalTask::reset() {
-    /*
-    tempAlarm = false;
-    levelAlarm = false;
-    userStatus = true;
-
-    tempTimer.reset();
-    userTimer.reset();
-    */
+   this->inputTask.reset();
+    this->stdExecTask.reset();
+    this->outputTask.reset();
+    this->alarmLevelTask.reset();
+    this->alarmTempTask.reset();
+    this->emptyBinTask.reset();
+    this->sleepTask.reset();
+    this->ActualTask.reset();
+    this->state = WasteDisposalState::Homing;
 }

@@ -1,4 +1,4 @@
-#include "task/api/InputTask.h"
+#include "../../api/subTask/InputTask.h"
 
 InputTask::InputTask(Pir& userDetector, 
                      Sonar& levelDetector, 

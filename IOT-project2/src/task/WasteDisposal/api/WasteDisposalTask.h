@@ -11,9 +11,10 @@
 #include "subTask/SleepTask.h"
 #include "subTask/StdExecTask.h"
 #include "subTask/InputTask.h"
+#include "subTask/HomingTask.h"
 #include "subTask/EmptyBinTask.h"
-#include "subTask/AlarmTempTask.h"
 #include "subTask/AlarmLevelTask.h"
+#include "subTask/AlarmTempTask.h"
 
 
 #define MAX_TASKS 10 //da rendere globale
@@ -55,12 +56,19 @@ private:
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 
-    InputTask inputTask;
-    StdExecTask stdExecTask;
 
+    AlarmLevelTask alarmLevelTask;
+    AlarmTempTask alarmTempTask;
     EmptyBinTask emptyBinTask;
+    HomingTask homingTask;
+    InputTask inputTask;
     OutputTask outputTask;
     SleepTask sleepTask;
+    StdExecTask stdExecTask;
+
+
+
+
     Task& ActualTask;
 
     WasteDisposalState state = WasteDisposalState::Homing;
