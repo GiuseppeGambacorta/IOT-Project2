@@ -18,15 +18,7 @@ void AllarmLevelTask::tick() {
         door.close();
         door.update();
     }
-    // a sleep could be used to turn off the system
-    // until the operator presses "Empty the container" on the GUI
 }
 
 void AllarmLevelTask::reset() {
-    ledGreen.turnOn();
-    ledRed.turnOff();
-    display.clear();
-    // should it open the door in reverse here?
-    door.empty();
-    door.update();
 }
