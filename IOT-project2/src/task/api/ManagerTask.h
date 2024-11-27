@@ -25,6 +25,15 @@ struct BidoneCommunication
 };
 
 
+enum BidoneState {
+    Homing = 0,
+    Normal = 10,
+    LevelAlarm = 20,
+    TempAlarm = 30,
+    Sleep = 40
+
+};
+
 
 
 class BidoneTask : public Task {
@@ -46,8 +55,9 @@ private:
 
     Task& ActualTask;
 
+    BidoneState state = BidoneState::Homing;
     BidoneCommunication communication;
-    unsigned int state;
+    
     bool tempAlarm;
     bool levelAlarm;
     bool userStatus;

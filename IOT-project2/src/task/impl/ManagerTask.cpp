@@ -1,5 +1,10 @@
 #include "task/api/ManagerTask.h"
 
+
+
+
+
+
 BidoneTask::BidoneTask(Sonar& levelDetector,
                          TemperatureSensor& tempSensor,
                          Pir& userDetector,
@@ -57,26 +62,54 @@ void BidoneTask::tick() {
 
     switch (this->state)
     {
-    case 0:
-        ActualTask = InputTask;
-
-        break;
-
-    case 10:
-        ActualTask = InputTask;
-
-        if (levelAlarm) {
-            state = 20;
-        } else if (tempAlarm) {
-            state = 30;
-        } else if (!userStatus) {
-            state = 40;
-        } else {
+    case BidoneState::Homing:
+        //ActualTask = InputTask
+        if homing.done() {
+            homing.reset();
             state = 10;
         }
 
         break;
+
+    case BidoneState::Normal:
+        ActualTask = InputTask;
+
+        if (levelAlarm) {
+            state = BidoneState::LevelAlarm;
+        } else if (tempAlarm) {
+            state = BidoneState::TempAlarm;
+        } else if (!userStatus) {
+            state = BidoneState::Sleep;
+        }
+
+        break;
+
+    case BidoneState::LevelAlarm:
+        ActualTask = InputTask;
+
+        if (!levelAlarm) {
+            state = BidoneState::Homing 
+        }
+
+        break;
+
+    case BidoneState::TempAlarm:
+        ActualTask = InputTask;
+
+        if (!tempAlarm) {
+            state = BidoneState::Homing;
+        }
+
+        break;
     
+    case BidoneState::Sleep:
+        ActualTask = InputTask;
+
+        if (userStatus) {
+            state = BidoneState::Homing;
+        }
+
+        break;
     default:
         break;
     }
