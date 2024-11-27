@@ -2,7 +2,6 @@
 #define __INPUTTASK__
 
 #include "task/api/Task.h"
-#include "task/TasksType.h"
 
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"

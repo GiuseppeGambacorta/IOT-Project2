@@ -1,15 +1,13 @@
 #include "task/api/OutputTask.h"
 
 OutputTask::OutputTask(Door& door, 
-              LiquidCrystal_I2C& dysplay, 
+              LiquidCrystal_I2C& display, 
               DigitalOutput& ledGreen, 
               DigitalOutput& ledRed)
     : door(door),
-    dysplay(dysplay),
+    display(display),
     ledGreen(ledGreen),
-    ledRed(ledRed){
-    this->type = OUT;
-}
+    ledRed(ledRed){}
 
 void OutputTask::tick(){
     door.update();

@@ -14,7 +14,6 @@ StdExecTask ::StdExecTask(Door& door,
       closeButton(closeButton),
       ledGreen(ledGreen),
       ledRed(ledRed){
-        this->type = STD_EXEC;
         this->state = READY;
 }
 

@@ -2,7 +2,6 @@
 #define __OUTPUTTASK__
 
 #include "task/api/Task.h"
-#include "task/TasksType.h"
 
 #include "Components/Door/Api/Door.h"
 #include <LiquidCrystal_I2C.h>
@@ -11,7 +10,7 @@
 class OutputTask : public Task {
 private:
     Door& door;
-    LiquidCrystal_I2C& dsplay;
+    LiquidCrystal_I2C& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 

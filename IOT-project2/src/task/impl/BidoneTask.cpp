@@ -1,4 +1,4 @@
-#include "task/api/ManagerTask.h"
+#include "task/api/BidoneTask.h"
 
 
 
@@ -22,14 +22,13 @@ BidoneTask::BidoneTask(Sonar& levelDetector,
       door(door),
       display(display),
       ledGreen(ledGreen),
-      ledRed(ledRed),
-      InputTask(userDetector, levelDetector, tempSensor, openButton, closeButton),
+      ledRed(ledRed) {}
+    //  InputTask(userDetector, levelDetector, tempSensor, openButton, closeButton) 
      // StdExecTask(door, display, ledGreen, ledRed),
-      OutputTask(door, display, ledGreen, ledRed) {
-}
+     // OutputTask(door, display, ledGreen, ledRed) 
 
 void BidoneTask::tick() {
-
+    /*
     InputTask.tick();
 
 
@@ -117,13 +116,16 @@ void BidoneTask::tick() {
     ActualTask.tick();
 
     OutputTask.tick();
+    */
 }
 
-void ManagerTask::reset() {
+void BidoneTask::reset() {
+    /*
     tempAlarm = false;
     levelAlarm = false;
     userStatus = true;
 
     tempTimer.reset();
     userTimer.reset();
+    */
 }

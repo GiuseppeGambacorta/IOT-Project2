@@ -9,9 +9,7 @@ InputTask::InputTask(Pir& userDetector,
     levelDetector(levelDetector), 
     tempSensor(tempSensor), 
     openButton(openButton), 
-    closeButton(closeButton){
-    this->type = IN;
-}
+    closeButton(closeButton){}
 
 void InputTask::tick(){
     userDetector.update();

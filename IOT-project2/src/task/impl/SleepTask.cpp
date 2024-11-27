@@ -8,9 +8,7 @@ SleepTask::SleepTask(Pir& userDetector, Sonar& levelDetector, Door& door, Liquid
                      DigitalOutput& ledRed, TemperatureSensor& tempSensor) 
                      : userDetector(userDetector), levelDetector(levelDetector), door(door), display(display),
                        openButton(openButton), closeButton(closeButton), ledGreen(ledGreen), ledRed(ledRed),
-                       tempSensor(tempSensor) {
-    this->type = SLEEP;
-}
+                       tempSensor(tempSensor) {}
 
 void wakeUp() {
 }
