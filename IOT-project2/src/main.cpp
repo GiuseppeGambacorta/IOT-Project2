@@ -34,7 +34,7 @@ Scheduler scheduler;
 
 // Tasks
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
-ManagerTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
+BidoneTask managerTask(levelDetector, tempSensor, userDetector, scheduler.getTaskList());
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
 SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
 OutputTask outputTask(door, display, ledGreen, ledRed);

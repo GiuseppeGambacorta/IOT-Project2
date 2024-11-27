@@ -1,22 +1,35 @@
 #include "task/api/ManagerTask.h"
 
-ManagerTask::ManagerTask(Sonar& levelDetector,
+BidoneTask::BidoneTask(Sonar& levelDetector,
                          TemperatureSensor& tempSensor,
                          Pir& userDetector,
-                         Task* taskList[MAX_TASKS])
+                         DigitalInput& openButton,
+                         DigitalInput& closeButton,
+                         Door& Door,
+                         LiquidCrystal_I2C& display,
+                         DigitalOutput& ledGreen,
+                         DigitalOutput& ledRed)
     : levelDetector(levelDetector),
       tempSensor(tempSensor),
-      userDetector(userDetector) {
-    this->type = MANAGER;
-    this->tempAlarm = false;
-    this->levelAlarm = false;
-    this->userStatus = true;
-    for (int i = 0; i < MAX_TASKS; i++) {
-        this->taskList[i] = taskList[i];
-    }
+      userDetector(userDetector),
+      openButton(openButton),
+      closeButton(closeButton),
+      door(door),
+      display(display),
+      ledGreen(ledGreen),
+      ledRed(ledRed),
+      InputTask(userDetector, levelDetector, tempSensor, openButton, closeButton),
+     // StdExecTask(door, display, ledGreen, ledRed),
+      OutputTask(door, display, ledGreen, ledRed) {
 }
 
-void ManagerTask::tick() {
+void BidoneTask::tick() {
+
+    InputTask.tick();
+
+
+    // allarm tick
+
     int level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
     bool user = userDetector.isDetected();
@@ -42,23 +55,35 @@ void ManagerTask::tick() {
         userStatus = true;
     }
 
-    // Selezione del task attivo
-    TaskType activeTaskType = STD_EXEC; // Default task
+    switch (this->state)
+    {
+    case 0:
+        ActualTask = InputTask;
 
-    if (levelAlarm) {
-        activeTaskType = ALLARM_LEVEL;
-    } else if (tempAlarm) {
-        activeTaskType = ALLARM_TMP;
-    } else if (!userStatus) {
-        activeTaskType = SLEEP;
-    }
+        break;
 
-    // Attivazione del task corrispondente
-    for (int i = 0; i < MAX_TASKS; i++) {
-        if (taskList[i] != nullptr) {
-            taskList[i]->setActive(taskList[i]->getType() == activeTaskType);
+    case 10:
+        ActualTask = InputTask;
+
+        if (levelAlarm) {
+            state = 20;
+        } else if (tempAlarm) {
+            state = 30;
+        } else if (!userStatus) {
+            state = 40;
+        } else {
+            state = 10;
         }
+
+        break;
+    
+    default:
+        break;
     }
+
+    ActualTask.tick();
+
+    OutputTask.tick();
 }
 
 void ManagerTask::reset() {
