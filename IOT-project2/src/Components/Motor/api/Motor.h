@@ -1,10 +1,7 @@
-
 #pragma once
 
 #include "ArduinoStandardLibrary.h"
 #include "Servo.h"
-
-
 
 class Motor
 {

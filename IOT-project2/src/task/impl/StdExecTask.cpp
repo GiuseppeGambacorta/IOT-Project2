@@ -71,6 +71,7 @@ void StdExecTask ::tick(){
 }
 
 void StdExecTask ::reset(){
+    this->timer.reset();
     this->active = true;
     this->state = READY;
 }

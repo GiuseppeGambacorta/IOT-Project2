@@ -17,9 +17,6 @@ void OutputTask::tick(){
 }
 
 void OutputTask::reset(){
-    door.update();
-    //dysplay.update();
-    ledGreen.update();
-    ledRed.update();
+
 }
 

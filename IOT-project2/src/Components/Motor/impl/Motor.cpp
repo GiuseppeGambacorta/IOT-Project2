@@ -1,4 +1,4 @@
-#include "motor.h"
+#include "../api/motor.h"
 
 Motor::Motor(unsigned int pin, unsigned int offsetPosition, int upperLimit, int lowerLimit)
     : pin(pin), offsetPosition(offsetPosition), upperLimit(upperLimit), lowerLimit(lowerLimit)

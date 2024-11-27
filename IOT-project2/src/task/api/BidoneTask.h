@@ -9,6 +9,10 @@
 #include "SleepTask.h"
 #include "StdExecTask.h"
 #include "InputTask.h"
+#include "EmptyBinTask.h"
+#include "AlarmTempTask.h"
+#include "AlarmLevelTask.h"
+
 
 #define MAX_TASKS 10 //da rendere globale
 
@@ -49,10 +53,12 @@ private:
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 
-    InputTask InputTask;
-    StdExecTask StdExecTask;
-    OutputTask OutputTask;
+    InputTask inputTask;
+    StdExecTask stdExecTask;
 
+    EmptyBinTask emptyBinTask;
+    OutputTask outputTask;
+    SleepTask sleepTask;
     Task& ActualTask;
 
     BidoneState state = BidoneState::Homing;

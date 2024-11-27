@@ -28,7 +28,7 @@ BidoneTask::BidoneTask(Sonar& levelDetector,
      // OutputTask(door, display, ledGreen, ledRed) 
 
 void BidoneTask::tick() {
-    /*
+    
     InputTask.tick();
 
 
@@ -116,7 +116,7 @@ void BidoneTask::tick() {
     ActualTask.tick();
 
     OutputTask.tick();
-    */
+    
 }
 
 void BidoneTask::reset() {
