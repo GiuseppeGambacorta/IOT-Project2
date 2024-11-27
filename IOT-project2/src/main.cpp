@@ -7,7 +7,7 @@
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 
 #include "task/WasteDisposal/api/WasteDisposalTask.h"
 
@@ -17,7 +17,7 @@
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
 Door door = Door(9);
-LiquidCrystal_I2C display = LiquidCrystal_I2C(0x27, 16, 2);
+Display display = Display(0x27, 16, 2);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(3, 500);
 DigitalOutput ledGreen = DigitalOutput(5);

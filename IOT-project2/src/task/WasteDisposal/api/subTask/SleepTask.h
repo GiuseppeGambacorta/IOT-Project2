@@ -6,14 +6,14 @@
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 
 class SleepTask : public Task {
 private:
     Pir& userDetector;
     Sonar& levelDetector;
     Door& door;
-    LiquidCrystal_I2C& display;
+    Display& display;
     DigitalInput& openButton;
     DigitalInput& closeButton;
     DigitalOutput& ledGreen;
@@ -24,7 +24,7 @@ public:
     SleepTask(Pir& userDetector, 
             Sonar& levelDetector,
             Door& door, 
-            LiquidCrystal_I2C& display,
+            Display& display,
             DigitalInput& openButton, 
             DigitalInput& closeButton, 
             DigitalOutput& ledGreen,

@@ -1,9 +1,10 @@
 #include "ArduinoStandardLibrary.h"
 #include "../../api/subTask/SleepTask.h"
+#include "Components/Display/Api/Display.h"
 #include "avr/sleep.h"
 #include "EnableInterrupt.h"
 
-SleepTask::SleepTask(Pir& userDetector, Sonar& levelDetector, Door& door, LiquidCrystal_I2C& display,
+SleepTask::SleepTask(Pir& userDetector, Sonar& levelDetector, Door& door, Display& display,
                      DigitalInput& openButton, DigitalInput& closeButton, DigitalOutput& ledGreen,
                      DigitalOutput& ledRed, TemperatureSensor& tempSensor) 
                      : userDetector(userDetector), levelDetector(levelDetector), door(door), display(display),
@@ -14,20 +15,17 @@ void wakeUp() {
 }
 
 void SleepTask::tick() {
-    display.noDisplay();
-    display.noBacklight();
+    display.off();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
     enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
     disableInterrupt(userDetector.getPin());
     sleep_disable();
-    display.display();
-    display.backlight();
+    display.on();
 }
 
 void SleepTask::reset() {
-    display.display();
-    display.backlight();
+    display.on();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 }

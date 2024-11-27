@@ -4,19 +4,19 @@
 #include "../../../Task.h"
 
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 #include "ArduinoStandardLibrary.h"
 
 class OutputTask : public Task {
 private:
     Door& door;
-    LiquidCrystal_I2C& display;
+    Display& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 
 public:
     OutputTask(Door& door, 
-              LiquidCrystal_I2C& display, 
+              Display& display, 
               DigitalOutput& ledGreen, 
               DigitalOutput& ledRed);
     void tick() override;

@@ -1,8 +1,9 @@
 #include "../../api/subTask/StdExecTask.h"
+#include "Components/Display/Api/Display.h"
 
 
 StdExecTask ::StdExecTask(Door& door,
-                          LiquidCrystal_I2C& display,
+                          Display& display,
                           DigitalInput& openButton,
                           DigitalInput& closeButton,
                           DigitalOutput& ledGreen,
@@ -28,8 +29,8 @@ void StdExecTask ::homingReady(){
         door.close();
     }
     display.clear();
-    display.setCursor(0, 0);
-    display.print("PRESS OPEN TO INSERT WASTE");
+    display.on();
+    display.write("PRESS OPEN TO INSERT WASTE");
 }
 
 void StdExecTask ::execReady(){
@@ -45,8 +46,8 @@ void StdExecTask ::homingOpen(){
         door.open();
     }
     display.clear();
-    display.setCursor(0, 0);
-    display.print("PRESS CLOSE WHEN YOU'RE DONE");
+    display.on();
+    display.write("PRESS CLOSE WHEN YOU'RE DONE");
 }
 
 void StdExecTask ::execOpen(){

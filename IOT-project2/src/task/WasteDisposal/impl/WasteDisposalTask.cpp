@@ -11,7 +11,7 @@ WasteDisposalTask::WasteDisposalTask(Sonar& levelDetector,
                          DigitalInput& openButton,
                          DigitalInput& closeButton,
                          Door& Door,
-                         LiquidCrystal_I2C& display,
+                         Display& display,
                          DigitalOutput& ledGreen,
                          DigitalOutput& ledRed)
     : levelDetector(levelDetector),

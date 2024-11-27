@@ -4,7 +4,7 @@
 
 #include "ArduinoStandardLibrary.h"
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 
 
 class HomingTask : public Task {
@@ -12,7 +12,7 @@ class HomingTask : public Task {
     private:
 
         Door door;
-        LiquidCrystal_I2C display;
+        Display display;
         DigitalInput openButton;
         DigitalInput closeButton;
         DigitalOutput ledGreen;
@@ -20,7 +20,7 @@ class HomingTask : public Task {
 
     public:
         HomingTask(Door& door,
-                    LiquidCrystal_I2C& display,
+                    Display& display,
                     DigitalInput& openButton,
                     DigitalInput& closeButton,
                     DigitalOutput& ledGreen,

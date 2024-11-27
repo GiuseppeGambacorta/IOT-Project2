@@ -1,16 +1,17 @@
 #include "ArduinoStandardLibrary.h"
 #include "../../api/subTask/AlarmLevelTask.h"
+#include "Components/Display/Api/Display.h"
 
 AlarmLevelTask::AlarmLevelTask(Door& door,
-                                 LiquidCrystal_I2C& display,
+                                 Display& display,
                                  DigitalOutput& ledGreen,
                                  DigitalOutput& ledRed) 
                                  : door(door), display(display), ledGreen(ledGreen), ledRed(ledRed) {
 }
 
 void AlarmLevelTask::tick() {
-    display.setCursor(0, 0);
-    display.print("CONTAINER FULL");
+    display.on();
+    display.write("CONTAINER FULL");
     ledGreen.turnOff();
     ledRed.turnOn();
     if (door.isOpened()) {

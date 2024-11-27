@@ -1,8 +1,9 @@
 #include "../../api/subTask/HomingTask.h"
+#include "Components/Display/Api/Display.h"
 
 
 HomingTask::HomingTask(Door& door,
-                          LiquidCrystal_I2C& display,
+                          Display& display,
                           DigitalInput& openButton,
                           DigitalInput& closeButton,
                           DigitalOutput& ledGreen,

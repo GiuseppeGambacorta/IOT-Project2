@@ -5,7 +5,7 @@
 
 #include "ArduinoStandardLibrary.h"
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 
 #define OPEN_WAITING_TIME 5000
 
@@ -22,7 +22,7 @@ class StdExecTask : public Task {
         Timer timer;
 
         Door door;
-        LiquidCrystal_I2C display;
+        Display display;
         DigitalInput openButton;
         DigitalInput closeButton;
         DigitalOutput ledGreen;
@@ -36,7 +36,7 @@ class StdExecTask : public Task {
 
     public:
         StdExecTask(Door& door,
-                    LiquidCrystal_I2C& display,
+                    Display& display,
                     DigitalInput& openButton,
                     DigitalInput& closeButton,
                     DigitalOutput& ledGreen,

@@ -7,7 +7,7 @@
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
-#include <LiquidCrystal_I2C.h>
+#include "Components/Display/Api/Display.h"
 #include "ArduinoStandardLibrary.h"
 
 class InputTask : public Task {

@@ -1,7 +1,8 @@
 #include "../../api/subTask/OutputTask.h"
+#include "Components/Display/Api/Display.h"
 
 OutputTask::OutputTask(Door& door, 
-              LiquidCrystal_I2C& display, 
+              Display& display, 
               DigitalOutput& ledGreen, 
               DigitalOutput& ledRed)
     : door(door),

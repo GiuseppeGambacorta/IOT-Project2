@@ -3,22 +3,22 @@
 
 #include "../../../Task.h"
 #include "Components/Door/Api/Door.h"
+#include "Components/Display/Api/Display.h"
 #include "ArduinoStandardLibrary.h"
-#include <LiquidCrystal_I2C.h>
 
 class EmptyBinTask : public Task {
     
     private:
         Timer timer;
         Door door;
-        LiquidCrystal_I2C display;
+        Display display;
         DigitalOutput ledGreen;
         DigitalOutput ledRed;
         enum Entry{FIRST, WAITING} entry;
 
     public:
         EmptyBinTask(Door& door,
-                    LiquidCrystal_I2C& display,
+                    Display& display,
                     DigitalOutput& ledGreen,
                     DigitalOutput& ledRed);
         void tick() override;

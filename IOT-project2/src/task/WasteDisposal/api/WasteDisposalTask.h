@@ -7,6 +7,7 @@
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
+#include "Components/Display/Api/Display.h"
 #include "subTask/OutputTask.h"
 #include "subTask/SleepTask.h"
 #include "subTask/StdExecTask.h"
@@ -52,7 +53,7 @@ private:
     DigitalInput& openButton;
     DigitalInput& closeButton;
     Door& door;
-    LiquidCrystal_I2C& display;
+    Display& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 
@@ -88,7 +89,7 @@ public:
                          DigitalInput& openButton,
                          DigitalInput& closeButton,
                          Door& door,
-                         LiquidCrystal_I2C& display,
+                         Display& display,
                          DigitalOutput& ledGreen,
                          DigitalOutput& ledRed);
 

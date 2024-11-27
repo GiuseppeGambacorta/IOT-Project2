@@ -1,9 +1,10 @@
 #include "../../api/subTask/EmptybinTask.h"
+#include "Components/Display/Api/Display.h"
 
 #define T3 3000
 
 EmptyBinTask::EmptyBinTask(Door& door,
-                           LiquidCrystal_I2C& display,
+                           Display& display,
                            DigitalOutput& ledGreen,
                            DigitalOutput& ledRed)
     : timer(T3),
