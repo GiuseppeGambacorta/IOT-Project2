@@ -7,7 +7,7 @@
 #include "Components/Door/Api/Door.h"
 #include <LiquidCrystal_I2C.h>
 
-class AllarmLevelTask : public Task {
+class AlarmLevelTask : public Task {
 
 private:
     Door& door;
@@ -15,7 +15,7 @@ private:
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 public:
-    AllarmLevelTask(Door& door,
+    AlarmLevelTask(Door& door,
                     LiquidCrystal_I2C& display,
                     DigitalOutput& ledGreen,
                     DigitalOutput& ledRed);

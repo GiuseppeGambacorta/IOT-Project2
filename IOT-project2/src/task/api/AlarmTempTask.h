@@ -7,7 +7,7 @@
 #include "Components/Door/Api/Door.h"
 #include <LiquidCrystal_I2C.h>
 
-class AllarmTempTask : public Task {
+class AlarmTempTask : public Task {
 
     private:
         DigitalOutput& ledGreen;
@@ -15,7 +15,7 @@ class AllarmTempTask : public Task {
         LiquidCrystal_I2C& display;
         Door& door;
     public:
-        AllarmTempTask(DigitalOutput& ledGreen,
+        AlarmTempTask(DigitalOutput& ledGreen,
                                 DigitalOutput& ledRed,
                                 LiquidCrystal_I2C& display,
                                 Door& door);

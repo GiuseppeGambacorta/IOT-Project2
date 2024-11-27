@@ -1,14 +1,14 @@
 #include "ArduinoStandardLibrary.h"
-#include "task/api/AllarmLevelTask.h"
+#include "task/api/AlarmLevelTask.h"
 
-AllarmLevelTask::AllarmLevelTask(Door& door,
+AlarmLevelTask::AlarmLevelTask(Door& door,
                                  LiquidCrystal_I2C& display,
                                  DigitalOutput& ledGreen,
                                  DigitalOutput& ledRed) 
                                  : door(door), display(display), ledGreen(ledGreen), ledRed(ledRed) {
 }
 
-void AllarmLevelTask::tick() {
+void AlarmLevelTask::tick() {
     display.setCursor(0, 0);
     display.print("CONTAINER FULL");
     ledGreen.turnOff();
@@ -19,5 +19,5 @@ void AllarmLevelTask::tick() {
     }
 }
 
-void AllarmLevelTask::reset() {
+void AlarmLevelTask::reset() {
 }

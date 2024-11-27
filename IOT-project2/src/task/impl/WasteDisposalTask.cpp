@@ -1,11 +1,11 @@
-#include "task/api/BidoneTask.h"
+#include "task/api/WasteDisposalTask.h"
 
 
 
 
 
 
-BidoneTask::BidoneTask(Sonar& levelDetector,
+WasteDisposalTask::WasteDisposalTask(Sonar& levelDetector,
                          TemperatureSensor& tempSensor,
                          Pir& userDetector,
                          DigitalInput& openButton,
@@ -27,7 +27,7 @@ BidoneTask::BidoneTask(Sonar& levelDetector,
      // StdExecTask(door, display, ledGreen, ledRed),
      // OutputTask(door, display, ledGreen, ledRed) 
 
-void BidoneTask::tick() {
+void WasteDisposalTask::tick() {
     
     InputTask.tick();
 
@@ -61,7 +61,7 @@ void BidoneTask::tick() {
 
     switch (this->state)
     {
-    case BidoneState::Homing:
+    case WasteDisposalState::Homing:
         //ActualTask = InputTask
         if homing.done() {
             homing.reset();
@@ -70,42 +70,42 @@ void BidoneTask::tick() {
 
         break;
 
-    case BidoneState::Normal:
+    case WasteDisposalState::Normal:
         ActualTask = InputTask;
 
         if (levelAlarm) {
-            state = BidoneState::LevelAlarm;
+            state = WasteDisposalState::LevelAlarm;
         } else if (tempAlarm) {
-            state = BidoneState::TempAlarm;
+            state = WasteDisposalState::TempAlarm;
         } else if (!userStatus) {
-            state = BidoneState::Sleep;
+            state = WasteDisposalState::Sleep;
         }
 
         break;
 
-    case BidoneState::LevelAlarm:
+    case WasteDisposalState::LevelAlarm:
         ActualTask = InputTask;
 
         if (!levelAlarm) {
-            state = BidoneState::Homing 
+            state = WasteDisposalState::Homing 
         }
 
         break;
 
-    case BidoneState::TempAlarm:
+    case WasteDisposalState::TempAlarm:
         ActualTask = InputTask;
 
         if (!tempAlarm) {
-            state = BidoneState::Homing;
+            state = WasteDisposalState::Homing;
         }
 
         break;
     
-    case BidoneState::Sleep:
+    case WasteDisposalState::Sleep:
         ActualTask = InputTask;
 
         if (userStatus) {
-            state = BidoneState::Homing;
+            state = WasteDisposalState::Homing;
         }
 
         break;
@@ -119,7 +119,7 @@ void BidoneTask::tick() {
     
 }
 
-void BidoneTask::reset() {
+void WasteDisposalTask::reset() {
     /*
     tempAlarm = false;
     levelAlarm = false;

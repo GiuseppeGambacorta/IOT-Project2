@@ -1,6 +1,9 @@
 #ifndef __MANAGERTASK__
 #define __MANAGERTASK__
 
+
+
+
 #include "Task.h"
 #include "Components/Pir/Api/Pir.h"
 #include "Components/Sonar/Api/Sonar.h"
@@ -22,14 +25,14 @@
 #define TEMP_MAX 100
 
 
-struct BidoneCommunication
+struct WasteDisposalCommunication
 {
     bool alarm;
     int level;
 };
 
 
-enum BidoneState {
+enum WasteDisposalState {
     Homing = 0,
     Normal = 10,
     LevelAlarm = 20,
@@ -40,7 +43,7 @@ enum BidoneState {
 
 
 
-class BidoneTask : public Task {
+class WasteDisposalTask : public Task {
 
 private:
     Sonar& levelDetector;
@@ -61,8 +64,8 @@ private:
     SleepTask sleepTask;
     Task& ActualTask;
 
-    BidoneState state = BidoneState::Homing;
-    BidoneCommunication communication;
+    WasteDisposalState state = WasteDisposalState::Homing;
+    WasteDisposalCommunication communication;
     
     bool tempAlarm;
     bool levelAlarm;
@@ -72,7 +75,7 @@ private:
     Timer userTimer = Timer(TSleep);
     
 public:
-    BidoneTask(Sonar& levelDetector,
+    WasteDisposalTask(Sonar& levelDetector,
                          TemperatureSensor& tempSensor,
                          Pir& userDetector,
                          DigitalInput& openButton,

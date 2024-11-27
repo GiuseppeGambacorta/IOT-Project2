@@ -16,7 +16,7 @@ private:
   int basePeriod;
   int nTasks;
   InputTask* inputTask;
-  BidoneTask* managerTask;
+  WasteDisposalTask* managerTask;
   Task* taskExchangeableList[MAX_TASKS];  
   OutputTask* outputTask;
   SchedulerTimer timer = SchedulerTimer();
@@ -25,7 +25,7 @@ public:
   Scheduler();
   void init(int basePeriod); 
   bool addInputTask(InputTask* inputTask);
-  bool addManagerTask(BidoneTask* managerTask); 
+  bool addManagerTask(WasteDisposalTask* managerTask); 
   bool addTask(Task* task); 
   bool addOutputTask(OutputTask* outputTask); 
   void schedule();
