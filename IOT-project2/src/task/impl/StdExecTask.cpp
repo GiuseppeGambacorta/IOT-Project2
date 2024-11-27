@@ -7,13 +7,13 @@ StdExecTask ::StdExecTask(Door& door,
                           DigitalInput& closeButton,
                           DigitalOutput& ledGreen,
                           DigitalOutput& ledRed)
-    : door(door),
+    : timer(OPEN_WAITING_TIME),
+      door(door),
       display(display),
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
-      ledRed(ledRed),
-      timer(OPEN_WAITING_TIME){
+      ledRed(ledRed){
         this->type = STD_EXEC;
         this->state = READY;
 }
