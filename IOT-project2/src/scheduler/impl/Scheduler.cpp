@@ -13,7 +13,7 @@ bool Scheduler::addInputTask(InputTask* inputTask) {
   return true;
 }
 
-bool Scheduler::addManagerTask(ManagerTask* managerTask) {
+bool Scheduler::addManagerTask(BidoneTask* managerTask) {
   this->managerTask = managerTask;
   return true;
 }
