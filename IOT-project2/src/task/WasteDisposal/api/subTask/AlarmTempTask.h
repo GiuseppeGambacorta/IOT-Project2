@@ -14,11 +14,15 @@ class AlarmTempTask : public Task {
         DigitalOutput& ledRed;
         Display& display;
         Door& door;
+        TemperatureSensor& tempSensor;
+        enum State {IDLE, ALARM, RESET} state;
+        Timer* timer;
     public:
         AlarmTempTask(DigitalOutput& ledGreen,
                                 DigitalOutput& ledRed,
                                 Display& display,
-                                Door& door);
+                                Door& door,
+                                TemperatureSensor& tempSensor);
         void tick() override;
         void reset() override;
 };
