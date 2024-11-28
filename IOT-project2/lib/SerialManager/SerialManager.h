@@ -339,6 +339,7 @@ public:
     {
         if (isConnectionEstablished())
         {
+            Serial.flush(); // wait for the transmission of outgoing serial data to complete, before sending new data
             sendinitCommunicationData();
             sendVariables();
             sendDebugMessages();
@@ -347,13 +348,12 @@ public:
             internalRegister.resetDebugMessages();
             internalRegister.resetEventMessages();
 
-            Serial.flush();
         }
     }
 
     void getData()
     {
-        if (Serial.available() > 0)
+        if (this->isSerialAvailable() && Serial.available() > 0)
         {
 
             byte header = Serial.read();
