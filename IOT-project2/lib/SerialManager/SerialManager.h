@@ -300,11 +300,15 @@ public:
         {
             if (Serial.available() > 0)
             {
-                byte received = (short unsigned int)Serial.read();
+                byte received = (short unsigned int)Serial.read(); //convert because i want to check a number not a char or a byte
                 if (received == 255)
                 {
                     Serial.write(10);
-                    connectionEstablished = true;
+
+                    received = (short unsigned int)Serial.read(); 
+                    if (received == 0){
+                        connectionEstablished = true;
+                    }
                 }
             }
         }
@@ -371,7 +375,7 @@ public:
                     int *var = internalRegister.getIncomingDataHeader(int(id));
                     if (var != nullptr)
                     {
-                        *var = (int(buffer[0]) << 8) | int(buffer[1]);
+                        *var = (int(buffer[0]) << 8) | int(buffer[1]); //for now only int are supported
                     }
                 }
             }

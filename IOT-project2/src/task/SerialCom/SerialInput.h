@@ -13,6 +13,7 @@ public:
     SerialInputTask() : serialManager(ServiceLocator::getSerialManagerInstance()) {}
 
     void tick() override {
+        serialManager.doHandshake();
         serialManager.getData();
     }
     void reset() override {
