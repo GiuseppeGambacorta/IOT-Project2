@@ -16,8 +16,8 @@ private:
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
     Sonar& levelDetector;
-    enum State {IDLE, ALARM, RESET} state;
-    //Timer* timer; SE VOGLIAMO FARE EMPTY BIN DIRETTAMENTE QUI DENTRO
+    enum State {IDLE, ALARM, EMPTY, RESET} state;
+    Timer timer; //SE VOGLIAMO FARE EMPTY BIN DIRETTAMENTE QUI DENTRO
 public:
     AlarmLevelTask(Door& door,
                     Display& display,
