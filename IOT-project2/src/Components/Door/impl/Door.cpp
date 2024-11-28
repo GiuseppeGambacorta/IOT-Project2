@@ -20,6 +20,11 @@ void Door::empty() {
     motor.setPosition(-90);
 }
 
+void Door::update() {
+    motor.update();
+}
+
+
 bool Door::isClosed() {
     return motor.getPosition() == 0  && motor.isInPosition() ;
 }

@@ -1,15 +1,10 @@
-#ifndef __TASK__
-#define __TASK__
-
-#include "task/TasksType.h"
-
+#pragma once
 class Task {
 
   protected:
     int myPeriod;
     int timeElapsed;
     bool active;
-    TaskType type;
     
   public:
     virtual void init(int period){
@@ -30,10 +25,7 @@ class Task {
       }
     }
 
-    TaskType getType(){
-      TaskType retType = this->type;
-      return retType;
-    }
+
 
     bool isActive(){
       bool retActive = this->active;
@@ -48,4 +40,3 @@ class Task {
   
 };
 
-#endif

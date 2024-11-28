@@ -7,6 +7,7 @@
 class Sonar {
 public:
     Sonar(int triggerPin, int echoPin);
+    void update();
     float readDistance();
     bool isThresholdLower();
 

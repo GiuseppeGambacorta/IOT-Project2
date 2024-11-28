@@ -1,15 +1,14 @@
-#include "task/api/TemperatureCheckTask.h"
-#include "task/api/TemperatureSensor.h"
+#include "../../api/subTask/TemperatureCheck.h"
 #include <Arduino.h>
 
 #define MAXTEMPTIME 10000
 
-TemperatureCheckTask::TemperatureCheckTask(TemperatureSensor& sensor) : tempSensor(sensor) {
+TemperatureCheck::TemperatureCheck(TemperatureSensor& sensor) : tempSensor(sensor) {
     state = OK;
     timer = new Timer(MAXTEMPTIME);
 }
 
-void TemperatureCheckTask::tick() {
+void TemperatureCheck::tick() {
     timer->active(tempSensor.isThresholdExceeded());
     if (timer->isTimeElapsed()) {
         state = EMERGENCY;
@@ -19,11 +18,11 @@ void TemperatureCheckTask::tick() {
 
 }
 
-void TemperatureCheckTask::reset() {
+void TemperatureCheck::reset() {
     state = OK;
     timer->reset();
 }
 
-int TemperatureCheckTask::getState() {
+int TemperatureCheck::getState() {
     return state;
 }

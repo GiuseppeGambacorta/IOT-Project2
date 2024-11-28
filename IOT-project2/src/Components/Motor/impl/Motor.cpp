@@ -1,4 +1,4 @@
-#include "motor.h"
+#include "../api/motor.h"
 
 Motor::Motor(unsigned int pin, unsigned int offsetPosition, int upperLimit, int lowerLimit)
     : pin(pin), offsetPosition(offsetPosition), upperLimit(upperLimit), lowerLimit(lowerLimit)
@@ -10,7 +10,7 @@ void Motor::setPosition(int value)
 
     if (value >= lowerLimit && value <= upperLimit)
     {
-        motor.write(value + offsetPosition);
+        commandPosition = value + offsetPosition;
         this->lastCommandPosition = value;
     }
 }
@@ -45,4 +45,9 @@ bool Motor::isAtLowerLimit()
 void Motor::init()
 {
     motor.attach(pin);
+}
+
+void Motor::update()
+{
+    motor.write(commandPosition);
 }

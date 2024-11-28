@@ -1,5 +1,5 @@
 #pragma once
-#include "Motor/Motor.h"
+#include "../../Motor/api/Motor.h"
 
 class Door {
 private:
@@ -14,4 +14,5 @@ public:
     bool isClosed();
     bool isOpened();
     bool isInEmptyPosition();
+    void update();
 };

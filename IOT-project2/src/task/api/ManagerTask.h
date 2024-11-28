@@ -28,6 +28,7 @@ public:
                 DigitalInput closeButton,
                 Task* taskList[MAX_TASKS]);
     void tick();
+    void tick();
     void reset();
 };
 
