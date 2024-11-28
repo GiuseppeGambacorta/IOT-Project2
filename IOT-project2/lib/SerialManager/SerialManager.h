@@ -296,27 +296,26 @@ public:
 
     void doHandshake()
     {
-        if (!connectionEstablished)
+        
+        if (Serial.available() > 0)
         {
-            if (Serial.available() > 0)
+            byte received = (short unsigned int)Serial.read(); //convert because i want to check a number not a char or a byte
+            if (received == 255)
             {
-                byte received = (short unsigned int)Serial.read(); //convert because i want to check a number not a char or a byte
-                if (received == 255)
-                {
-                    Serial.write(10);
+                Serial.write(10);
 
-                    received = (short unsigned int)Serial.read(); 
-                    if (received == 0){
-                        connectionEstablished = true;
-                    }
+                received = (short unsigned int)Serial.read(); 
+                if (received == 0){
+                    connectionEstablished = true;
                 }
             }
         }
+        
     }
 
     bool isConnectionEstablished()
     {
-        return this->connectionEstablished;
+        return this->connectionEstablished && isSerialAvailable();
     }
 
     void addVariableToSend(byte *var, VarType varType)
@@ -341,8 +340,6 @@ public:
 
     void sendData()
     {
-        if (isConnectionEstablished())
-        {
             Serial.flush(); // wait for the transmission of outgoing serial data to complete, before sending new data
             sendinitCommunicationData();
             sendVariables();
@@ -351,13 +348,12 @@ public:
 
             internalRegister.resetDebugMessages();
             internalRegister.resetEventMessages();
-
-        }
+   
     }
 
     void getData()
     {
-        if (this->isSerialAvailable() && Serial.available() > 0)
+        if (Serial.available() > 0)
         {
 
             byte header = Serial.read();

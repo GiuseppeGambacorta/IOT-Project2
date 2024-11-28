@@ -13,8 +13,11 @@ public:
     SerialOutputTask() : serialManager(ServiceLocator::getSerialManagerInstance()) {}
 
     void tick() override {
-        serialManager.doHandshake();
-        serialManager.sendData();  
+        if (!serialManager.isConnectionEstablished()){
+            serialManager.doHandshake();
+        } else {
+            serialManager.sendData();
+        }
     }
     void reset() override {
         ;

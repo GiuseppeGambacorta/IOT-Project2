@@ -13,8 +13,11 @@ public:
     SerialInputTask() : serialManager(ServiceLocator::getSerialManagerInstance()) {}
 
     void tick() override {
-        serialManager.doHandshake();
-        serialManager.getData();
+        if (!serialManager.isConnectionEstablished()){
+            serialManager.doHandshake();
+        } else {
+            serialManager.getData();
+        }
     }
     void reset() override {
         ;
