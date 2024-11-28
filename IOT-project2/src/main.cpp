@@ -32,7 +32,7 @@ InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeBu
 
   EmptyBinTask emptyBinTask(door, display, ledGreen, ledRed);
   HomingTask homingTask(door, display, openButton, closeButton, ledGreen, ledRed);
-  StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
+  StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed, userDetector);
   SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
 
   OutputTask outputTask(door, display, ledGreen, ledRed);
