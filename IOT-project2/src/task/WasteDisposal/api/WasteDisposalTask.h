@@ -47,33 +47,16 @@ enum WasteDisposalState {
 class WasteDisposalTask : public Task {
 
 private:
-    Sonar& levelDetector;
-    TemperatureSensor& tempSensor;
-    Pir& userDetector;
-    DigitalInput& openButton;
-    DigitalInput& closeButton;
-    Door& door;
-    Display& display;
-    DigitalOutput& ledGreen;
-    DigitalOutput& ledRed;
+   
 
 
-    AlarmLevelTask alarmLevelTask;
-    AlarmTempTask alarmTempTask;
-    EmptyBinTask emptyBinTask;
-    HomingTask homingTask;
-    InputTask inputTask;
-    OutputTask outputTask;
-    SleepTask sleepTask;
-    StdExecTask stdExecTask;
+    EmptyBinTask& emptyBinTask;
+    HomingTask& homingTask;
+    SleepTask& sleepTask;
+    StdExecTask& stdExecTask;
 
-
-
-
-    Task& ActualTask = homingTask;
 
     WasteDisposalState state = WasteDisposalState::Homing;
-    WasteDisposalCommunication communication;
     
     bool tempAlarm;
     bool levelAlarm;
@@ -83,15 +66,12 @@ private:
     Timer userTimer = Timer(TSleep);
     
 public:
-    WasteDisposalTask(Sonar& levelDetector,
-                         TemperatureSensor& tempSensor,
-                         Pir& userDetector,
-                         DigitalInput& openButton,
-                         DigitalInput& closeButton,
-                         Door& door,
-                         Display& display,
-                         DigitalOutput& ledGreen,
-                         DigitalOutput& ledRed);
+    WasteDisposalTask(
+                      EmptyBinTask& emptyBinTask,
+                      HomingTask& homingTask,
+                      SleepTask& sleepTask,
+                      StdExecTask& stdExecTask
+                     );
 
     void tick() override;
     void reset() override;

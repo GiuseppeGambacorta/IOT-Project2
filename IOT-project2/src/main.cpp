@@ -24,10 +24,25 @@ DigitalOutput ledGreen = DigitalOutput(5);
 DigitalOutput ledRed = DigitalOutput(4);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
+
+InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
+
+  AlarmLevelTask alarmLevelTask(door, display, ledGreen, ledRed);
+  AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door);
+
+  EmptyBinTask emptyBinTask(door, display, ledGreen, ledRed);
+  HomingTask homingTask(door, display, openButton, closeButton, ledGreen, ledRed);
+  StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed);
+  SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
+
+  OutputTask outputTask(door, display, ledGreen, ledRed);
+
+  WasteDisposalTask wasteDisposalTask = WasteDisposalTask(emptyBinTask, homingTask, sleepTask, stdExecTask);
+
 // Scheduler
 Scheduler scheduler;
 
-WasteDisposalTask wasteDisposalTask = WasteDisposalTask(levelDetector, tempSensor, userDetector, openButton, closeButton, door, display, ledGreen, ledRed);
+
 
 
 unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
@@ -56,7 +71,17 @@ void setup() {
 
   //inserimento tank in list
 
+  scheduler.addTask(&inputTask);
+  scheduler.addTask(&alarmLevelTask);
+  scheduler.addTask(&alarmTempTask);
+
   scheduler.addTask(&wasteDisposalTask);
+  scheduler.addTask(&emptyBinTask);
+  scheduler.addTask(&homingTask);
+  scheduler.addTask(&stdExecTask);
+  scheduler.addTask(&sleepTask);
+
+  scheduler.addTask(&outputTask);
 
 
   
