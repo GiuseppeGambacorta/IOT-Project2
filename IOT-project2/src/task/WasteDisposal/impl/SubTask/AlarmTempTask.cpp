@@ -17,39 +17,50 @@ AlarmTempTask::AlarmTempTask(DigitalOutput& ledGreen,
 }
 
 void AlarmTempTask::tick() {
-    switch (this->state)
-    {
+    switch (this->state) {
     case IDLE:
-        this->timer->active(tempSensor.isThresholdExceeded());
-        if (this->timer->isTimeElapsed()) {
-            this->state = ALARM;
-            //alarmTemp=true;
-        }
+        handleIdleState();
         break;
     case ALARM:
-        display.on();
-        display.write("PROBLEM DETECTED");
-        ledGreen.turnOff();
-        ledRed.turnOn();
-        if (door.isOpened()) {
-            door.close();
-            door.update();
-        }
-        this->state = RESET;
-        //alarmTempReset=true;
-        //alarmTemp=false;
+        handleAlarmState();
         break;
     case RESET:
-        ledGreen.turnOn();
-        ledRed.turnOff();
-        display.clear();
-        this->timer->reset();
-        this->state = IDLE;
-        //alarmTempReset=false;
+        handleResetState();
         break;
     default:
         break;
     }
+}
+
+void AlarmTempTask::handleIdleState() {
+    this->timer->active(tempSensor.isThresholdExceeded());
+    if (this->timer->isTimeElapsed()) {
+        this->state = ALARM;
+        //alarmTemp=true;
+    }
+}
+
+void AlarmTempTask::handleAlarmState() {
+    display.on();
+    display.write("PROBLEM DETECTED");
+    ledGreen.turnOff();
+    ledRed.turnOn();
+    if (door.isOpened()) {
+        door.close();
+        door.update();
+    }
+    this->state = RESET;
+    //alarmTempReset=true;
+    //alarmTemp=false;
+}
+
+void AlarmTempTask::handleResetState() {
+    ledGreen.turnOn();
+    ledRed.turnOff();
+    display.clear();
+    this->timer->reset();
+    this->state = IDLE;
+    //alarmTempReset=false;
 }
 
 void AlarmTempTask::reset() {

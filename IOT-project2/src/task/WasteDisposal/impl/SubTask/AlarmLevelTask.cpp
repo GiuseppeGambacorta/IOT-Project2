@@ -21,52 +21,68 @@ AlarmLevelTask::AlarmLevelTask(Door& door,
 
 void AlarmLevelTask::tick() {
     this->timer.active(this->state == EMPTY);
-    switch (this->state)
-    {
+    switch (this->state) {
     case IDLE:
-        if (levelDetector.isThresholdLower()) {
-            this->state = ALARM;
-            //alarmLevel=true;
-        }
+        handleIdleState();
         break;
     case ALARM:
-        display.on();
-        display.write("CONTAINER FULL");
-        ledGreen.turnOff();
-        ledRed.turnOn();
-        if (door.isOpened()) {
-            door.close();
-            door.update();
-        }
-        if(/*buttonPressed*/true){
-            this->state = EMPTY;
-            //alarmLevelReset=false;
-            //alarmLevel=false;
-            //emptyBin=true;
-        }
+        handleAlarmState();
         break;
     case EMPTY:
-        door.empty();
-        if (door.isInEmptyPosition()){
-            if (timer.isTimeElapsed()){
+        handleEmptyState();
+        break;
+    case RESET:
+        handleResetState();
+        break;
+    default:
+        break;
+    }
+}
+
+void AlarmLevelTask::handleIdleState() {
+    if (levelDetector.isThresholdLower()) {
+        this->state = ALARM;
+        //alarmLevel=true;
+    }
+}
+
+void AlarmLevelTask::handleAlarmState() {
+    display.on();
+    display.write("CONTAINER FULL");
+    ledGreen.turnOff();
+    ledRed.turnOn();
+    if (door.isOpened()) {
+        door.close();
+        door.update();
+    }
+    if (/*buttonPressed*/true) {
+        this->state = EMPTY;
+        //alarmLevelReset=false;
+        //alarmLevel=false;
+        //emptyBin=true;
+    }
+}
+
+void AlarmLevelTask::handleEmptyState() {
+    door.empty();
+    if (door.isInEmptyPosition()) {
+        if (timer.isTimeElapsed()) {
             this->state = RESET;
             //alarmLevelReset=true;
             //alarmLevel=false;
             //emptyBin=false;
         }
-        }
-    case RESET:
-        ledGreen.turnOn();
-        ledRed.turnOff();
-        display.clear();
-        this->state = IDLE;
-        //alarmLevelReset=false;
-        //alarmLevel=false;
-        //emptyBin=false;
-        break;
-    default:
-        break;
     }
+}
+
+void AlarmLevelTask::handleResetState() {
+    ledGreen.turnOn();
+    ledRed.turnOff();
+    display.clear();
+    this->state = IDLE;
+    //alarmLevelReset=false;
+    //alarmLevel=false;
+    //emptyBin=false;
 }
 
 void AlarmLevelTask::reset() {

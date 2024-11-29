@@ -17,7 +17,13 @@ private:
     DigitalOutput& ledRed;
     Sonar& levelDetector;
     enum State {IDLE, ALARM, EMPTY, RESET} state;
-    Timer timer; //SE VOGLIAMO FARE EMPTY BIN DIRETTAMENTE QUI DENTRO
+    Timer timer;
+
+    void handleIdleState();
+    void handleAlarmState();
+    void handleEmptyState();
+    void handleResetState();
+
 public:
     AlarmLevelTask(Door& door,
                     Display& display,

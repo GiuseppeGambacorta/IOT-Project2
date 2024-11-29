@@ -17,6 +17,10 @@ class AlarmTempTask : public Task {
         TemperatureSensor& tempSensor;
         enum State {IDLE, ALARM, RESET} state;
         Timer* timer;
+
+        void handleIdleState();
+        void handleAlarmState();
+        void handleResetState();
     public:
         AlarmTempTask(DigitalOutput& ledGreen,
                                 DigitalOutput& ledRed,
