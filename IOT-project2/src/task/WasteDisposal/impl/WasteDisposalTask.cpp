@@ -16,6 +16,7 @@ WasteDisposalTask::WasteDisposalTask(
 
 
 void WasteDisposalTask::tick() {
+    /*
     int level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
     bool user = userDetector.isDetected();
@@ -24,6 +25,7 @@ void WasteDisposalTask::tick() {
     this->stdExecTask.active(false);
     this->sleepTask.active(false);
     this->emptyBinTask.active(false);
+    */
 }
 
 void WasteDisposalTask::reset() {
