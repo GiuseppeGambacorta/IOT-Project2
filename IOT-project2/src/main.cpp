@@ -8,7 +8,8 @@
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
-
+#include "task/SerialCom/SerialInput.h"
+#include "task/SerialCom/SerialOutput.h"
 
 
 #define SECURITY_MARGIN (maxTime/10)
@@ -39,15 +40,18 @@ unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
 
 
 int i = 530;
-
 String s = "gambacorta";
 int i2 = 65;
 bool start = false;
-SerialManager serialManager(9600);
+
 bool toggle = false;
 
+
+SerialInputTask inputTask();
+SerialOutputTask outputTask();
+SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
+
 void setup() {
-  Serial.begin(9600);
 
   //inserimento tank in list
 
