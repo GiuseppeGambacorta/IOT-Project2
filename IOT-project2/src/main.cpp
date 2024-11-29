@@ -9,9 +9,14 @@
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
 
+#include "task/WasteDisposal/api/subTask/InputTask.h"
 #include "task/WasteDisposal/api/WasteDisposalTask.h"
+#include "task/WasteDisposal/api/subTask/StdExecTask.h"
+#include "task/WasteDisposal/api/subTask/AlarmLevelTask.h"
+#include "task/WasteDisposal/api/subTask/AlarmTempTask.h"
+#include "task/WasteDisposal/api/subTask/OutputTask.h"
 
-#define SECURITY_MARGIN (maxTime/10)
+//#define SECURITY_MARGIN (maxTime/10)
 
 // Componenti I/O
 Pir userDetector = Pir(8);
@@ -24,28 +29,18 @@ DigitalOutput ledGreen = DigitalOutput(5);
 DigitalOutput ledRed = DigitalOutput(4);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
-
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
+StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed, userDetector);
+AlarmLevelTask alarmLevelTask(door,display,ledGreen,ledRed, levelDetector);
+AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door, tempSensor);
+OutputTask outputTask(door, display, ledGreen, ledRed);
 
-  AlarmLevelTask alarmLevelTask(door, display, ledGreen, ledRed);
-  AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door);
-
-  EmptyBinTask emptyBinTask(door, display, ledGreen, ledRed);
-  HomingTask homingTask(door, display, openButton, closeButton, ledGreen, ledRed);
-  StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed, userDetector);
-  SleepTask sleepTask(userDetector, levelDetector, door, display, openButton, closeButton, ledGreen, ledRed, tempSensor);
-
-  OutputTask outputTask(door, display, ledGreen, ledRed);
-
-  WasteDisposalTask wasteDisposalTask = WasteDisposalTask(emptyBinTask, homingTask, sleepTask, stdExecTask);
+WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
 
 // Scheduler
 Scheduler scheduler;
 
-
-
-
-unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
+/*unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     unsigned long maxTime = 0;
 
     for (int i = 0; i < scheduler.getNumTask(); i++) {
@@ -63,38 +58,33 @@ unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
     }
     maxTime += SECURITY_MARGIN;
     return maxTime;
-}
+}*/
 
 
 void setup() {
   Serial.begin(9600);
 
-  //inserimento tank in list
+  //init task
+  inputTask.init(20);
+  wasteDisposalTask.init(20);
+  stdExecTask.init(20);
+  alarmLevelTask.init(20);
+  alarmTempTask.init(20);
+  outputTask.init(20);
 
+  //inserimento tank in list
   scheduler.addTask(&inputTask);
+  scheduler.addTask(&wasteDisposalTask);
   scheduler.addTask(&alarmLevelTask);
   scheduler.addTask(&alarmTempTask);
-
-  scheduler.addTask(&wasteDisposalTask);
-  scheduler.addTask(&emptyBinTask);
-  scheduler.addTask(&homingTask);
   scheduler.addTask(&stdExecTask);
-  scheduler.addTask(&sleepTask);
-
   scheduler.addTask(&outputTask);
-
-
   
-  scheduler.init(calculateOptimalPeriod(scheduler));
-
-  for (int i = 0; i < scheduler.getNumTask(); i++) {
-    Task* task = scheduler.getTask(i);
-    task->reset();
-  }
+  // init scheduler
+  scheduler.init(150);
 
 }
 
 void loop() {
   scheduler.schedule();
 }
-
