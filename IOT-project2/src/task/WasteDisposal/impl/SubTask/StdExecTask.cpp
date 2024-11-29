@@ -1,5 +1,8 @@
 #include "../../api/subTask/StdExecTask.h"
 
+#include "avr/sleep.h"
+#include "EnableInterrupt.h"
+
 
 StdExecTask ::StdExecTask(Door& door,
                           Display& display,
@@ -81,9 +84,9 @@ void StdExecTask ::execSleep(){
     homingSleep();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    //enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
+    enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
-    //disableInterrupt(userDetector.getPin());
+    disableInterrupt(userDetector.getPin());
     sleep_disable();
     display.on();
     state = READY;

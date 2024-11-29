@@ -8,8 +8,6 @@
 #include "Components/Display/Api/Display.h"
 #include "Components/Pir/Api/Pir.h"
 
-#include "avr/sleep.h"
-//#include "EnableInterrupt.h"
 
 #define OPEN_WAITING_TIME 5000
 #define TSleep 10000
