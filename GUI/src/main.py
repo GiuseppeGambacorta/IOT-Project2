@@ -95,12 +95,14 @@ class RealTimePlotApp(ctk.CTk):
                         if var.id == self.data_to_read["temperature"]:
                             temperature = var
 
+
                     if temperature is None:
                         continue
 
                     for var in self.var:
                         if var.id == self.data_to_read["level"]:
                             level = var
+                            print(level.data)
 
                     if level is None:
                         continue
@@ -126,7 +128,7 @@ class RealTimePlotApp(ctk.CTk):
                     # Aggiorna la gui in modo sicuro dal thread principale
                     self.after(0, self.safe_update)
                     
-                    time.sleep(1)
+                    time.sleep(0.5)
                 else:
                     self.arduino.connect()
             except RuntimeError:

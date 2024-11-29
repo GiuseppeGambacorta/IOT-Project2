@@ -10,6 +10,7 @@
 #include "Components/Display/Api/Display.h"
 #include "task/SerialCom/SerialInput.h"
 #include "task/SerialCom/SerialOutput.h"
+#include "task/SerialCom/ProvaTask.h"
 
 
 #define SECURITY_MARGIN (maxTime/10)
@@ -39,16 +40,12 @@ unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
 }
 
 
-int i = 530;
-String s = "gambacorta";
-int i2 = 65;
-bool start = false;
 
-bool toggle = false;
 
 
 SerialInputTask inputTask;
 SerialOutputTask outputTask;
+ProvaTask provaTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 Scheduler scheduler;
 
@@ -68,17 +65,21 @@ void setup() {
 
   //scheduler.addTask(&outputTask);
 
-  scheduler.init(100);
-  scheduler.addTask(&inputTask);
-scheduler.addTask(&outputTask);
-outputTask.setActive(true);
-inputTask.setActive(true);
+    scheduler.init(50);
+    scheduler.addTask(&inputTask);
+    scheduler.addTask(&outputTask);
+    scheduler.addTask(&provaTask);
+    outputTask.setActive(true);
+    inputTask.setActive(true);
+    provaTask.setActive(true);
+    inputTask.init(250);
+    outputTask.init(250);
+    provaTask.init(50);
+
 
 
     serialManager.init();
-    serialManager.addVariableToSend((byte *)&i, VarType::INT);
-    serialManager.addVariableToSend((byte *)&i2, VarType::INT);
-    serialManager.addVariableToSend(&s);
+
     pinMode(2, OUTPUT);
     // Serial.begin(9600);
     digitalWrite(2, HIGH);
@@ -90,40 +91,9 @@ void loop() {
 
 
 
-        scheduler.schedule();
+    scheduler.schedule();
     
 
     
-
-        int* restore = serialManager.getvar(0);
-        if (*restore == 1) {
-            serialManager.addEventMessage("restore arrivato");
-            *restore = 0;
-        }
-
-        int* empty = serialManager.getvar(1);
-        if (*empty == 1) {
-            serialManager.addEventMessage("svuota arrivato");
-            *empty = 0;
-        }
-
-        s = "gambacorta " + String(i);
-        delay(1000);
-    
-    
-
-
-    serialManager.addDebugMessage("prova debug seriale");
-    serialManager.addDebugMessage("prova debug seriale");
-    serialManager.addEventMessage("prova evento seriale");
-    toggle = !toggle;
-    if (toggle)
-    {
-        serialManager.addDebugMessage("prova debug seriale che capita ogni tanto");
-    }
-
-    digitalWrite(2, !start);
-
-    i += 5;
 }
 
