@@ -10,18 +10,18 @@ SleepTask::SleepTask(Pir& userDetector, Sonar& levelDetector, Door& door, Displa
                      : userDetector(userDetector), levelDetector(levelDetector), door(door), display(display),
                        openButton(openButton), closeButton(closeButton), ledGreen(ledGreen), ledRed(ledRed),
                        tempSensor(tempSensor) {}
-
+/*
 void wakeUp() {
-}
+}*/
 
 void SleepTask::tick() {
-    display.off();
+    display.off();/*
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
     enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
     disableInterrupt(userDetector.getPin());
-    sleep_disable();
+    sleep_disable();*/
     display.on();
 }
 
