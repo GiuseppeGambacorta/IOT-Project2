@@ -65,14 +65,14 @@ void setup() {
 
   //scheduler.addTask(&outputTask);
 
-    scheduler.init(50);
+    scheduler.init(25);
     scheduler.addTask(&inputTask);
     scheduler.addTask(&outputTask);
     scheduler.addTask(&provaTask);
     outputTask.setActive(true);
     inputTask.setActive(true);
     provaTask.setActive(true);
-    inputTask.init(250);
+    inputTask.init(500);
     outputTask.init(250);
     provaTask.init(50);
 
