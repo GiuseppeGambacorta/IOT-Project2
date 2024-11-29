@@ -84,6 +84,7 @@ void loop() {
 
 
         outputTask.tick();
+        inputTask.tick();
     
 
     
