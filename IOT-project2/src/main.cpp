@@ -50,6 +50,7 @@ bool toggle = false;
 SerialInputTask inputTask;
 SerialOutputTask outputTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
+Scheduler scheduler;
 
 void setup() {
 
@@ -67,6 +68,12 @@ void setup() {
 
   //scheduler.addTask(&outputTask);
 
+  scheduler.init(100);
+  scheduler.addTask(&inputTask);
+scheduler.addTask(&outputTask);
+outputTask.setActive(true);
+inputTask.setActive(true);
+
 
     serialManager.init();
     serialManager.addVariableToSend((byte *)&i, VarType::INT);
@@ -83,8 +90,7 @@ void loop() {
 
 
 
-        outputTask.tick();
-        inputTask.tick();
+        scheduler.schedule();
     
 
     
