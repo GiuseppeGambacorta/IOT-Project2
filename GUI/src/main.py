@@ -128,7 +128,7 @@ class RealTimePlotApp(ctk.CTk):
                     # Aggiorna la gui in modo sicuro dal thread principale
                     self.after(0, self.safe_update)
                     
-                    time.sleep(0.5)
+                    time.sleep(0.25)
                 else:
                     self.arduino.connect()
             except RuntimeError:
