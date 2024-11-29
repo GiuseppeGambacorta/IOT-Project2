@@ -31,5 +31,5 @@ float Sonar::readDistance() {
 }
 
 bool Sonar::isThresholdLower() {
-    return readDistance() < D1;
+    return this->level < D1;
 }

@@ -6,6 +6,7 @@
 #include "ArduinoStandardLibrary.h"
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
+#include <Components/Sonar/api/Sonar.h>
 
 class AlarmLevelTask : public Task {
 
@@ -14,11 +15,15 @@ private:
     Display& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
+    Sonar& levelDetector;
+    enum State {IDLE, ALARM, EMPTY, RESET} state;
+    Timer timer; //SE VOGLIAMO FARE EMPTY BIN DIRETTAMENTE QUI DENTRO
 public:
     AlarmLevelTask(Door& door,
                     Display& display,
                     DigitalOutput& ledGreen,
-                    DigitalOutput& ledRed);
+                    DigitalOutput& ledRed,
+                    Sonar& levelDetector);
     void tick() override;
     void reset() override;
 };
