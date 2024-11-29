@@ -303,11 +303,7 @@ public:
             if (received == 255)
             {
                 Serial.write(10);
-
-                received = (short unsigned int)Serial.read(); 
-                if (received == 0){
-                    connectionEstablished = true;
-                }
+                connectionEstablished = true;
             }
         }
         

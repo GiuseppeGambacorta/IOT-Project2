@@ -54,8 +54,7 @@ class ArduinoReader:
                 response = struct.unpack('B', response)[0]
                 print(f"Ricevuto: {response}")
 
-            value_to_send = 0
-            self.serial_connection.write(value_to_send.to_bytes(1, 'big'))
+
             print("Arduino connesso!")
 
         except Exception as e:
@@ -99,7 +98,7 @@ class ArduinoReader:
 
                 number_of_messages = self.read_communication_data()   
                 if number_of_messages is None:
-                    print("Errore di lettura.")
+                    print("Errore di lettura. niente dal leggere")
                     return None
 
                 for i in range(number_of_messages):

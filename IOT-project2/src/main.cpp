@@ -47,8 +47,8 @@ bool start = false;
 bool toggle = false;
 
 
-SerialInputTask inputTask();
-SerialOutputTask outputTask();
+SerialInputTask inputTask;
+SerialOutputTask outputTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 void setup() {
@@ -83,14 +83,9 @@ void loop() {
 
 
 
-    if (serialManager.isSerialAvailable())
-    {
+        outputTask.tick();
+    
 
-        serialManager.doHandshake();
-
-        serialManager.sendData();
-
-        serialManager.getData();
     
 
         int* restore = serialManager.getvar(0);
@@ -107,7 +102,9 @@ void loop() {
 
         s = "gambacorta " + String(i);
         delay(1000);
-    }
+    
+    
+
 
     serialManager.addDebugMessage("prova debug seriale");
     serialManager.addDebugMessage("prova debug seriale");
