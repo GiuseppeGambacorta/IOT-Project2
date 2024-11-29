@@ -30,7 +30,7 @@ DigitalOutput ledRed = DigitalOutput(4);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
-StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed); //userDetector
+StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed,userDetector);
 AlarmLevelTask alarmLevelTask(door,display,ledGreen,ledRed, levelDetector);
 AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door, tempSensor);
 OutputTask outputTask(door, display, ledGreen, ledRed);
