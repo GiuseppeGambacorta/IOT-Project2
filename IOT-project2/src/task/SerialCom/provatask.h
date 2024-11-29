@@ -20,8 +20,6 @@ public:
             serialManager.addVariableToSend((byte *)&i, VarType::INT);
             serialManager.addVariableToSend((byte *)&i2, VarType::INT);
             serialManager.addVariableToSend(&s);
-
-
     }
 
     void tick() override {
@@ -38,7 +36,7 @@ public:
         }
 
         s = "gambacorta " + String(i2);
-        delay(100);
+    
         
         
         //serialManager.addDebugMessage("prova debug seriale");
