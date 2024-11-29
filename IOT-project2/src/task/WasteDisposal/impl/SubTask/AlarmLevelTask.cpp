@@ -5,13 +5,19 @@
 #define T3 3000
 
 AlarmLevelTask::AlarmLevelTask(Door& door,
-                                 Display& display,
-                                 DigitalOutput& ledGreen,
-                                 DigitalOutput& ledRed,
-                                 Sonar& levelDetector) 
-                                 : timer(T3), door(door), display(display), ledGreen(ledGreen), ledRed(ledRed), levelDetector(levelDetector) {
+                               Display& display,
+                               DigitalOutput& ledGreen,
+                               DigitalOutput& ledRed,
+                               Sonar& levelDetector)
+                               : door(door),
+                                 display(display),
+                                 ledGreen(ledGreen),
+                                 ledRed(ledRed),
+                                 levelDetector(levelDetector),
+                                 timer(T3) {
     this->state = IDLE;
 }
+
 
 void AlarmLevelTask::tick() {
     this->timer.active(this->state == EMPTY);
