@@ -10,7 +10,7 @@ private:
     SerialManager& serialManager;
     
 public:
-    SerialInputTask() : serialManager(ServiceLocator::getSerialManagerInstance()) {}
+    SerialInputTask() : serialManager(SerialManager::getInstance()) {}
 
     void tick() override {
         if (!serialManager.isConnectionEstablished()){

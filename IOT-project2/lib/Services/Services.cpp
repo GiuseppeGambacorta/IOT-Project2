@@ -6,7 +6,7 @@
 // allocation of the static variable
 ITimeKeeper* ServiceLocator::timeKeeper = &TimeKeeper::getInstance();
 IInputKeeper* ServiceLocator::inputKeeper = &RealInputKeeper::getInstance();
-SerialManager* ServiceLocator::serialManager = new SerialManager(9600);
+SerialManager* ServiceLocator::serialManager = &SerialManager::getInstance(9600);
 
 
 /*---- TIME KEEPER ABSTRACT CLASS ----*/

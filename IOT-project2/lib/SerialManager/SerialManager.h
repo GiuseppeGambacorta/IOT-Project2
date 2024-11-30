@@ -214,6 +214,9 @@ private:
     unsigned int baudRate;
     bool connectionEstablished = false;
 
+
+    SerialManager(unsigned int baudRate) : baudRate(baudRate) {}
+
     void sendinitCommunicationData()
     {
         byte numberOfVariables = internalRegister.getVariableCount() + internalRegister.getDebugMessageCount() + internalRegister.getEventMessageCount();
@@ -279,10 +282,15 @@ private:
     }
 
 public:
-    SerialManager(unsigned int baudRate)
-    {
-        this->baudRate = baudRate;
+    static SerialManager& getInstance(unsigned int baudRate = 9600) {
+        static SerialManager* instance;
+        if (instance == nullptr) {
+            instance = new SerialManager(baudRate);
+        }
+        return *instance;
     }
+
+    void operator=(SerialManager const&) = delete; // serial = serial1; NO
 
     void init()
     {
