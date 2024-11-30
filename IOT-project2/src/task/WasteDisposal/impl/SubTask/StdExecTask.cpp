@@ -43,7 +43,7 @@ void StdExecTask ::execReady(){
     if (user){
         userTimer.reset();
     } else {
-        userTimer.active(user);
+        userTimer.active(true);
     }
     if (userTimer.isTimeElapsed()) {
         state = SLEEP;
@@ -94,8 +94,6 @@ void StdExecTask ::execSleep(){
 
 void StdExecTask ::tick(){
 
-    Serial.println("openButton: " + (String)openButton.isActive());
-    Serial.println("closeButton: " + (String)closeButton.isActive());
     Serial.println("userDetector: " + (String)userDetector.isDetected());
 
     switch (state)
