@@ -16,7 +16,7 @@ StdExecTask ::StdExecTask(Door& door,
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
-      ledRed(ledRed)
+      ledRed(ledRed),
       userDetector(userDetector)
  
 {
@@ -25,24 +25,30 @@ StdExecTask ::StdExecTask(Door& door,
 }
 
 void StdExecTask ::homingReady(){
+    
+
     if (!ledGreen.isActive()){
         ledGreen.turnOn();
     }
     if (ledRed.isActive()){
         ledRed.turnOff();
     }
+    
     if (door.isOpened()){
      door.close();
     }
+    
     display.clear();
     display.on();
-    display.write("PRESS OPEN TO INSERT WASTE");
+    
+  //  display.write("PRESS OPEN TO INSERT WASTE");
+    
 }
 
 void StdExecTask ::execReady(){
     
    homingReady();
-    /*
+    
     bool user = userDetector.isDetected();
     if (user){
         userTimer.reset();
@@ -56,7 +62,7 @@ void StdExecTask ::execReady(){
         timer.active(true);
         state = OPEN;
     }
-    */
+    
 }
 
 void StdExecTask ::homingOpen(){
@@ -88,9 +94,9 @@ void StdExecTask ::execSleep(){
     homingSleep();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    // enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
+    //enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
-    // disableInterrupt(userDetector.getPin());
+    disableInterrupt(userDetector.getPin());
     sleep_disable();
     display.on();
     state = READY;
