@@ -76,7 +76,7 @@ void StdExecTask ::execOpen(){
 }
 
 void StdExecTask ::homingSleep(){
-    // display.off();
+     display.off();
 }
 
 void wakeUp(){
@@ -90,7 +90,7 @@ void StdExecTask ::execSleep(){
     sleep_mode();
     // disableInterrupt(userDetector.getPin());
     sleep_disable();
-    // display.on();
+    display.on();
     state = READY;
 }
 
