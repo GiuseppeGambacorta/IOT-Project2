@@ -22,7 +22,7 @@
 //#define SECURITY_MARGIN (maxTime/10)
 
 // Componenti I/O
-/*
+
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
 Door door = Door(9);
@@ -34,13 +34,15 @@ DigitalOutput ledRed = DigitalOutput(4);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
-StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed,userDetector);
+
+//StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed,userDetector);
+
 AlarmLevelTask alarmLevelTask(door,display,ledGreen,ledRed, levelDetector);
 AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door, tempSensor);
 OutputTask outputTask(door, display, ledGreen, ledRed);
 
-WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
-*/
+//WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
+
 // Scheduler
 
 
@@ -96,6 +98,10 @@ void setup() {
   // init scheduler
   scheduler.init(150);
   */   
+
+
+
+
     serialManager.init();
     scheduler.init(25);
     scheduler.addTask(&serialinputTask);
