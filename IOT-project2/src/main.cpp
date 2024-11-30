@@ -24,9 +24,9 @@ Sonar levelDetector = Sonar(13, 12);
 Door door = Door(9);
 Display display = Display(0x27, 16, 2);
 DigitalInput openButton = DigitalInput(2, 500);
-DigitalInput closeButton = DigitalInput(3, 500);
-DigitalOutput ledGreen = DigitalOutput(5);
-DigitalOutput ledRed = DigitalOutput(4);
+DigitalInput closeButton = DigitalInput(5, 500);
+DigitalOutput ledGreen = DigitalOutput(9);
+DigitalOutput ledRed = DigitalOutput(7);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
@@ -40,28 +40,8 @@ WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask,
 // Scheduler
 Scheduler scheduler;
 
-/*unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
-    unsigned long maxTime = 0;
 
-    for (int i = 0; i < scheduler.getNumTask(); i++) {
-        Task* task = scheduler.getTask(i);
-
-        if (task != nullptr) {
-            unsigned long startTime = micros();
-            task->tick(); 
-            unsigned long elapsedTime = micros() - startTime;
-
-            if (elapsedTime > maxTime) {
-                maxTime = elapsedTime;
-            }
-        }
-    }
-    maxTime += SECURITY_MARGIN;
-    return maxTime;
-}*/
-
-
-void setup() {
+/*void setup() {
   Serial.begin(9600);
 
   //init task
@@ -87,4 +67,31 @@ void setup() {
 
 void loop() {
   scheduler.schedule();
+}*/
+
+void setup() {
+  Serial.begin(115200);
+
+  //init obj
+  Serial.println("init obj");
+  userDetector.calibrate();
+  //levelDetector.calibrate();
+  Serial.println("end init obj");
+
+  // init scheduler
+  scheduler.init(100);
+
+  //init task
+  inputTask.init(100);
+
+  //inserimento tank in list
+  scheduler.addTask(&inputTask);
+
+}
+
+void loop() {
+  scheduler.schedule();
+  Serial.println("close button: "+ (String) closeButton.isActive());
+  Serial.println("open button: "+ (String) openButton.isActive());
+  Serial.println("user detected: "+ (String) userDetector.isDetected());
 }

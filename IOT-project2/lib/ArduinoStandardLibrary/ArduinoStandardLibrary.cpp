@@ -20,10 +20,10 @@ void SchedulerTimer::setupPeriod(int period) {
 
 void SchedulerTimer::waitForNextTick() {
     while (true) {
-        timeKeeper.update(); // Aggiorna il tempo corrente
+        timeKeeper.update();
         unsigned long currentTime = timeKeeper.getCurrentTime();
         if (currentTime >= nextTickTime) {
-            calculateNextTick(); // Calcola il prossimo tick
+            calculateNextTick();
             break;
         }
     }
