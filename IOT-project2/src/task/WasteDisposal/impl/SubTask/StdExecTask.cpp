@@ -3,7 +3,6 @@
 #include "avr/sleep.h"
 #include "EnableInterrupt.h"
 
-
 StdExecTask ::StdExecTask(Door& door,
                           Display& display,
                           DigitalInput& openButton,
@@ -17,10 +16,11 @@ StdExecTask ::StdExecTask(Door& door,
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
-      ledRed(ledRed),
-      userDetector(userDetector){
-        this->state = READY;
-        this->userStatus = true;
+     // userDetector(userDetector),
+      ledRed(ledRed)
+{
+    this->state = READY;
+    this->userStatus = true;
 }
 
 void StdExecTask ::homingReady(){
@@ -31,7 +31,7 @@ void StdExecTask ::homingReady(){
         ledRed.turnOff();
     }
     if (door.isOpened()){
-        door.close();
+     door.close();
     }
     display.clear();
     display.on();
@@ -39,6 +39,7 @@ void StdExecTask ::homingReady(){
 }
 
 void StdExecTask ::execReady(){
+    /*
     homingReady();
     bool user = userDetector.isDetected();
     if (user){
@@ -49,17 +50,18 @@ void StdExecTask ::execReady(){
     if (userTimer.isTimeElapsed()) {
         state = SLEEP;
         userTimer.reset();
-    }else if (openButton.isActive()){
+    } else if (openButton.isActive()){
         timer.active(true);
         state = OPEN;
     }
+    */
 }
 
 void StdExecTask ::homingOpen(){
-    if (door.isClosed()){
-        door.open();
-    }
-    display.clear();
+     if (door.isClosed()){
+         door.open();
+     }
+     display.clear();
     display.on();
     display.write("PRESS CLOSE WHEN YOU'RE DONE");
 }
@@ -74,7 +76,7 @@ void StdExecTask ::execOpen(){
 }
 
 void StdExecTask ::homingSleep(){
-    display.off();
+    // display.off();
 }
 
 void wakeUp(){
@@ -84,11 +86,11 @@ void StdExecTask ::execSleep(){
     homingSleep();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
+    // enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
-    disableInterrupt(userDetector.getPin());
+    // disableInterrupt(userDetector.getPin());
     sleep_disable();
-    display.on();
+    // display.on();
     state = READY;
 }
 

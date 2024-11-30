@@ -25,14 +25,14 @@ class StdExecTask : public Task {
 
         Timer timer;
 
-        Door door;
-        Display display;
-        DigitalInput openButton;
-        DigitalInput closeButton;
-        DigitalOutput ledGreen;
-        DigitalOutput ledRed;
+        Door& door;
+        Display& display;
+        DigitalInput& openButton;
+        DigitalInput& closeButton;
+        DigitalOutput& ledGreen;
+        DigitalOutput& ledRed;
 
-        Pir userDetector;
+        Pir& userDetector;
 
         bool userStatus;
         Timer userTimer = Timer(TSleep);
