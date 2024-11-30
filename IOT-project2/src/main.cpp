@@ -103,21 +103,29 @@ void setup() {
  
 
     serialManager.init();
+    
     scheduler.init(25);
-    scheduler.addTask(&serialinputTask);
-    scheduler.addTask(&serialoutputTask);
-    scheduler.addTask(&provaTask);
-    serialoutputTask.setActive(true);
-    serialinputTask.setActive(true);
-    provaTask.setActive(true);
-    serialinputTask.init(500);
+
     serialoutputTask.init(250);
+    serialinputTask.init(500);
+
     provaTask.init(50);
 
+    serialoutputTask.setActive(false);
+    serialinputTask.setActive(false);
+    provaTask.setActive(false);
+
+
+    scheduler.addTask(&serialoutputTask);
+    scheduler.addTask(&serialinputTask);
+    scheduler.addTask(&provaTask);
+ 
+    
 
 
 }
 
 void loop() {
+  Serial.println("loop");
   scheduler.schedule();
 }

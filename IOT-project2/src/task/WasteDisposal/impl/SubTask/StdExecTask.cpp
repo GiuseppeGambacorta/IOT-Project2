@@ -16,8 +16,9 @@ StdExecTask ::StdExecTask(Door& door,
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
-      userDetector(userDetector),
       ledRed(ledRed)
+      userDetector(userDetector)
+ 
 {
     this->state = READY;
     this->userStatus = true;
@@ -39,8 +40,9 @@ void StdExecTask ::homingReady(){
 }
 
 void StdExecTask ::execReady(){
+    
+   homingReady();
     /*
-    homingReady();
     bool user = userDetector.isDetected();
     if (user){
         userTimer.reset();
