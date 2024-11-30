@@ -8,6 +8,9 @@
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
+#include "task/SerialCom/SerialInput.h"
+#include "task/SerialCom/SerialOutput.h"
+#include "task/SerialCom/ProvaTask.h"
 
 #include "task/WasteDisposal/api/subTask/InputTask.h"
 #include "task/WasteDisposal/api/WasteDisposalTask.h"

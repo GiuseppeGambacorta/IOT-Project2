@@ -16,6 +16,7 @@ WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
             tempSensor(tempSensor){}
 
 void WasteDisposalTask::tick() {
+    
     int level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
 

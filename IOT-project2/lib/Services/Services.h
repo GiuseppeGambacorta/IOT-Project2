@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Arduino.h>
+#include <../Communication/SerialManager.h>
 
 
 
@@ -101,6 +102,8 @@ class ServiceLocator {
     private:
         static ITimeKeeper* timeKeeper; 
         static IInputKeeper* inputKeeper;
+        static SerialManager* serialManager;
+
 
     public:
         static void setTimeKeeperInstance(ITimeKeeper& newTimeKeeper){
@@ -118,6 +121,14 @@ class ServiceLocator {
 
         static IInputKeeper& getInputKeeperInstance(){
             return *inputKeeper;
+        }
+
+        static void setSerialManagerInstance(SerialManager& newSerialManager){
+            serialManager = &newSerialManager;
+        }
+
+        static SerialManager& getSerialManagerInstance(){
+            return *serialManager;
         }
 
 };
