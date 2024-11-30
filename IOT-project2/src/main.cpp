@@ -41,7 +41,7 @@ AlarmLevelTask alarmLevelTask(door,display,ledGreen,ledRed, levelDetector);
 AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door, tempSensor);
 OutputTask outputTask(door, display, ledGreen, ledRed);
 
-WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
+//WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
 
 // Scheduler
 
@@ -111,9 +111,9 @@ void setup() {
 
     provaTask.init(50);
 
-    serialoutputTask.setActive(false);
-    serialinputTask.setActive(false);
-    provaTask.setActive(false);
+    serialoutputTask.setActive(true);
+    serialinputTask.setActive(true);
+    provaTask.setActive(true);
 
 
     scheduler.addTask(&serialoutputTask);
@@ -126,6 +126,6 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("loop");
+  //Serial.println("loop");
   scheduler.schedule();
 }

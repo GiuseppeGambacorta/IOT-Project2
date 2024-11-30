@@ -34,8 +34,8 @@ private:
 
     Timer tempTimer;
 
-    Sonar levelDetector;
-    TemperatureSensor tempSensor;
+    Sonar& levelDetector;
+    TemperatureSensor& tempSensor;
     
 public:
     WasteDisposalTask(

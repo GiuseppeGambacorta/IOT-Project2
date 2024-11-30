@@ -41,7 +41,7 @@ void StdExecTask ::homingReady(){
     display.clear();
     display.on();
     
-  //  display.write("PRESS OPEN TO INSERT WASTE");
+    display.write("PRESS OPEN TO INSERT WASTE");
     
 }
 
@@ -94,7 +94,7 @@ void StdExecTask ::execSleep(){
     homingSleep();
     set_sleep_mode(SLEEP_MODE_PWR_DOWN);
     sleep_enable();
-    //enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
+   // enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
     sleep_mode();
     disableInterrupt(userDetector.getPin());
     sleep_disable();
