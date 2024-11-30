@@ -73,25 +73,23 @@ void setup() {
   Serial.begin(115200);
 
   //init obj
-  Serial.println("init obj");
+  /*Serial.println("init obj");
   userDetector.calibrate();
-  //levelDetector.calibrate();
-  Serial.println("end init obj");
+  Serial.println("end init obj");*/
 
   // init scheduler
   scheduler.init(100);
 
   //init task
-  inputTask.init(100);
+  inputTask.init(50);
+  wasteDisposalTask.init(50);
 
   //inserimento tank in list
   scheduler.addTask(&inputTask);
+  scheduler.addTask(&wasteDisposalTask);
 
 }
 
 void loop() {
   scheduler.schedule();
-  Serial.println("close button: "+ (String) closeButton.isActive());
-  Serial.println("open button: "+ (String) openButton.isActive());
-  Serial.println("user detected: "+ (String) userDetector.isDetected());
 }
