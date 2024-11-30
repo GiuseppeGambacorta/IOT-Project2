@@ -9,14 +9,14 @@ StdExecTask ::StdExecTask(Door& door,
                           DigitalInput& closeButton,
                           DigitalOutput& ledGreen,
                           DigitalOutput& ledRed,
-                          Pir userDetector)
+                          Pir& userDetector)
     : timer(OPEN_WAITING_TIME),
       door(door),
       display(display),
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
-     // userDetector(userDetector),
+      userDetector(userDetector),
       ledRed(ledRed)
 {
     this->state = READY;

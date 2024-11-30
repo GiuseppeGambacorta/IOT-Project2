@@ -52,7 +52,7 @@ class StdExecTask : public Task {
                     DigitalInput& closeButton,
                     DigitalOutput& ledGreen,
                     DigitalOutput& ledRed,
-                    Pir userDetector);
+                    Pir& userDetector);
         void tick() override;
         void reset() override;
 };
