@@ -11,7 +11,7 @@ private:
     unsigned int baudRate;
     bool connectionEstablished = false;
 
-    SerialManager(unsigned int baudRate) : baudRate(baudRate), protocol(internalRegister) {}
+    SerialManager(unsigned int baudRate) : protocol(internalRegister), baudRate(baudRate) {}
 
 public:
     static SerialManager& getInstance(unsigned int baudRate = 9600) {
