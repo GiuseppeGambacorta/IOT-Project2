@@ -18,6 +18,8 @@ void Register::addVariable(byte *var, VarType varType)
         case VarType::INT:
             variables[variablesCount].size = sizeof(int);
             break;
+        default:
+            break; // for now only byte and int are supported
         }
         variablesCount++;
     }
@@ -251,8 +253,9 @@ void Protocol::getData()
             byte command = Serial.read();
             if (command == 0)
             {
-                byte message_type = Serial.read();
-                byte var_type = Serial.read();
+                Serial.read(); // reading and ignoring var_type to disable the warning
+                Serial.read(); // reading and ignoring id to disable the warning
+
                 byte id = Serial.read();
                 byte size = Serial.read();
                 byte buffer[size];
