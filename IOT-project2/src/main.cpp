@@ -21,7 +21,7 @@
 // Componenti I/O
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
-Door door = Door(9);
+Door door = Door(11);
 Display display = Display(0x27, 16, 2);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
@@ -41,52 +41,27 @@ WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask,
 Scheduler scheduler;
 
 
-/*void setup() {
-  Serial.begin(9600);
-
-  //init task
-  inputTask.init(20);
-  wasteDisposalTask.init(20);
-  stdExecTask.init(20);
-  alarmLevelTask.init(20);
-  alarmTempTask.init(20);
-  outputTask.init(20);
-
-  //inserimento tank in list
-  scheduler.addTask(&inputTask);
-  scheduler.addTask(&wasteDisposalTask);
-  scheduler.addTask(&alarmLevelTask);
-  scheduler.addTask(&alarmTempTask);
-  scheduler.addTask(&stdExecTask);
-  scheduler.addTask(&outputTask);
-  
-  // init scheduler
-  scheduler.init(150);
-
-}
-
-void loop() {
-  scheduler.schedule();
-}*/
-
 void setup() {
   Serial.begin(115200);
 
-  //init obj
-  /*Serial.println("init obj");
-  userDetector.calibrate();
-  Serial.println("end init obj");*/
-
   // init scheduler
-  scheduler.init(100);
+  scheduler.init(200);
 
   //init task
   inputTask.init(50);
-  wasteDisposalTask.init(50);
+  //wasteDisposalTask.init(50);
+  stdExecTask.init(50);
+  //alarmLevelTask.init(50);
+  //alarmTempTask.init(50);
+  outputTask.init(50);
 
   //inserimento tank in list
   scheduler.addTask(&inputTask);
-  scheduler.addTask(&wasteDisposalTask);
+  //scheduler.addTask(&wasteDisposalTask);
+  //scheduler.addTask(&alarmLevelTask);
+  //scheduler.addTask(&alarmTempTask);
+  scheduler.addTask(&stdExecTask);
+  scheduler.addTask(&outputTask);
 
 }
 

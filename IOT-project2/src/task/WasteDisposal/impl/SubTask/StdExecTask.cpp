@@ -10,9 +10,8 @@ StdExecTask ::StdExecTask(Door& door,
                           DigitalInput& closeButton,
                           DigitalOutput& ledGreen,
                           DigitalOutput& ledRed,
-                          Pir userDetector)
-    : timer(OPEN_WAITING_TIME),
-      door(door),
+                          Pir& userDetector)
+    : door(door),
       display(display),
       openButton(openButton),
       closeButton(closeButton),
@@ -20,7 +19,7 @@ StdExecTask ::StdExecTask(Door& door,
       ledRed(ledRed),
       userDetector(userDetector){
         this->state = READY;
-        this->userStatus = true;
+        this->userStatus = false;
 }
 
 void StdExecTask ::homingReady(){
@@ -50,12 +49,13 @@ void StdExecTask ::execReady(){
         state = SLEEP;
         userTimer.reset();
     }else if (openButton.isActive()){
-        timer.active(true);
+        openTimer.active(true);
         state = OPEN;
     }
 }
 
 void StdExecTask ::homingOpen(){
+    closeTimer.active(true);
     if (door.isClosed()){
         door.open();
     }
@@ -66,9 +66,9 @@ void StdExecTask ::homingOpen(){
 
 void StdExecTask ::execOpen(){
     homingOpen();
-    if (closeButton.isActive() || timer.isTimeElapsed()){
-        timer.active(false);
-        timer.reset();
+    if (closeButton.isActive() || closeTimer.isTimeElapsed()){
+        closeTimer.active(false);
+        closeTimer.reset();
         state = READY;
     }
 }
@@ -93,6 +93,11 @@ void StdExecTask ::execSleep(){
 }
 
 void StdExecTask ::tick(){
+
+    Serial.println("openButton: " + (String)openButton.isActive());
+    Serial.println("closeButton: " + (String)closeButton.isActive());
+    Serial.println("userDetector: " + (String)userDetector.isDetected());
+
     switch (state)
     {
     case READY:
@@ -105,10 +110,14 @@ void StdExecTask ::tick(){
         execSleep();
         break;
     }
+
+    Serial.println("State: " + (String)state);
 }
 
 void StdExecTask ::reset(){
-    this->timer.reset();
+    this->userTimer.reset();
+    this->closeTimer.reset();
+    this->openTimer.reset();
     this->active = true;
     this->state = READY;
 }

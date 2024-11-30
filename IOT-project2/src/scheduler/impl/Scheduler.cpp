@@ -12,16 +12,12 @@ bool Scheduler::addTask(Task* task) {
   if (nTasks < MAX_TASKS) {
     taskList[nTasks] = task;
     nTasks++;
-    Serial.println("Task added");
     Serial.println(nTasks);
     return true;
   } else {
-    Serial.println("Task not added");
     return false;
   }
 }
-
-
 
 void Scheduler::schedule() {
   timer.waitForNextTick();
