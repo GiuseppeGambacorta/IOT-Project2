@@ -23,109 +23,49 @@ class DataHeader:
         self.data = data
 
 
-class ArduinoReader:
-    def __init__(self, port, baudrate=9600, timeout=1):
-        self.port = port
-        self.baudrate = baudrate
-        self.timeout = timeout
-        self.serial_connection = None
+class Protocol:
+    def __init__(self, serial_connection):
+        self.serial_connection = serial_connection
 
-        self.variables = []
-        self.debugs = []
-        self.events = []
+    def handshake(self):
+        response = None
+        while response != 10: 
+            print("Aspetto che Arduino si connetta...")
+            value_to_send = 255
+            self.serial_connection.write(value_to_send.to_bytes(1, 'big'))
+            response = self.serial_connection.read(1)  
+            if not response:
+                continue
+            response = struct.unpack('B', response)[0]
+            print(f"Ricevuto: {response}")
+        print("Arduino connesso!")
 
-    # Connect to the Arduino, check for handshake and wait for the connection
-    def connect(self):
-        try:
-           
-            self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
-            print(f"Connesso ad Arduino su {self.port} a {self.baudrate} baud.")
-            self.serial_connection.reset_input_buffer()
-            self.serial_connection.reset_output_buffer()
-
-            response = None
-            while response != 10: 
-                print("Aspetto che Arduino si connetta...")
-                value_to_send = 255
-                self.serial_connection.write(value_to_send.to_bytes(1, 'big'))
-                response = self.serial_connection.read(1)  
-                if not response:
-                    continue
-                response = struct.unpack('B', response)[0]
-                print(f"Ricevuto: {response}")
-
-
-            print("Arduino connesso!")
-
-        except Exception as e:
-            print(f"Errore nella connessione: {e}")
-
-    # Check for handshake and after for the number of messages that are coming
     def read_communication_data(self):
-            starthead = self.serial_connection.read(1)
-            if not starthead:
-                return None
-            
-            starthead = struct.unpack('B', starthead)[0]
-            if starthead != 255:
-                print("Errore di sincronizzazione.")
-                return None
-            
-            starthead = self.serial_connection.read(1)
-            if not starthead:
-                return None
-            starthead = struct.unpack('B', starthead)[0]
-            if starthead != 0:
-                print("Errore di sincronizzazione.")
-                return None
-
-            number_of_messages = self.serial_connection.read(1)
-        
-            if not number_of_messages:
-                return None
-            number_of_messages = struct.unpack('B', number_of_messages)[0]
-            return number_of_messages
-            
-
-    # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
-    def read_data(self):
-        if self.serial_connection and self.serial_connection.is_open:
-            self.variables.clear()
-            self.debugs.clear()
-            self.events.clear()
-
-            try:
-
-                number_of_messages = self.read_communication_data()   
-                if number_of_messages is None:
-                    print("Errore di lettura. niente dal leggere")
-                    return None
-
-                for i in range(number_of_messages):
-                    temp_message = self.read_message()
-                    if temp_message is None:
-                        print("Errore di lettura.")
-                        return None
-                    if temp_message.message_type == MessageType.VAR.value:
-                        self.variables.append(temp_message)
-                    elif temp_message.message_type == MessageType.DEBUG.value:
-                        self.debugs.append(temp_message)
-                    elif temp_message.message_type == MessageType.EVENT.value:
-                        self.events.append(temp_message)
-                
-                self.serial_connection.reset_input_buffer()
-
-                return self.variables.copy(), self.debugs.copy(), self.events.copy()
-            except serial.SerialException as e:
-                    print(f"Errore di lettura: {e}")
-                    return None
-        else:
-            print("Connessione seriale non aperta.")
+        starthead = self.serial_connection.read(1)
+        if not starthead:
             return None
-    # Read a single message from the serial connection
+        
+        starthead = struct.unpack('B', starthead)[0]
+        if starthead != 255:
+            print("Errore di sincronizzazione.")
+            return None
+        
+        starthead = self.serial_connection.read(1)
+        if not starthead:
+            return None
+        starthead = struct.unpack('B', starthead)[0]
+        if starthead != 0:
+            print("Errore di sincronizzazione.")
+            return None
+
+        number_of_messages = self.serial_connection.read(1)
+    
+        if not number_of_messages:
+            return None
+        number_of_messages = struct.unpack('B', number_of_messages)[0]
+        return number_of_messages
+
     def read_message(self):
-
-
         message_type = self.serial_connection.read(1)
         if not message_type:
             return None
@@ -146,7 +86,6 @@ class ArduinoReader:
             return None
         size = struct.unpack('B', size)[0]
 
-
         if var_type == VarType.INT.value:
             data = self.serial_connection.read(size)
             if not data:
@@ -162,6 +101,84 @@ class ArduinoReader:
             return DataHeader(message_type, var_type, id, data, value)
         
         return None
+
+    def write_data(self, value, id):
+        self.serial_connection.write((255).to_bytes(1, 'big'))
+        self.serial_connection.write((0).to_bytes(1, 'big'))
+
+        message_type = MessageType.VAR.value.to_bytes(1, 'big')
+        var_type = VarType.INT.value.to_bytes(1, 'big')
+        id = id.to_bytes(1, 'big')
+        size = (2).to_bytes(1, 'big')
+        value = value.to_bytes(2, 'big')
+        self.serial_connection.write(message_type)
+        self.serial_connection.write(var_type)
+        self.serial_connection.write(id)
+        self.serial_connection.write(size)
+        self.serial_connection.write(value)
+
+
+class ArduinoReader:
+    def __init__(self, port, baudrate=9600, timeout=1):
+        self.port = port
+        self.baudrate = baudrate
+        self.timeout = timeout
+        self.serial_connection = None
+        self.protocol = None
+
+        self.variables = []
+        self.debugs = []
+        self.events = []
+
+    # Connect to the Arduino, check for handshake and wait for the connection
+    def connect(self):
+        try:
+           
+            self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
+            self.protocol = Protocol(self.serial_connection)
+            print(f"Connesso ad Arduino su {self.port} a {self.baudrate} baud.")
+            self.serial_connection.reset_input_buffer()
+            self.serial_connection.reset_output_buffer()
+            self.protocol.handshake()
+
+        except Exception as e:
+            print(f"Errore nella connessione: {e}")
+
+    # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
+    def read_data(self):
+        if self.serial_connection and self.serial_connection.is_open:
+            self.variables.clear()
+            self.debugs.clear()
+            self.events.clear()
+
+            try:
+
+                number_of_messages = self.protocol.read_communication_data()   
+                if number_of_messages is None:
+                    print("Errore di lettura. niente dal leggere")
+                    return None
+
+                for i in range(number_of_messages):
+                    temp_message = self.protocol.read_message()
+                    if temp_message is None:
+                        print("Errore di lettura.")
+                        return None
+                    if temp_message.message_type == MessageType.VAR.value:
+                        self.variables.append(temp_message)
+                    elif temp_message.message_type == MessageType.DEBUG.value:
+                        self.debugs.append(temp_message)
+                    elif temp_message.message_type == MessageType.EVENT.value:
+                        self.events.append(temp_message)
+                
+                self.serial_connection.reset_input_buffer()
+
+                return self.variables.copy(), self.debugs.copy(), self.events.copy()
+            except serial.SerialException as e:
+                    print(f"Errore di lettura: {e}")
+                    return None
+        else:
+            print("Connessione seriale non aperta.")
+            return None
     
 
     def is_connected(self):
@@ -171,21 +188,7 @@ class ArduinoReader:
     def write_data(self, value, id):
         if self.serial_connection and self.serial_connection.is_open:
             try:
-                #handshake
-                self.serial_connection.write((255).to_bytes(1, 'big'))
-                self.serial_connection.write((0).to_bytes(1, 'big'))
-
-
-                message_type = MessageType.VAR.value.to_bytes(1, 'big')
-                var_type = VarType.INT.value.to_bytes(1, 'big')
-                id = id.to_bytes(1, 'big')
-                size = (2).to_bytes(1, 'big')
-                value = value.to_bytes(2, 'big')
-                self.serial_connection.write(message_type)
-                self.serial_connection.write(var_type)
-                self.serial_connection.write(id)
-                self.serial_connection.write(size)
-                self.serial_connection.write(value)
+                self.protocol.write_data(value, id)
             except serial.SerialException as e:
                 print(f"Errore di scrittura: {e}")
         else:
