@@ -2,7 +2,7 @@
 #pragma once
 
 #include <Arduino.h>
-#include <../SerialManager/SerialManager.h>
+#include <../Communication/SerialManager.h>
 
 
 
