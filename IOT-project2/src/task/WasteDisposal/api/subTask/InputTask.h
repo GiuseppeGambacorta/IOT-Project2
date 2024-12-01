@@ -12,12 +12,13 @@
 
 class InputTask : public Task {
 private:
-
+   // TemperatureSensor& tempSensor;
     DigitalInput& openButton;
     DigitalInput& closeButton;
 
 public:
     InputTask(
+              //TemperatureSensor& tempSensor,
               DigitalInput& openButton, 
               DigitalInput& closeButton);
     void tick() override;

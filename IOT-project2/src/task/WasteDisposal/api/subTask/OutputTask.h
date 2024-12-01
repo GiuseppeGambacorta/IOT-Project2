@@ -9,11 +9,15 @@
 
 class OutputTask : public Task {
 private:
+    Door& door;
+    Display& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
 
 public:
     OutputTask( 
+                Door& door,
+                Display& display,
               DigitalOutput& ledGreen, 
               DigitalOutput& ledRed);
     void tick() override;

@@ -62,16 +62,16 @@ LedTask ledTask(ledGreen, ledRed);
 
 //Pir userDetector = Pir(8);
 //Sonar levelDetector = Sonar(13, 12);
-//TemperatureSensor tempSensor = TemperatureSensor(2);
+//TemperatureSensor tempSensor = TemperatureSensor(3);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
 
-InputTask inputTask(openButton, closeButton);
+InputTask inputTask( openButton, closeButton);
 
 
-//Door door = Door(11);
-//Display display = Display(0x27, 16, 2);
-OutputTask outputTask(ledGreen, ledRed);
+Door door = Door(11);
+Display display = Display(0x27, 16, 2);
+OutputTask outputTask(door, display ,ledGreen, ledRed);
 
 Scheduler scheduler;
 

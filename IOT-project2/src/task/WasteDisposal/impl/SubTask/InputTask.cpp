@@ -1,6 +1,7 @@
 #include "../../api/subTask/InputTask.h"
 
 InputTask::InputTask(
+           //          TemperatureSensor& tempSensor,
                      DigitalInput& openButton, 
                      DigitalInput& closeButton) 
     : 
@@ -9,6 +10,7 @@ InputTask::InputTask(
 
 void InputTask::tick(){
 
+   // tempSensor.update();
     openButton.update();
     closeButton.update();
 }
