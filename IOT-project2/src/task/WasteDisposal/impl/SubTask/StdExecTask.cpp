@@ -10,28 +10,15 @@ StdExecTask ::StdExecTask(Door& door,
                           DigitalOutput& ledGreen,
                           DigitalOutput& ledRed,
                           Pir& userDetector)
-<<<<<<< HEAD
-    : timer(OPEN_WAITING_TIME),
-      door(door),
-=======
     : door(door),
->>>>>>> origin/linking_branch
       display(display),
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
       ledRed(ledRed),
-<<<<<<< HEAD
-      userDetector(userDetector)
- 
-{
-    this->state = READY;
-    this->userStatus = true;
-=======
       userDetector(userDetector){
         this->state = READY;
         this->userStatus = false;
->>>>>>> origin/linking_branch
 }
 
 void StdExecTask ::homingReady(){

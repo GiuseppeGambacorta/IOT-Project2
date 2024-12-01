@@ -22,7 +22,7 @@
 //#define SECURITY_MARGIN (maxTime/10)
 
 // Componenti I/O
-
+/*
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
 Door door = Door(11);
@@ -40,7 +40,7 @@ StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed
 AlarmLevelTask alarmLevelTask(door,display,ledGreen,ledRed, levelDetector);
 AlarmTempTask alarmTempTask(ledGreen, ledRed, display, door, tempSensor);
 OutputTask outputTask(door, display, ledGreen, ledRed);
-
+*/
 //WasteDisposalTask wasteDisposalTask (stdExecTask, alarmLevelTask, alarmTempTask, levelDetector, tempSensor);
 
 // Scheduler
