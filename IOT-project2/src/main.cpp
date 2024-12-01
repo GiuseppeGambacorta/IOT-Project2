@@ -31,8 +31,7 @@ Door door = Door(11);
 Display display = Display(0x27, 16, 2);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
-DigitalOutput ledGreen = DigitalOutput(9);
-DigitalOutput ledRed = DigitalOutput(7);
+
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
@@ -55,9 +54,14 @@ ProvaTask provaTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 
-DigitalOutput ledGreen = DigitalOutput(4);
-DigitalOutput ledRed = DigitalOutput(5);
+DigitalOutput ledGreen(9);
+DigitalOutput ledRed(7);
 LedTask ledTask(ledGreen, ledRed);
+
+
+Door door = Door(11);
+Display display = Display(0x27, 16, 2);
+OutputTask outputTask(door, display, ledGreen, ledRed);
 
 Scheduler scheduler;
 
@@ -100,17 +104,20 @@ void setup() {
 
     provaTask.init(50);
     ledTask.init(50);
+    outputTask.init(50);
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
     provaTask.setActive(true);
     ledTask.setActive(true);
+    outputTask.setActive(true);
 
 
     scheduler.addTask(&serialoutputTask);
     scheduler.addTask(&serialinputTask);
     scheduler.addTask(&provaTask);
     scheduler.addTask(&ledTask);
+    scheduler.addTask(&outputTask);
  
     
 

@@ -51,9 +51,6 @@ public:
         default:
             break;
         }
-
-        ledGreen.update();
-        ledRed.update();
        
     }
     void reset() override {
