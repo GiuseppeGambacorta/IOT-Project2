@@ -91,6 +91,8 @@ class RealTimePlotApp(ctk.CTk):
 
                     self.var, self.debug, self.event = result
 
+
+                    temperature = None
                     for var in self.var:
                         if var.id == self.data_to_read["temperature"]:
                             temperature = var
@@ -99,10 +101,12 @@ class RealTimePlotApp(ctk.CTk):
                     if temperature is None:
                         continue
 
+                    level = None
                     for var in self.var:
                         if var.id == self.data_to_read["level"]:
+                            print(var.data)
                             level = var
-                            print(level.data)
+                       
 
                     if level is None:
                         continue
@@ -113,7 +117,7 @@ class RealTimePlotApp(ctk.CTk):
 
 
                     self.x2_data.append(time.time())
-                    self.y2_data.append(int(level.data))
+                    self.y2_data.append(float(level.data))
                     
                 
                     # Mantieni solo gli ultimi 50 punti

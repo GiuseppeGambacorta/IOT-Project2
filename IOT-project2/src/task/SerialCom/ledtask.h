@@ -18,12 +18,13 @@ private:
   Timer timerOff;
 
   int state = 0;   
-  int level = 0; 
+  float level = 0; 
   SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 public:
     LedTask(Sonar& sonar, DigitalOutput& ledGreen, DigitalOutput& ledRed) 
       : levelDetector(sonar) ,ledGreen(ledGreen), ledRed(ledRed), timerOn(2000), timerOff(2000) {        
-        serialManager.addVariableToSend((byte*)level, VarType::INT);
+        serialManager.addVariableToSend((byte*)&state, VarType::INT);
+        serialManager.addVariableToSend((byte*)&level, VarType::FLOAT);
     }
 
     void tick() override {
@@ -59,7 +60,6 @@ public:
             break;
         }
 
-       // Serial.println("LedTask: " + (String)levelDetector.readDistance());
        
     }
     void reset() override {

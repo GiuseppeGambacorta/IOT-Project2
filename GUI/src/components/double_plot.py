@@ -7,7 +7,7 @@ def create_real_time_plots():
         ax1.set_xlabel("Time")
         ax1.set_ylabel("Value")
 
-        ax2.set_title("Temperature")
+        ax2.set_title("Level")
         ax2.set_xlabel("Time")
         ax2.set_ylabel("Value")
 

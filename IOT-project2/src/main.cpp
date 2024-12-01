@@ -50,7 +50,7 @@ OutputTask outputTask(door, display, ledGreen, ledRed);
 
 SerialInputTask serialinputTask;
 SerialOutputTask serialoutputTask;
-ProvaTask provaTask;
+//ProvaTask provaTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 
@@ -120,14 +120,14 @@ void setup() {
     serialinputTask.init(500);
 
 
-    provaTask.init(50);
+    //provaTask.init(50);
     ledTask.init(50);
     outputTask.init(50);
     inputTask.init(100);
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
-    provaTask.setActive(true);
+    //provaTask.setActive(true);
     ledTask.setActive(true);
     outputTask.setActive(true);
     inputTask.setActive(true);

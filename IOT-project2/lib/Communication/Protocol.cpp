@@ -18,6 +18,9 @@ void Register::addVariable(byte *var, VarType varType)
         case VarType::INT:
             variables[variablesCount].size = sizeof(int);
             break;
+        case VarType::FLOAT:
+            variables[variablesCount].size = sizeof(float);
+            break;
         default:
             break; // for now only byte and int are supported
         }

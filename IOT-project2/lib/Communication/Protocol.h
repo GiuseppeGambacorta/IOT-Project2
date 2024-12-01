@@ -6,6 +6,7 @@ enum class VarType : byte
     BYTE,
     INT,
     STRING,
+    FLOAT,
 };
 
 enum class MessageType : byte

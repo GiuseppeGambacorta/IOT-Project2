@@ -12,6 +12,7 @@ class VarType(Enum):
     BYTE = 0
     INT = 1
     STRING = 2
+    FLOAT = 3
     
 
 class DataHeader:
@@ -66,41 +67,43 @@ class Protocol:
         return number_of_messages
 
     def read_message(self):
-        message_type = self.serial_connection.read(1)
-        if not message_type:
+        message_type_data = self.serial_connection.read(1)
+        if not message_type_data:
             return None
-        message_type = struct.unpack('B', message_type)[0]
+        message_type = struct.unpack('B', message_type_data)[0]
 
         var_type_data = self.serial_connection.read(1)
         if not var_type_data:
             return None
         var_type = struct.unpack('B', var_type_data)[0]
 
-        id = self.serial_connection.read(1)
-        if not id:
+        id_data = self.serial_connection.read(1)
+        if not id_data:
             return None
-        id = struct.unpack('B', id)[0]
+        id = struct.unpack('B', id_data)[0]
 
-        size = self.serial_connection.read(1)
-        if not size:
+        size_data = self.serial_connection.read(1)
+        if not size_data:
             return None
-        size = struct.unpack('B', size)[0]
+        size = struct.unpack('B', size_data)[0]
+
+        data = self.serial_connection.read(size)
+        if not data or len(data) != size:
+            return None
 
         if var_type == VarType.INT.value:
-            data = self.serial_connection.read(size)
-            if not data:
-                return None
-            value = struct.unpack('h', data)[0] # h is for short int
-            return DataHeader(message_type, var_type, id, data, value)
-        
-        if var_type == VarType.STRING.value:
-            data = self.serial_connection.read(size)
-            if not data:
-                return None
+            value = struct.unpack('<h', data)[0]  # '<h' per short int (little-endian)
+        elif var_type == VarType.STRING.value:
             value = data.decode('utf-8')
-            return DataHeader(message_type, var_type, id, data, value)
-        
-        return None
+        elif var_type == VarType.FLOAT.value:
+            value = struct.unpack('<f', data)[0]  # '<f' per float (little-endian)
+            print(f'valore letto {value}')
+        else:
+            # Tipo non riconosciuto
+            return None
+
+        return DataHeader(message_type, var_type, id, data, value)
+
 
     def write_data(self, value, id):
         self.serial_connection.write((255).to_bytes(1, 'big'))
@@ -164,6 +167,7 @@ class ArduinoReader:
                         print("Errore di lettura.")
                         return None
                     if temp_message.message_type == MessageType.VAR.value:
+                        print(f'value: {temp_message.data}')
                         self.variables.append(temp_message)
                     elif temp_message.message_type == MessageType.DEBUG.value:
                         self.debugs.append(temp_message)
