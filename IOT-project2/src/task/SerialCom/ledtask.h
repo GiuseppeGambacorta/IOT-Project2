@@ -10,9 +10,10 @@ class LedTask : public Task {
 
 private:
     
+Sonar& levelDetector;
   DigitalOutput& ledGreen;
   DigitalOutput& ledRed;
-  Sonar& levelDetector;
+
 
   Timer timerOn;
   Timer timerOff;
@@ -33,6 +34,8 @@ public:
 
         timerOn.active(state==0);
         timerOff.active(state==1);
+
+
 
         switch (state)
         {

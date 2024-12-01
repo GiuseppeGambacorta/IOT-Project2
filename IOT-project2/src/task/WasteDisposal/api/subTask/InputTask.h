@@ -10,19 +10,22 @@
 #include "Components/Display/Api/Display.h"
 #include "ArduinoStandardLibrary.h"
 
-class InputTask : public Task {
+class InputTask : public Task
+{
 private:
-    Sonar& levelDetector;
-    Pir& userDetector;
-    DigitalInput& openButton;
-    DigitalInput& closeButton;
+    Sonar &levelDetector;
+    Pir &userDetector;
+    TemperatureSensor &tempSensor;
+    DigitalInput &openButton;
+    DigitalInput &closeButton;
 
 public:
     InputTask(
-              Sonar& levelDetector,
-                Pir& userDetector,
-              DigitalInput& openButton, 
-              DigitalInput& closeButton);
+        Sonar &levelDetector,
+        Pir &userDetector,
+        TemperatureSensor &tempSensor,
+        DigitalInput &openButton,
+        DigitalInput &closeButton);
     void tick() override;
     void reset() override;
 };

@@ -9,13 +9,13 @@
 class DoorTask : public Task {
 
 private:
-    
+    Door& door;
     Timer timerEmpty;
     Timer timerOpen;
     Timer timerClose;
     int state = 0;
     SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
-    Door& door;
+
 public:
     DoorTask(Door& door) 
       : door(door), timerEmpty(2000), timerOpen(2000), timerClose(2000) {        

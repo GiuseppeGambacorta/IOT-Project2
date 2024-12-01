@@ -49,19 +49,9 @@ OutputTask outputTask(door, display, ledGreen, ledRed);
 
 
 
-SerialInputTask serialinputTask;
-SerialOutputTask serialoutputTask;
-
-SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
-
-
-
-
-
-
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
-//TemperatureSensor tempSensor = TemperatureSensor(3);
+TemperatureSensor tempSensor = TemperatureSensor(3);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
 
@@ -73,7 +63,18 @@ DigitalOutput ledGreen(9);
 DigitalOutput ledRed(7);
 
 
-InputTask inputTask(levelDetector, userDetector, openButton, closeButton);
+SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
+
+SerialInputTask serialinputTask;
+SerialOutputTask serialoutputTask;
+
+
+
+
+
+
+
+InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeButton);
 
 LedTask ledTask(levelDetector, ledGreen, ledRed);
 
