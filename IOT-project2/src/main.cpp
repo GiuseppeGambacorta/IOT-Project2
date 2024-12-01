@@ -59,7 +59,7 @@ SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 
 
-//Pir userDetector = Pir(8);
+Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
 //TemperatureSensor tempSensor = TemperatureSensor(3);
 DigitalInput openButton = DigitalInput(2, 500);
@@ -73,7 +73,7 @@ DigitalOutput ledGreen(9);
 DigitalOutput ledRed(7);
 
 
-InputTask inputTask(levelDetector, openButton, closeButton);
+InputTask inputTask(levelDetector, userDetector, openButton, closeButton);
 
 LedTask ledTask(levelDetector, ledGreen, ledRed);
 
@@ -118,6 +118,8 @@ void setup() {
 
     serialManager.init();
     door.init();
+    userDetector.calibrate();
+    serialManager.addDebugMessage("System started");
     
     scheduler.init(25);
     serialoutputTask.init(250);

@@ -2,15 +2,18 @@
 
 InputTask::InputTask(
                  Sonar& levelDetector,
+                 Pir& userDetector,
                      DigitalInput& openButton, 
                      DigitalInput& closeButton) 
     : 
     levelDetector(levelDetector),
+    userDetector(userDetector),
     openButton(openButton), 
     closeButton(closeButton){}
 
 void InputTask::tick(){
-    //Serial.println("InputTask");
+    
+    userDetector.update();
     levelDetector.update();
     openButton.update();
     closeButton.update();

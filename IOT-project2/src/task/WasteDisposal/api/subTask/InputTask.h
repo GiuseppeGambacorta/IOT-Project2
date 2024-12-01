@@ -13,12 +13,14 @@
 class InputTask : public Task {
 private:
     Sonar& levelDetector;
+    Pir& userDetector;
     DigitalInput& openButton;
     DigitalInput& closeButton;
 
 public:
     InputTask(
               Sonar& levelDetector,
+                Pir& userDetector,
               DigitalInput& openButton, 
               DigitalInput& closeButton);
     void tick() override;
