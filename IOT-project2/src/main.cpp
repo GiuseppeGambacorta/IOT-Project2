@@ -78,7 +78,7 @@ int tempo = 0;
 InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeButton);
 
 
-
+LedTask ledTask(levelDetector, tempSensor, ledGreen, ledRed);
 DoorTask doorTask(door);
 
 ButtonsTask buttonsTask(openButton, closeButton);
@@ -119,8 +119,7 @@ void setup() {
  
 
     serialManager.init();
-    serialManager.addVariableToSend((byte*)&tempo, VarType::INT);
-    LedTask ledTask(levelDetector, ledGreen, ledRed);
+
     door.init();
     userDetector.calibrate();
     serialManager.addDebugMessage("System started");
@@ -166,8 +165,6 @@ void setup() {
 void loop() {
   //Serial.println("loop");
   scheduler.schedule();
-  tempSensor.update();
-  tempo = tempSensor.readTemperature();
 
   
 

@@ -2,6 +2,7 @@
 #include <Arduino.h>
 
 #define MAXTEMP 100
+#define TEMPOFFSET 55
 
 TemperatureSensor::TemperatureSensor(int pin) {
     this->temperature = 0;
@@ -10,7 +11,7 @@ TemperatureSensor::TemperatureSensor(int pin) {
 
 void TemperatureSensor::update() {
     sensor->update();
-    int analogValue = sensor->getValue() - 55;
+    int analogValue = sensor->getValue() - TEMPOFFSET;
     // Convert the analog value to a temperature value for the LM35 sensor
     this->temperature = analogValue;
 }

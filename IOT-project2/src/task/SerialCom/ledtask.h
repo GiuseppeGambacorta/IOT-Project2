@@ -11,6 +11,7 @@ class LedTask : public Task {
 private:
     
 Sonar& levelDetector;
+TemperatureSensor& tempSensor;
   DigitalOutput& ledGreen;
   DigitalOutput& ledRed;
 
@@ -20,17 +21,19 @@ Sonar& levelDetector;
 
   int state = 0;   
   float level = 0; 
+  int temp = 0;
   SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 public:
-    LedTask(Sonar& sonar, DigitalOutput& ledGreen, DigitalOutput& ledRed) 
-      : levelDetector(sonar) ,ledGreen(ledGreen), ledRed(ledRed), timerOn(2000), timerOff(2000) {        
-      //  serialManager.addVariableToSend((byte*)&state, VarType::INT);
+    LedTask(Sonar& sonar, TemperatureSensor& tempSensor,DigitalOutput& ledGreen, DigitalOutput& ledRed) 
+      : levelDetector(sonar) , tempSensor(tempSensor),ledGreen(ledGreen), ledRed(ledRed), timerOn(2000), timerOff(2000) {        
+        serialManager.addVariableToSend((byte*)&temp, VarType::INT);
         serialManager.addVariableToSend((byte*)&level, VarType::FLOAT);
     }
 
     void tick() override {
 
         level = levelDetector.readDistance();
+        temp = tempSensor.readTemperature();
 
         timerOn.active(state==0);
         timerOff.active(state==1);
