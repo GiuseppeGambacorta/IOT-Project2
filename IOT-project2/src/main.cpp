@@ -11,7 +11,7 @@
 
 #include "task/SerialCom/SerialInput.h"
 #include "task/SerialCom/SerialOutput.h"
-#include "task/SerialCom/ProvaTask.h"
+#include "task/SerialCom/doorTask.h"
 #include "task/SerialCom/ledtask.h"
 
 #include "task/WasteDisposal/api/subTask/InputTask.h"
@@ -50,7 +50,7 @@ OutputTask outputTask(door, display, ledGreen, ledRed);
 
 SerialInputTask serialinputTask;
 SerialOutputTask serialoutputTask;
-//ProvaTask provaTask;
+
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 
@@ -77,7 +77,7 @@ Door door = Door(11);
 Display display = Display(0x27, 16, 2);
 OutputTask outputTask(door, display ,ledGreen, ledRed);
 
-
+DoorTask doorTask(door);
 
 
 
@@ -113,32 +113,35 @@ void setup() {
  
 
     serialManager.init();
+    door.init();
     
     scheduler.init(25);
-
     serialoutputTask.init(250);
     serialinputTask.init(500);
 
-
-    //provaTask.init(50);
+    inputTask.init(50);
     ledTask.init(50);
+    doorTask.init(50);
     outputTask.init(50);
-    inputTask.init(100);
+
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
-    //provaTask.setActive(true);
-    ledTask.setActive(true);
-    outputTask.setActive(true);
+
     inputTask.setActive(true);
+    ledTask.setActive(true);
+    doorTask.setActive(true);
+    outputTask.setActive(true);
+   
 
 
     scheduler.addTask(&serialoutputTask);
     scheduler.addTask(&serialinputTask);
-   // scheduler.addTask(&provaTask);
+
    
     scheduler.addTask(&inputTask);
     scheduler.addTask(&ledTask);
+    scheduler.addTask(&doorTask);
     scheduler.addTask(&outputTask);
 
  
