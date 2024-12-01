@@ -8,9 +8,11 @@
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
+
 #include "task/SerialCom/SerialInput.h"
 #include "task/SerialCom/SerialOutput.h"
 #include "task/SerialCom/ProvaTask.h"
+#include "task/SerialCom/ledtask.h"
 
 #include "task/WasteDisposal/api/subTask/InputTask.h"
 #include "task/WasteDisposal/api/WasteDisposalTask.h"
@@ -51,6 +53,12 @@ SerialInputTask serialinputTask;
 SerialOutputTask serialoutputTask;
 ProvaTask provaTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
+
+
+DigitalOutput ledGreen = DigitalOutput(4);
+DigitalOutput ledRed = DigitalOutput(5);
+LedTask ledTask(ledGreen, ledRed);
+
 Scheduler scheduler;
 
 
@@ -89,16 +97,20 @@ void setup() {
     serialoutputTask.init(250);
     serialinputTask.init(500);
 
+
     provaTask.init(50);
+    ledTask.init(50);
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
     provaTask.setActive(true);
+    ledTask.setActive(true);
 
 
     scheduler.addTask(&serialoutputTask);
     scheduler.addTask(&serialinputTask);
     scheduler.addTask(&provaTask);
+    scheduler.addTask(&ledTask);
  
     
 
@@ -108,4 +120,5 @@ void setup() {
 void loop() {
   //Serial.println("loop");
   scheduler.schedule();
+
 }
