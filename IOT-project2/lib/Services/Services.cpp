@@ -79,7 +79,7 @@ bool RealInputKeeper::getDigitalPinState(unsigned int pin) {
 
 unsigned int RealInputKeeper::getAnalogPinValue(unsigned int pin) {
 
-    if (pin >= NUM_ANALOG_INPUTS) {
+    if (pin >= NUM_DIGITAL_PINS) {
         return 0;
     }
     return analogRead(pin);

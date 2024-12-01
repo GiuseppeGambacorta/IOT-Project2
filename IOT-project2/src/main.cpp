@@ -51,7 +51,7 @@ OutputTask outputTask(door, display, ledGreen, ledRed);
 
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
-TemperatureSensor tempSensor = TemperatureSensor(A3);
+TemperatureSensor tempSensor = TemperatureSensor(A1);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(3, 500);
 
@@ -71,12 +71,13 @@ SerialOutputTask serialoutputTask;
 
 
 
-
+AnalogInput potenziometro(A2,100);
+int tempo = 0;
 
 
 InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeButton);
 
-LedTask ledTask(levelDetector, ledGreen, ledRed);
+
 
 DoorTask doorTask(door);
 
@@ -118,6 +119,8 @@ void setup() {
  
 
     serialManager.init();
+    serialManager.addVariableToSend((byte*)&tempo, VarType::INT);
+    LedTask ledTask(levelDetector, ledGreen, ledRed);
     door.init();
     userDetector.calibrate();
     serialManager.addDebugMessage("System started");
@@ -163,6 +166,8 @@ void setup() {
 void loop() {
   //Serial.println("loop");
   scheduler.schedule();
+  potenziometro.update();
+  tempo = potenziometro.getValue();
 
   
 

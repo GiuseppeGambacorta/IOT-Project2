@@ -24,7 +24,7 @@ Sonar& levelDetector;
 public:
     LedTask(Sonar& sonar, DigitalOutput& ledGreen, DigitalOutput& ledRed) 
       : levelDetector(sonar) ,ledGreen(ledGreen), ledRed(ledRed), timerOn(2000), timerOff(2000) {        
-        serialManager.addVariableToSend((byte*)&state, VarType::INT);
+      //  serialManager.addVariableToSend((byte*)&state, VarType::INT);
         serialManager.addVariableToSend((byte*)&level, VarType::FLOAT);
     }
 
