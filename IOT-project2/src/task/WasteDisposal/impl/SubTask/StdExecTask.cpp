@@ -21,88 +21,11 @@ StdExecTask ::StdExecTask(Door& door,
         this->userStatus = false;
 }
 
-void StdExecTask ::homingReady(){
-    
 
-    if (!ledGreen.isActive()){
-        ledGreen.turnOn();
-    }
-    if (ledRed.isActive()){
-        ledRed.turnOff();
-    }
-    
-    if (door.isOpened()){
-     door.close();
-    }
-    
-    display.clear();
-    display.on();
-    
-    display.write("PRESS OPEN TO INSERT WASTE");
-    
-}
-
-void StdExecTask ::execReady(){
-    
-   homingReady();
-    
-    bool user = userDetector.isDetected();
-    if (user){
-        userTimer.reset();
-    } else {
-        userTimer.active(true);
-    }
-    if (userTimer.isTimeElapsed()) {
-        state = SLEEP;
-        userTimer.reset();
-    }else if (openButton.isActive()){
-        openTimer.active(true);
-        state = OPEN;
-    }
-    
-}
-
-void StdExecTask ::homingOpen(){
-    closeTimer.active(true);
-    if (door.isClosed()){
-        door.open();
-    }
-    display.clear();
-    display.on();
-    display.write("PRESS CLOSE WHEN YOU'RE DONE");
-}
-
-void StdExecTask ::execOpen(){
-    homingOpen();
-    if (closeButton.isActive() || closeTimer.isTimeElapsed()){
-        closeTimer.active(false);
-        closeTimer.reset();
-        state = READY;
-    }
-}
-
-void StdExecTask ::homingSleep(){
-     display.off();
-}
-
-void wakeUp(){
-}
-
-void StdExecTask ::execSleep(){
-    homingSleep();
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    sleep_enable();
-   // enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
-    sleep_mode();
-    disableInterrupt(userDetector.getPin());
-    sleep_disable();
-    display.on();
-    state = READY;
-}
 
 void StdExecTask ::tick(){
 
-    Serial.println("userDetector: " + (String)userDetector.isDetected());
+  //  Serial.println("userDetector: " + (String)userDetector.isDetected());
 
     switch (state)
     {
@@ -117,8 +40,88 @@ void StdExecTask ::tick(){
         break;
     }
 
-    Serial.println("State: " + (String)state);
+  //  Serial.println("State: " + (String)state);
 }
+
+
+void StdExecTask ::execReady(){
+    
+   homingReady();
+    
+    userTimer.active(!userDetector.isDetected());
+    
+    if (userTimer.isTimeElapsed()) {
+        state = SLEEP;
+        userTimer.reset();
+    }else if (openButton.isActive()){
+        openTimer.active(true);
+        state = OPEN;
+    }
+    
+}
+
+void StdExecTask ::homingReady(){
+    
+
+    ledGreen.turnOn();    
+    ledRed.turnOff();
+    door.close();
+    
+    /*
+    display.clear();
+    display.on();
+    
+    display.write("PRESS OPEN TO INSERT WASTE");*/
+    
+}
+
+
+
+void StdExecTask ::homingOpen(){
+   
+    if (door.isClosed()){
+        door.open();
+    }
+    
+    /*
+    display.clear();
+    display.on();
+    display.write("PRESS CLOSE WHEN YOU'RE DONE");*/
+}
+
+void StdExecTask ::execOpen(){
+    homingOpen();
+    closeTimer.active(door.isOpened());
+
+        if (closeButton.isActive() || closeTimer.isTimeElapsed()){
+            closeTimer.active(false);
+            closeTimer.reset();
+            state = READY;
+         }
+}
+   
+
+
+void StdExecTask ::homingSleep(){
+     display.off();
+}
+
+void wakeUp(){
+}
+
+void StdExecTask ::execSleep(){
+    homingSleep();
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    enableInterrupt(userDetector.getPin(), wakeUp, HIGH);
+    sleep_mode();
+    disableInterrupt(userDetector.getPin());
+    sleep_disable();
+    display.on();
+    state = READY;
+}
+
+
 
 void StdExecTask ::reset(){
     this->userTimer.reset();

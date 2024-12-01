@@ -14,6 +14,7 @@
 #include "task/SerialCom/doorTask.h"
 #include "task/SerialCom/ledtask.h"
 #include "task/SerialCom/buttonsTask.h"
+#include "task/SerialCom/provaTask.h"
 
 #include "task/WasteDisposal/api/subTask/InputTask.h"
 #include "task/WasteDisposal/api/WasteDisposalTask.h"
@@ -78,14 +79,14 @@ int tempo = 0;
 InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeButton);
 
 
-LedTask ledTask(levelDetector, tempSensor, ledGreen, ledRed);
-DoorTask doorTask(door, userDetector, display);
+//LedTask ledTask(levelDetector, tempSensor, ledGreen, ledRed);
+//DoorTask doorTask(door, userDetector, display);
 
-ButtonsTask buttonsTask(openButton, closeButton);
+//ButtonsTask buttonsTask(openButton, closeButton);
 
 OutputTask outputTask(door, display ,ledGreen, ledRed);
-
-
+ProvaTask provaTask;
+StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed, userDetector);
 
 Scheduler scheduler;
 
@@ -129,9 +130,11 @@ void setup() {
     serialinputTask.init(500);
 
     inputTask.init(50);
-    ledTask.init(50);
-    doorTask.init(50);
-    buttonsTask.init(50);
+    //ledTask.init(50);
+    //doorTask.init(50);
+    //buttonsTask.init(50);
+    provaTask.init(50);
+    stdExecTask.init(50);
     outputTask.init(50);
 
 
@@ -139,9 +142,11 @@ void setup() {
     serialinputTask.setActive(true);
 
     inputTask.setActive(true);
-    ledTask.setActive(true);
-    doorTask.setActive(true);
-    buttonsTask.setActive(true);
+    //ledTask.setActive(true);
+    //doorTask.setActive(true);
+    //buttonsTask.setActive(true);
+    provaTask.setActive(true);
+    stdExecTask.setActive(true);
     outputTask.setActive(true);
    
 
@@ -151,9 +156,11 @@ void setup() {
 
    
     scheduler.addTask(&inputTask);
-    scheduler.addTask(&ledTask);
-    scheduler.addTask(&doorTask);
-    scheduler.addTask(&buttonsTask);
+    scheduler.addTask(&provaTask);
+    scheduler.addTask(&stdExecTask);
+   // scheduler.addTask(&ledTask);
+   // scheduler.addTask(&doorTask);
+   // scheduler.addTask(&buttonsTask);
     scheduler.addTask(&outputTask);
 
  
