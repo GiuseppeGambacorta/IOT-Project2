@@ -5,14 +5,14 @@
 
 TemperatureSensor::TemperatureSensor(int pin) {
     this->temperature = 0;
-    this->sensor = new AnalogInput(pin, 1023);
+    this->sensor = new AnalogInput(pin, 206);
 }
 
 void TemperatureSensor::update() {
     sensor->update();
-    int analogValue = sensor->getValue();
+    int analogValue = sensor->getValue() - 55;
     // Convert the analog value to a temperature value for the LM35 sensor
-    this->temperature = analogValue * (5.0 / 1023.0) * 100;
+    this->temperature = analogValue;
 }
 
 int TemperatureSensor::readTemperature() {
