@@ -54,24 +54,32 @@ ProvaTask provaTask;
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 
-DigitalOutput ledGreen(9);
-DigitalOutput ledRed(7);
-LedTask ledTask(ledGreen, ledRed);
+
 
 
 
 //Pir userDetector = Pir(8);
-//Sonar levelDetector = Sonar(13, 12);
+Sonar levelDetector = Sonar(13, 12);
 //TemperatureSensor tempSensor = TemperatureSensor(3);
 DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
 
-InputTask inputTask( openButton, closeButton);
+InputTask inputTask(levelDetector, openButton, closeButton);
+
+DigitalOutput ledGreen(9);
+DigitalOutput ledRed(7);
+LedTask ledTask(levelDetector, ledGreen, ledRed);
+
+
 
 
 Door door = Door(11);
 Display display = Display(0x27, 16, 2);
 OutputTask outputTask(door, display ,ledGreen, ledRed);
+
+
+
+
 
 Scheduler scheduler;
 
@@ -115,7 +123,7 @@ void setup() {
     provaTask.init(50);
     ledTask.init(50);
     outputTask.init(50);
-    inputTask.init(50);
+    inputTask.init(100);
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
@@ -127,10 +135,12 @@ void setup() {
 
     scheduler.addTask(&serialoutputTask);
     scheduler.addTask(&serialinputTask);
-    scheduler.addTask(&provaTask);
+   // scheduler.addTask(&provaTask);
+   
+    scheduler.addTask(&inputTask);
     scheduler.addTask(&ledTask);
     scheduler.addTask(&outputTask);
-    scheduler.addTask(&inputTask);
+
  
     
 
@@ -140,5 +150,7 @@ void setup() {
 void loop() {
   //Serial.println("loop");
   scheduler.schedule();
+
+  
 
 }

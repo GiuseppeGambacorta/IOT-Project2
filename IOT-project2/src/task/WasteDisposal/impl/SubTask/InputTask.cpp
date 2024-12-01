@@ -1,16 +1,17 @@
 #include "../../api/subTask/InputTask.h"
 
 InputTask::InputTask(
-           //          TemperatureSensor& tempSensor,
+                 Sonar& levelDetector,
                      DigitalInput& openButton, 
                      DigitalInput& closeButton) 
     : 
+    levelDetector(levelDetector),
     openButton(openButton), 
     closeButton(closeButton){}
 
 void InputTask::tick(){
-
-   // tempSensor.update();
+    //Serial.println("InputTask");
+    levelDetector.update();
     openButton.update();
     closeButton.update();
 }
