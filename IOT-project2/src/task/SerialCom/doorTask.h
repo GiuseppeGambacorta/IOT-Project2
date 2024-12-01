@@ -10,6 +10,7 @@ class DoorTask : public Task {
 
 private:
     Door& door;
+    Pir& userDetector;
     Timer timerEmpty;
     Timer timerOpen;
     Timer timerClose;
@@ -17,12 +18,17 @@ private:
     SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 public:
-    DoorTask(Door& door) 
-      : door(door), timerEmpty(2000), timerOpen(2000), timerClose(2000) {        
+    DoorTask(Door& door, Pir& userDetector, Display& display) 
+      : door(door), userDetector(userDetector), timerEmpty(2000), timerOpen(2000), timerClose(2000) {        
       
     }
 
     void tick() override {
+        userDetector.update();
+        if(userDetector.isDetected()){
+            serialManager.addEventMessage("user detected");
+
+        }
 
         timerClose.active(state==0);
         timerOpen.active(state==1);

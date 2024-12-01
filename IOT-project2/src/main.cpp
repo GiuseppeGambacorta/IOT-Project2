@@ -79,7 +79,7 @@ InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeBu
 
 
 LedTask ledTask(levelDetector, tempSensor, ledGreen, ledRed);
-DoorTask doorTask(door);
+DoorTask doorTask(door, userDetector, display);
 
 ButtonsTask buttonsTask(openButton, closeButton);
 
@@ -121,7 +121,7 @@ void setup() {
     serialManager.init();
 
     door.init();
-    userDetector.calibrate();
+    //userDetector.calibrate();
     serialManager.addDebugMessage("System started");
     
     scheduler.init(25);
