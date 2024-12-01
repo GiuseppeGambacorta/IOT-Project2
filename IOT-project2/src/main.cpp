@@ -121,7 +121,7 @@ void setup() {
     serialManager.init();
 
     door.init();
-    //userDetector.calibrate();
+    userDetector.calibrate();
     serialManager.addDebugMessage("System started");
     
     scheduler.init(25);

@@ -24,7 +24,7 @@ public:
     }
 
     void tick() override {
-        userDetector.update();
+        //userDetector.update();
         if(userDetector.isDetected()){
             serialManager.addEventMessage("user detected");
 
