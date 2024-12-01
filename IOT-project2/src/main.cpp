@@ -59,9 +59,19 @@ DigitalOutput ledRed(7);
 LedTask ledTask(ledGreen, ledRed);
 
 
-Door door = Door(11);
-Display display = Display(0x27, 16, 2);
-OutputTask outputTask(door, display, ledGreen, ledRed);
+
+//Pir userDetector = Pir(8);
+//Sonar levelDetector = Sonar(13, 12);
+//TemperatureSensor tempSensor = TemperatureSensor(2);
+DigitalInput openButton = DigitalInput(2, 500);
+DigitalInput closeButton = DigitalInput(5, 500);
+
+InputTask inputTask(openButton, closeButton);
+
+
+//Door door = Door(11);
+//Display display = Display(0x27, 16, 2);
+OutputTask outputTask(ledGreen, ledRed);
 
 Scheduler scheduler;
 
@@ -105,12 +115,14 @@ void setup() {
     provaTask.init(50);
     ledTask.init(50);
     outputTask.init(50);
+    inputTask.init(50);
 
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
     provaTask.setActive(true);
     ledTask.setActive(true);
     outputTask.setActive(true);
+    inputTask.setActive(true);
 
 
     scheduler.addTask(&serialoutputTask);
@@ -118,6 +130,7 @@ void setup() {
     scheduler.addTask(&provaTask);
     scheduler.addTask(&ledTask);
     scheduler.addTask(&outputTask);
+    scheduler.addTask(&inputTask);
  
     
 
