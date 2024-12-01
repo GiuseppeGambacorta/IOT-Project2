@@ -9,19 +9,12 @@
 #include "subTask/AlarmLevelTask.h"
 #include "subTask/AlarmTempTask.h"
 
-#define MAXTEMPTIME 10000
-#define TSleep 10000
-#define LEVEL_MAX 10
-#define TEMP_MAX 100
-
 
 enum WasteDisposalState {
     STD_EXEC,
     LVL_ALLARM,
     TEMP_ALLARM
 };
-
-
 
 class WasteDisposalTask : public Task {
 

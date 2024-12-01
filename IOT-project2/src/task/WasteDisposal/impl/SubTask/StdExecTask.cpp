@@ -10,18 +10,28 @@ StdExecTask ::StdExecTask(Door& door,
                           DigitalOutput& ledGreen,
                           DigitalOutput& ledRed,
                           Pir& userDetector)
+<<<<<<< HEAD
     : timer(OPEN_WAITING_TIME),
       door(door),
+=======
+    : door(door),
+>>>>>>> origin/linking_branch
       display(display),
       openButton(openButton),
       closeButton(closeButton),
       ledGreen(ledGreen),
       ledRed(ledRed),
+<<<<<<< HEAD
       userDetector(userDetector)
  
 {
     this->state = READY;
     this->userStatus = true;
+=======
+      userDetector(userDetector){
+        this->state = READY;
+        this->userStatus = false;
+>>>>>>> origin/linking_branch
 }
 
 void StdExecTask ::homingReady(){
@@ -53,32 +63,33 @@ void StdExecTask ::execReady(){
     if (user){
         userTimer.reset();
     } else {
-        userTimer.active(user);
+        userTimer.active(true);
     }
     if (userTimer.isTimeElapsed()) {
         state = SLEEP;
         userTimer.reset();
-    } else if (openButton.isActive()){
-        timer.active(true);
+    }else if (openButton.isActive()){
+        openTimer.active(true);
         state = OPEN;
     }
     
 }
 
 void StdExecTask ::homingOpen(){
-     if (door.isClosed()){
-         door.open();
-     }
-     display.clear();
+    closeTimer.active(true);
+    if (door.isClosed()){
+        door.open();
+    }
+    display.clear();
     display.on();
     display.write("PRESS CLOSE WHEN YOU'RE DONE");
 }
 
 void StdExecTask ::execOpen(){
     homingOpen();
-    if (closeButton.isActive() || timer.isTimeElapsed()){
-        timer.active(false);
-        timer.reset();
+    if (closeButton.isActive() || closeTimer.isTimeElapsed()){
+        closeTimer.active(false);
+        closeTimer.reset();
         state = READY;
     }
 }
@@ -103,6 +114,9 @@ void StdExecTask ::execSleep(){
 }
 
 void StdExecTask ::tick(){
+
+    Serial.println("userDetector: " + (String)userDetector.isDetected());
+
     switch (state)
     {
     case READY:
@@ -115,10 +129,14 @@ void StdExecTask ::tick(){
         execSleep();
         break;
     }
+
+    Serial.println("State: " + (String)state);
 }
 
 void StdExecTask ::reset(){
-    this->timer.reset();
+    this->userTimer.reset();
+    this->closeTimer.reset();
+    this->openTimer.reset();
     this->active = true;
     this->state = READY;
 }

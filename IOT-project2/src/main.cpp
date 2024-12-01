@@ -25,12 +25,12 @@
 
 Pir userDetector = Pir(8);
 Sonar levelDetector = Sonar(13, 12);
-Door door = Door(9);
+Door door = Door(11);
 Display display = Display(0x27, 16, 2);
 DigitalInput openButton = DigitalInput(2, 500);
-DigitalInput closeButton = DigitalInput(3, 500);
-DigitalOutput ledGreen = DigitalOutput(5);
-DigitalOutput ledRed = DigitalOutput(4);
+DigitalInput closeButton = DigitalInput(5, 500);
+DigitalOutput ledGreen = DigitalOutput(9);
+DigitalOutput ledRed = DigitalOutput(7);
 TemperatureSensor tempSensor = TemperatureSensor(2);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
@@ -45,26 +45,6 @@ OutputTask outputTask(door, display, ledGreen, ledRed);
 
 // Scheduler
 
-
-/*unsigned long calculateOptimalPeriod(Scheduler& scheduler) {
-    unsigned long maxTime = 0;
-
-    for (int i = 0; i < scheduler.getNumTask(); i++) {
-        Task* task = scheduler.getTask(i);
-
-        if (task != nullptr) {
-            unsigned long startTime = micros();
-            task->tick(); 
-            unsigned long elapsedTime = micros() - startTime;
-
-            if (elapsedTime > maxTime) {
-                maxTime = elapsedTime;
-            }
-        }
-    }
-    maxTime += SECURITY_MARGIN;
-    return maxTime;
-}*/
 
 
 SerialInputTask serialinputTask;
@@ -88,9 +68,9 @@ void setup() {
 
   //inserimento tank in list
   scheduler.addTask(&inputTask);
-  scheduler.addTask(&wasteDisposalTask);
-  scheduler.addTask(&alarmLevelTask);
-  scheduler.addTask(&alarmTempTask);
+  //scheduler.addTask(&wasteDisposalTask);
+  //scheduler.addTask(&alarmLevelTask);
+  //scheduler.addTask(&alarmTempTask);
   scheduler.addTask(&stdExecTask);
   scheduler.addTask(&outputTask);
 

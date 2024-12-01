@@ -9,8 +9,9 @@
 #include "Components/Pir/Api/Pir.h"
 
 
-#define OPEN_WAITING_TIME 5000
+#define TOpen 5000
 #define TSleep 10000
+#define TClose 10000
 
 enum StdExecState{
     READY,
@@ -23,19 +24,18 @@ class StdExecTask : public Task {
     private:
         StdExecState state;
 
-        Timer timer;
-
         Door& door;
         Display& display;
         DigitalInput& openButton;
         DigitalInput& closeButton;
         DigitalOutput& ledGreen;
         DigitalOutput& ledRed;
-
         Pir& userDetector;
 
         bool userStatus;
+        Timer openTimer = Timer(TOpen);
         Timer userTimer = Timer(TSleep);
+        Timer closeTimer = Timer(TClose);
 
         void homingReady();
         void homingOpen();

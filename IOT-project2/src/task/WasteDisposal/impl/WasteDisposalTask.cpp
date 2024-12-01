@@ -1,6 +1,9 @@
 #include "../api/WasteDisposalTask.h"
 
-
+#define MAXTEMPTIME 10000
+#define TSleep 10000
+double maxLevel = 0.3;
+int maxTemp = 100;
 
 WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
                                      AlarmLevelTask& alarmLevelTask,
@@ -16,16 +19,15 @@ WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
             tempSensor(tempSensor){}
 
 void WasteDisposalTask::tick() {
-    
-    int level = levelDetector.readDistance();
+    double level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
 
     switch (state){
     case STD_EXEC:
-        if (level >= LEVEL_MAX) {
+        if (level <= maxLevel) {
             state = WasteDisposalState::LVL_ALLARM;
         }
-        if (temp >= TEMP_MAX) {
+        if (temp >= maxTemp) {
             tempTimer.active(true);
         } else {
             tempTimer.active(false);
@@ -36,10 +38,10 @@ void WasteDisposalTask::tick() {
         }
         break;
     case LVL_ALLARM:
-        if (level < LEVEL_MAX) {
+        if (level <= maxLevel) {
             state = WasteDisposalState::STD_EXEC;
         }
-        if (temp > TEMP_MAX) {
+        if (temp > maxTemp) {
             tempTimer.active(true);
         } else {
             tempTimer.active(false);
@@ -50,12 +52,12 @@ void WasteDisposalTask::tick() {
         }
         break;
     case TEMP_ALLARM:
-        if (temp < TEMP_MAX) {
+        if (temp < maxTemp) {
             tempTimer.active(false);
             tempTimer.reset();
             state = WasteDisposalState::STD_EXEC;
         }
-        if (level >= LEVEL_MAX) {
+        if (level <= maxLevel) {
             state = WasteDisposalState::LVL_ALLARM;
         }
         break;
