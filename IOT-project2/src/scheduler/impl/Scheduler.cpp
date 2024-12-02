@@ -12,7 +12,6 @@ bool Scheduler::addTask(Task* task) {
   if (nTasks < MAX_TASKS) {
     taskList[nTasks] = task;
     nTasks++;
-    Serial.println(nTasks);
     return true;
   } else {
     return false;
