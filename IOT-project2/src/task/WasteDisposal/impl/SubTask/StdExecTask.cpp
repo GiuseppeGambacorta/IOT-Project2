@@ -51,6 +51,9 @@ void StdExecTask ::homingReady(){
         door.close();
     }
     
+    /*if (openButton.isActive()){
+        display.write("open button");
+    }*/
     display.write("PRESS OPEN TO INSERT WASTE");
 }
 

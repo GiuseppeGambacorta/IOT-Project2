@@ -8,7 +8,7 @@ void Display::init() {
     lcd.init();
     lcd.backlight();
     lcd.clear();
-   // lcd.setCursor(0, 0);
+    //lcd.setCursor(0, 0);
 }
 
 void Display::on() {
@@ -20,18 +20,16 @@ void Display::on() {
 void Display::off() {
     lcd.noDisplay();
     lcd.noBacklight();
-    lcd.clear();
+    this->clear();
 }
 
 void Display::write(const char* message) {
     this->currentMessage = message;
-    
-  
 }
 
 void Display::clear() {
-    //lcd.clear();
-    //this->currentMessage = "";
+    lcd.clear();
+    this->currentMessage = "";
 }
 
 void Display::update() {
@@ -43,6 +41,4 @@ void Display::update() {
     lcd.setCursor(0, 0);
     lcd.print(this->currentMessage);
     this->oldMessage = this->currentMessage;
-
-
 }
