@@ -7,7 +7,7 @@ void Display::init() {
     lcd.init();
     lcd.backlight();
     lcd.clear();
-    lcd.setCursor(0, 0);
+   // lcd.setCursor(0, 0);
 }
 
 void Display::on() {

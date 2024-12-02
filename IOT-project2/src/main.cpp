@@ -121,6 +121,7 @@ void setup() {
     serialManager.init();
 
     door.init();
+    display.init();
     userDetector.calibrate();
     serialManager.addDebugMessage("System started");
     
@@ -146,8 +147,8 @@ void setup() {
    
 
 
-    scheduler.addTask(&serialoutputTask);
-    scheduler.addTask(&serialinputTask);
+  //  scheduler.addTask(&serialoutputTask);
+   scheduler.addTask(&serialinputTask);
 
    
     scheduler.addTask(&inputTask);

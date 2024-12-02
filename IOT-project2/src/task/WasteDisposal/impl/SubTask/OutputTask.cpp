@@ -13,6 +13,8 @@ OutputTask::OutputTask (
 
 void OutputTask::tick(){
     
+   
+    display.write("Ciao");
     door.update();
     display.update();
     ledGreen.update();
