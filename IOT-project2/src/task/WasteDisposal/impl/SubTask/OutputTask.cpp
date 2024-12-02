@@ -14,8 +14,8 @@ OutputTask::OutputTask (
 void OutputTask::tick(){
     
 
-    
-    display.write("Ciao");
+    String message = "Ciao";
+    display.write(message);
     door.update();
     display.update();
     ledGreen.update();

@@ -1,4 +1,5 @@
 #include "Components/Display/Api/Display.h"
+#include "ArduinoStandardLibrary.h"
 
 Display::Display(int address, int columns, int rows)
     : lcd(address, columns, rows), columns(columns), rows(rows) {}
@@ -32,10 +33,7 @@ void Display::clear() {
 }
 
 void Display::update() {
-    if (this->currentMessage != this->oldMessage) {
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print(this->currentMessage);
-        this->oldMessage = this->currentMessage;
-    }
+    const char *wewe = this->currentMessage.c_str();
+    lcd.setCursor(0, 0);
+    lcd.print("Dio santo");
 }
