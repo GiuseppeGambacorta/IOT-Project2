@@ -14,10 +14,10 @@ OutputTask::OutputTask (
 void OutputTask::tick(){
     
 
-    String message = "Ciao";
-    display.write(message);
+    
+    //display.write("Ciao");
     door.update();
-    display.update();
+    display.update("ciao");
     ledGreen.update();
     ledRed.update();
 }

@@ -19,7 +19,7 @@ public:
     void off();
     void write( String  message);
     void clear();
-    void update();
+    void update(const char* message);
 };
 
 #endif
