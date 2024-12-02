@@ -42,7 +42,7 @@ void AlarmTempTask::handleIdleState() {
 
 void AlarmTempTask::handleAlarmState() {
     display.on();
-    //display.write("PROBLEM DETECTED");
+    display.write("PROBLEM DETECTED");
     ledGreen.turnOff();
     ledRed.turnOn();
     if (door.isOpened()) {

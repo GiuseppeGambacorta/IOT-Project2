@@ -51,7 +51,7 @@ void StdExecTask ::homingReady(){
         door.close();
     }
     
-    //display.write("PRESS OPEN TO INSERT WASTE");
+    display.write("PRESS OPEN TO INSERT WASTE");
 }
 
 void StdExecTask ::execReady(){
@@ -76,7 +76,7 @@ void StdExecTask ::homingOpen(){
         door.open();
     }
 
-    //display.write("PRESS CLOSE WHEN YOU'RE DONE");
+    display.write("PRESS CLOSE WHEN YOU'RE DONE");
 }
 
 void StdExecTask ::execOpen(){
