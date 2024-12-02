@@ -94,8 +94,6 @@ void StdExecTask ::execSleep(){
 
 void StdExecTask ::tick(){
 
-    Serial.println("userDetector: " + (String)userDetector.isDetected());
-
     switch (state)
     {
     case READY:
@@ -109,7 +107,6 @@ void StdExecTask ::tick(){
         break;
     }
 
-    Serial.println("State: " + (String)state);
 }
 
 void StdExecTask ::reset(){

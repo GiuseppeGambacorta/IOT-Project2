@@ -27,7 +27,7 @@ DigitalInput openButton = DigitalInput(2, 500);
 DigitalInput closeButton = DigitalInput(5, 500);
 DigitalOutput ledGreen = DigitalOutput(9);
 DigitalOutput ledRed = DigitalOutput(7);
-TemperatureSensor tempSensor = TemperatureSensor(2);
+TemperatureSensor tempSensor = TemperatureSensor(3);
 
 InputTask inputTask(userDetector, levelDetector, tempSensor, openButton, closeButton);
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed,userDetector);
