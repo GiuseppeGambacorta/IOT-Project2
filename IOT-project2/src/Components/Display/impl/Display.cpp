@@ -22,23 +22,20 @@ void Display::off() {
     lcd.clear();
 }
 
-void Display::write(const char* message) {
-    strncpy(currentMessage, message, sizeof(currentMessage) - 1);
-    currentMessage[sizeof(currentMessage) - 1] = '\0';
+void Display::write(String message) {
+    this->currentMessage = message;
 }
 
 void Display::clear() {
     lcd.clear();
-    previousMessage[0] = '\0';
+    this->currentMessage = "";
 }
 
 void Display::update() {
-    if (strcmp(currentMessage, previousMessage) != 0) {
+    if (this->currentMessage != this->oldMessage) {
         lcd.clear();
         lcd.setCursor(0, 0);
-        lcd.print(currentMessage);
-
-        strncpy(previousMessage, currentMessage, sizeof(previousMessage) - 1);
-        previousMessage[sizeof(previousMessage) - 1] = '\0';
+        lcd.print(this->currentMessage);
+        this->oldMessage = this->currentMessage;
     }
 }

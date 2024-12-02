@@ -129,11 +129,11 @@ void setup() {
     serialoutputTask.init(500);
     serialinputTask.init(500);
 
-    inputTask.init(50);
-    ledTask.init(50);
-    doorTask.init(50);
-    buttonsTask.init(50);
-    outputTask.init(50);
+    inputTask.init(100);
+    ledTask.init(100);
+    doorTask.init(100);
+    buttonsTask.init(100);
+    outputTask.init(100);
 
 
     serialoutputTask.setActive(true);

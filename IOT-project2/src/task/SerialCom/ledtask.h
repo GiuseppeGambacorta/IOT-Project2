@@ -69,8 +69,8 @@ public:
 
         int* restore = serialManager.getvar(0);
         if (*restore == 1) {
-            ledGreen.turnOn();
-            ledRed.turnOn();
+        //    ledGreen.turnOn();
+        //    ledRed.turnOn();
         }
 
       
