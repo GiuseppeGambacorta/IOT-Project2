@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "../api/Pir.h"
 
-#define CALIBRATION_TIME 10
+#define CALIBRATION_TIME 1
 
 Pir::Pir(int pin) : calibrated(false), pin(pin) {
     pir = new DigitalInput(pin, 0);

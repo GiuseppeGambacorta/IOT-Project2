@@ -66,6 +66,15 @@ public:
             break;
         }
 
+
+        int* restore = serialManager.getvar(0);
+        if (*restore == 1) {
+            ledGreen.turnOn();
+            ledRed.turnOn();
+        }
+
+      
+
        
     }
     void reset() override {

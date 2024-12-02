@@ -58,11 +58,10 @@ void AlarmLevelTask::handleIdleState() {
 }
 
 void AlarmLevelTask::handleAlarmState() {
-    /*display.on();
-    display.write("CONTAINER FULL");
+    display.on();
+    //display.write("CONTAINER FULL");
     ledGreen.turnOff();
-    ledRed.turnOn();*/
-    //Serial.println("CONTAINER FULL");
+    ledRed.turnOn();
     if (door.isOpened()) {
         door.close();
     }

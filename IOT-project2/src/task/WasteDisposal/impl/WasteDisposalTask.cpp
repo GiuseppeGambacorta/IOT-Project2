@@ -1,5 +1,6 @@
 #include "../api/WasteDisposalTask.h"
 
+
 #define MAXTEMPTIME 10000
 #define TSleep 10000
 #define TEmpty 3000
@@ -43,7 +44,7 @@ void WasteDisposalTask::tick() {
         }
         break;
     case LVL_ALLARM:
-        if (level <= maxLevel && *empty == 1) {
+        if (*empty == 1) {
             emptyTimer.active(true);
             state = WasteDisposalState::LVL_TIME;
         }
@@ -102,10 +103,6 @@ void WasteDisposalTask::tick() {
             alarmTempTask.setActive(true);
             break;
     }
-
-    Serial.println("stdExecTask: " + (String)stdExecTask.isActive());
-    Serial.println("alarmLevelTask: " + (String)alarmLevelTask.isActive());
-    Serial.println("alarmTempTask: " + (String)alarmTempTask.isActive());
 }
 
 void WasteDisposalTask::reset() {

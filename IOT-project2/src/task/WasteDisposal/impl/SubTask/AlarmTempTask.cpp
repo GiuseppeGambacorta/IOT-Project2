@@ -41,11 +41,10 @@ void AlarmTempTask::handleIdleState() {
 }
 
 void AlarmTempTask::handleAlarmState() {
-    /*display.on();
-    display.write("PROBLEM DETECTED");
+    display.on();
+    //display.write("PROBLEM DETECTED");
     ledGreen.turnOff();
-    ledRed.turnOn();*/
-    Serial.println("PROBLEM DETECTED");
+    ledRed.turnOn();
     if (door.isOpened()) {
         door.close();
         door.update();

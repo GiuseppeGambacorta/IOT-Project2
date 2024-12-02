@@ -19,6 +19,9 @@ private:
     DigitalInput &openButton;
     DigitalInput &closeButton;
 
+    int temp = 0;
+    float level = 0;
+
 public:
     InputTask(
         Sonar &levelDetector,
