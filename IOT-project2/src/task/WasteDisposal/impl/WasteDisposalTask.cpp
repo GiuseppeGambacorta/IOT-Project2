@@ -2,6 +2,7 @@
 
 #define MAXTEMPTIME 10000
 #define TSleep 10000
+#define TEmpty 3000
 double maxLevel = 0.3;
 int maxTemp = 100;
 
@@ -15,8 +16,12 @@ WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
             alarmTempTask(alarmTempTask),
             state(WasteDisposalState::STD_EXEC),
             tempTimer(Timer(MAXTEMPTIME)),
+            emptyTimer(Timer(TEmpty)),
             levelDetector(levelDetector),
-            tempSensor(tempSensor){}
+            tempSensor(tempSensor){
+                int *empty = ServiceLocator::getSerialManagerInstance().getvar(1);
+                int *fire = ServiceLocator::getSerialManagerInstance().getvar(0);
+            }
 
 void WasteDisposalTask::tick() {
     double level = levelDetector.readDistance();
@@ -38,10 +43,11 @@ void WasteDisposalTask::tick() {
         }
         break;
     case LVL_ALLARM:
-        if (level <= maxLevel) {
-            state = WasteDisposalState::STD_EXEC;
+        if (level <= maxLevel && *empty == 1) {
+            emptyTimer.active(true);
+            state = WasteDisposalState::LVL_TIME;
         }
-        if (temp > maxTemp) {
+        if (temp >= maxTemp) {
             tempTimer.active(true);
         } else {
             tempTimer.active(false);
@@ -52,13 +58,19 @@ void WasteDisposalTask::tick() {
         }
         break;
     case TEMP_ALLARM:
-        if (temp < maxTemp) {
+        if ( *fire == 1) {
             tempTimer.active(false);
             tempTimer.reset();
+            state = WasteDisposalState::TEMP_TIME;
+        }
+    case LVL_TIME:
+        if (emptyTimer.isTimeElapsed()) {
+            emptyTimer.reset();
             state = WasteDisposalState::STD_EXEC;
         }
-        if (level <= maxLevel) {
-            state = WasteDisposalState::LVL_ALLARM;
+    case TEMP_TIME:
+        if ( *fire == 0) {
+            state = WasteDisposalState::STD_EXEC;
         }
         break;
     }
@@ -79,7 +91,21 @@ void WasteDisposalTask::tick() {
             alarmLevelTask.setActive(false);
             alarmTempTask.setActive(true);
             break;
+        case LVL_TIME:
+            stdExecTask.setActive(false);
+            alarmLevelTask.setActive(active);
+            alarmTempTask.setActive(false);
+            break;
+        case TEMP_TIME:
+            stdExecTask.setActive(false);
+            alarmLevelTask.setActive(false);
+            alarmTempTask.setActive(true);
+            break;
     }
+
+    Serial.println("stdExecTask: " + (String)stdExecTask.isActive());
+    Serial.println("alarmLevelTask: " + (String)alarmLevelTask.isActive());
+    Serial.println("alarmTempTask: " + (String)alarmTempTask.isActive());
 }
 
 void WasteDisposalTask::reset() {

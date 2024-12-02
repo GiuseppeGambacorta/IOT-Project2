@@ -14,7 +14,7 @@ OutputTask::OutputTask (
 void OutputTask::tick(){
     
     door.update();
-    display.update();
+    //display.update();
     ledGreen.update();
     ledRed.update();
 }

@@ -7,8 +7,8 @@
 class Display {
 private:
     LiquidCrystal_I2C lcd;
-    char currentMessage[32] = ""; // Buffer per il messaggio corrente
-    char previousMessage[32] = ""; // Buffer per il messaggio precedente
+    String currentMessage;
+    String oldMessage;
     int columns;
     int rows;
 
@@ -17,7 +17,7 @@ public:
     void init();
     void on();
     void off();
-    void write(const char* message);
+    void write( String  message);
     void clear();
     void update();
 };

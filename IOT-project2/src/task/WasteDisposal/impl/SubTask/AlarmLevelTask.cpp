@@ -20,6 +20,17 @@ AlarmLevelTask::AlarmLevelTask(Door& door,
 
 
 void AlarmLevelTask::tick() {
+
+    int *empty = ServiceLocator::getSerialManagerInstance().getvar(1);
+
+    if (*empty == 1) {
+        *empty = 0;
+        this->state = EMPTY;
+        //alarmLevelReset=false;
+        //alarmLevel=false;
+        //emptyBin=true;
+    }
+
     this->timer.active(this->state == EMPTY);
     switch (this->state) {
     case IDLE:
@@ -47,19 +58,13 @@ void AlarmLevelTask::handleIdleState() {
 }
 
 void AlarmLevelTask::handleAlarmState() {
-    display.on();
+    /*display.on();
     display.write("CONTAINER FULL");
     ledGreen.turnOff();
-    ledRed.turnOn();
+    ledRed.turnOn();*/
+    //Serial.println("CONTAINER FULL");
     if (door.isOpened()) {
         door.close();
-        door.update();
-    }
-    if (/*buttonPressed*/true) {
-        this->state = EMPTY;
-        //alarmLevelReset=false;
-        //alarmLevel=false;
-        //emptyBin=true;
     }
 }
 

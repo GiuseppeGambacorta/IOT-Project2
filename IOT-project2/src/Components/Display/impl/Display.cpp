@@ -1,4 +1,5 @@
 #include "Components/Display/Api/Display.h"
+#include "ArduinoStandardLibrary.h"
 
 Display::Display(int address, int columns, int rows)
     : lcd(address, columns, rows), columns(columns), rows(rows) {}
@@ -7,7 +8,7 @@ void Display::init() {
     lcd.init();
     lcd.backlight();
     lcd.clear();
-    lcd.setCursor(0, 0);
+   // lcd.setCursor(0, 0);
 }
 
 void Display::on() {
@@ -22,23 +23,17 @@ void Display::off() {
     lcd.clear();
 }
 
-void Display::write(const char* message) {
-    strncpy(currentMessage, message, sizeof(currentMessage) - 1);
-    currentMessage[sizeof(currentMessage) - 1] = '\0';
+void Display::write(String message) {
+    this->currentMessage = message;
 }
 
 void Display::clear() {
     lcd.clear();
-    previousMessage[0] = '\0';
+    this->currentMessage = "";
 }
 
 void Display::update() {
-    if (strcmp(currentMessage, previousMessage) != 0) {
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print(currentMessage);
-
-        strncpy(previousMessage, currentMessage, sizeof(previousMessage) - 1);
-        previousMessage[sizeof(previousMessage) - 1] = '\0';
-    }
+    const char *wewe = this->currentMessage.c_str();
+    lcd.setCursor(0, 0);
+    lcd.print("Dio santo");
 }

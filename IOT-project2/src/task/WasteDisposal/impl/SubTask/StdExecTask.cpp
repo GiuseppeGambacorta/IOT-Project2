@@ -25,7 +25,8 @@ StdExecTask ::StdExecTask(Door& door,
 
 void StdExecTask ::tick(){
 
-  //  Serial.println("userDetector: " + (String)userDetector.isDetected());
+    //Serial.println("open button: " + (String)openButton.isActive());
+    //Serial.println("close button: " + (String)closeButton.isActive());
 
     switch (state)
     {
@@ -43,10 +44,29 @@ void StdExecTask ::tick(){
   //  Serial.println("State: " + (String)state);
 }
 
+void StdExecTask ::homingReady(){
+    
+    if (!ledGreen.isActive()){
+        ledGreen.turnOn();
+    }
+    if (ledRed.isActive()){
+        ledRed.turnOff();
+    }   
+    if (door.isOpened()){
+        door.close();
+    }
+    
+    /*
+    display.clear();
+    display.on();
+    
+    display.write("PRESS OPEN TO INSERT WASTE");*/
+    //Serial.println("PRESS OPEN TO INSERT WASTE");
+}
 
 void StdExecTask ::execReady(){
     
-   homingReady();
+    homingReady();    
     
     userTimer.active(!userDetector.isDetected());
     
@@ -60,23 +80,6 @@ void StdExecTask ::execReady(){
     
 }
 
-void StdExecTask ::homingReady(){
-    
-
-    ledGreen.turnOn();    
-    ledRed.turnOff();
-    door.close();
-    
-    /*
-    display.clear();
-    display.on();
-    
-    display.write("PRESS OPEN TO INSERT WASTE");*/
-    
-}
-
-
-
 void StdExecTask ::homingOpen(){
    
     if (door.isClosed()){
@@ -87,6 +90,7 @@ void StdExecTask ::homingOpen(){
     display.clear();
     display.on();
     display.write("PRESS CLOSE WHEN YOU'RE DONE");*/
+    //Serial.println("PRESS CLOSE WHEN YOU'RE DONE");
 }
 
 void StdExecTask ::execOpen(){
@@ -103,7 +107,7 @@ void StdExecTask ::execOpen(){
 
 
 void StdExecTask ::homingSleep(){
-     display.off();
+    //display.off();
 }
 
 void wakeUp(){
@@ -117,7 +121,7 @@ void StdExecTask ::execSleep(){
     sleep_mode();
     disableInterrupt(userDetector.getPin());
     sleep_disable();
-    display.on();
+    //display.on();
     state = READY;
 }
 

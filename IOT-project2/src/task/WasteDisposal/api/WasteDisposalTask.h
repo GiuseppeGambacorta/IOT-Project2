@@ -13,7 +13,9 @@
 enum WasteDisposalState {
     STD_EXEC,
     LVL_ALLARM,
-    TEMP_ALLARM
+    LVL_TIME,
+    TEMP_ALLARM,
+    TEMP_TIME
 };
 
 class WasteDisposalTask : public Task {
@@ -26,9 +28,13 @@ private:
     WasteDisposalState state;
 
     Timer tempTimer;
+    Timer emptyTimer;
 
     Sonar& levelDetector;
     TemperatureSensor& tempSensor;
+
+    int *empty;
+    int *fire;
     
 public:
     WasteDisposalTask(
