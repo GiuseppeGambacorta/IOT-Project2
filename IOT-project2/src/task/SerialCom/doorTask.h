@@ -31,6 +31,8 @@ public:
             serialManager.addEventMessage("user detected");
         }
 
+       
+
         timerClose.active(state==0);
         timerOpen.active(state==1);
         timerEmpty.active(state==2);
@@ -43,7 +45,7 @@ public:
 
             if (timerClose.isTimeElapsed() && door.isClosed()) {
                 serialManager.addEventMessage("door closed");
-                display.update("Door closed");
+                display.write("Door closed");
                 state = 1;
                 timerClose.reset();
             }
@@ -55,7 +57,7 @@ public:
             door.open();
             if (timerOpen.isTimeElapsed() && door.isOpened()) {
                 serialManager.addEventMessage("door opened");
-                display.update("Door opened");
+                display.write("Door opened");
                 state = 2;
                 timerOpen.reset();
             }
@@ -65,7 +67,7 @@ public:
             door.empty();
             if (timerEmpty.isTimeElapsed() && door.isInEmptyPosition()) {
                 serialManager.addEventMessage("door empty");
-                display.update("Door empty");
+                display.write("Door empty");
                 state = 0;
                 timerEmpty.reset();
             }

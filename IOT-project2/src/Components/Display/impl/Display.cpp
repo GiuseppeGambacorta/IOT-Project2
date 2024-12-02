@@ -2,7 +2,7 @@
 #include "ArduinoStandardLibrary.h"
 
 Display::Display(int address, int columns, int rows)
-    : lcd(address, columns, rows), columns(columns), rows(rows), currentMessage("pippo"), oldMessage("pippettino") {}
+    : lcd(address, columns, rows), columns(columns), rows(rows), currentMessage(""), oldMessage("") {}
 
 void Display::init() {
     lcd.init();
@@ -23,7 +23,7 @@ void Display::off() {
     lcd.clear();
 }
 
-void Display::write(String message) {
+void Display::write(const char* message) {
     this->currentMessage = message;
     
   
@@ -34,11 +34,15 @@ void Display::clear() {
     //this->currentMessage = "";
 }
 
-void Display::update(const char* message) {
+void Display::update() {
+
+    if (strcmp(this->currentMessage, this->oldMessage) == 0) {
+        return;
+    }
     lcd.clear();
     lcd.setCursor(0, 0);
-    lcd.print(message);
+    lcd.print(this->currentMessage);
+    this->oldMessage = this->currentMessage;
 
-    
-  
+
 }

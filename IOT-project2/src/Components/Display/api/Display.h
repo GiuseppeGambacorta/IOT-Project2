@@ -7,8 +7,8 @@
 class Display {
 private:
     LiquidCrystal_I2C lcd;
-    String currentMessage;
-    String oldMessage;
+    const char* currentMessage;
+    const char* oldMessage;
     int columns;
     int rows;
 
@@ -17,9 +17,9 @@ public:
     void init();
     void on();
     void off();
-    void write( String  message);
+    void write(const char* message);
     void clear();
-    void update(const char* message);
+    void update();
 };
 
 #endif
