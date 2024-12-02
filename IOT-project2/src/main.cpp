@@ -126,7 +126,7 @@ void setup() {
     serialManager.addDebugMessage("System started");
     
     scheduler.init(25);
-    serialoutputTask.init(250);
+    serialoutputTask.init(500);
     serialinputTask.init(500);
 
     inputTask.init(50);
@@ -147,8 +147,8 @@ void setup() {
    
 
 
-  //  scheduler.addTask(&serialoutputTask);
-   scheduler.addTask(&serialinputTask);
+    scheduler.addTask(&serialoutputTask);
+    scheduler.addTask(&serialinputTask);
 
    
     scheduler.addTask(&inputTask);
