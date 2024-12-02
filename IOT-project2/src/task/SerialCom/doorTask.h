@@ -11,15 +11,17 @@ class DoorTask : public Task {
 private:
     Door& door;
     Pir& userDetector;
+    Display& display;
     Timer timerEmpty;
     Timer timerOpen;
     Timer timerClose;
     int state = 0;
     SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
+
 public:
     DoorTask(Door& door, Pir& userDetector, Display& display) 
-      : door(door), userDetector(userDetector), timerEmpty(2000), timerOpen(2000), timerClose(2000) {        
+      : door(door), userDetector(userDetector), display(display) , timerEmpty(2000), timerOpen(2000), timerClose(2000) {        
       
     }
 
@@ -27,7 +29,6 @@ public:
         //userDetector.update();
         if(userDetector.isDetected()){
             serialManager.addEventMessage("user detected");
-
         }
 
         timerClose.active(state==0);
@@ -42,6 +43,7 @@ public:
 
             if (timerClose.isTimeElapsed() && door.isClosed()) {
                 serialManager.addEventMessage("door closed");
+                display.update("Door closed");
                 state = 1;
                 timerClose.reset();
             }
@@ -53,6 +55,7 @@ public:
             door.open();
             if (timerOpen.isTimeElapsed() && door.isOpened()) {
                 serialManager.addEventMessage("door opened");
+                display.update("Door opened");
                 state = 2;
                 timerOpen.reset();
             }
@@ -62,6 +65,7 @@ public:
             door.empty();
             if (timerEmpty.isTimeElapsed() && door.isInEmptyPosition()) {
                 serialManager.addEventMessage("door empty");
+                display.update("Door empty");
                 state = 0;
                 timerEmpty.reset();
             }

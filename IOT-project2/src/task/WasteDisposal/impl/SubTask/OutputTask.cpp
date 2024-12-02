@@ -17,7 +17,7 @@ void OutputTask::tick(){
     
     //display.write("Ciao");
     door.update();
-    display.update("ciao");
+   // display.update("ciao");
     ledGreen.update();
     ledRed.update();
 }
