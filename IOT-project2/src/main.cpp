@@ -8,10 +8,10 @@
 #include "Components/Temperaturesensor/Api/TemperatureSensor.h"
 #include "Components/Door/Api/Door.h"
 #include "Components/Display/Api/Display.h"
-/*
+
 #include "task/SerialCom/SerialInput.h"
 #include "task/SerialCom/SerialOutput.h"
-*/
+
 #include "task/WasteDisposal/api/subTask/InputTask.h"
 #include "task/WasteDisposal/api/WasteDisposalTask.h"
 #include "task/WasteDisposal/api/subTask/StdExecTask.h"
@@ -31,10 +31,10 @@ DigitalOutput ledGreen(4);
 DigitalOutput ledRed(5);
 
 SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
-/*
+
 SerialInputTask serialinputTask;
 SerialOutputTask serialoutputTask;
-*/
+
 InputTask inputTask(levelDetector, userDetector, tempSensor, openButton, closeButton);
 StdExecTask stdExecTask(door, display, openButton, closeButton, ledGreen, ledRed, userDetector);
 AlarmLevelTask alarmLevelTask(door, display, ledGreen, ledRed, levelDetector);
@@ -55,22 +55,20 @@ void setup() {
     display.init();
     serialManager.addDebugMessage("System started");
     
-    scheduler.init(100);
+    scheduler.init(50);
     
-    /*serialoutputTask.init(500);
-    serialinputTask.init(500);*/
+    serialoutputTask.init(250);
+    serialinputTask.init(500);
 
-    inputTask.init(100);
+    inputTask.init(50);
     wasteDisposalTask.init(100);
     alarmLevelTask.init(100);
     alarmTempTask.init(100);
     stdExecTask.init(100);
     outputTask.init(100);
 
-    /*
     serialoutputTask.setActive(true);
     serialinputTask.setActive(true);
-    */
 
     inputTask.setActive(true);
     wasteDisposalTask.setActive(true);
@@ -80,14 +78,14 @@ void setup() {
     outputTask.setActive(true);
    
 
-  /*scheduler.addTask(&serialoutputTask);
-    scheduler.addTask(&serialinputTask);*/
+    scheduler.addTask(&serialoutputTask);
+    scheduler.addTask(&serialinputTask);
 
    
     scheduler.addTask(&inputTask);
     scheduler.addTask(&wasteDisposalTask);
     scheduler.addTask(&alarmLevelTask); 
-    //scheduler.addTask(&alarmTempTask);
+    scheduler.addTask(&alarmTempTask);
     scheduler.addTask(&stdExecTask);
     scheduler.addTask(&outputTask);
 }

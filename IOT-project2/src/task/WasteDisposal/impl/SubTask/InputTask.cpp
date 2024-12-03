@@ -26,8 +26,6 @@ void InputTask::tick(){
 
     temp = tempSensor.readTemperature();
     level = levelDetector.readDistance();
-
-   
 }
 
 void InputTask::reset(){

@@ -25,7 +25,8 @@ StdExecTask ::StdExecTask(Door& door,
 }
 
 void StdExecTask ::tick(){
-
+    openButton.update();
+    closeButton.update();
     switch (state)
     {
     case READY:
@@ -50,14 +51,9 @@ void StdExecTask ::homingReady(){
 
 void StdExecTask ::execReady(){
     
-    homingReady();  
-
-    if (openButton.isActive()){
-        Serial.println("OPEN");
-    }
+    homingReady();
 
     userTimer.active(!userDetector.isDetected());
-    
     if (userTimer.isTimeElapsed()) {
         state = SLEEP;
         userTimer.reset();

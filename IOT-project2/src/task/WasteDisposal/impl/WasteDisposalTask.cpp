@@ -20,8 +20,8 @@ WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
             emptyTimer(Timer(TEmpty)),
             levelDetector(levelDetector),
             tempSensor(tempSensor){
-                int *empty = ServiceLocator::getSerialManagerInstance().getvar(1);
-                int *fire = ServiceLocator::getSerialManagerInstance().getvar(0);
+                empty = ServiceLocator::getSerialManagerInstance().getvar(1);
+                fire = ServiceLocator::getSerialManagerInstance().getvar(0);
             }
 
 void WasteDisposalTask::tick() {
@@ -107,7 +107,7 @@ void WasteDisposalTask::tick() {
 
 void WasteDisposalTask::reset() {
     state = WasteDisposalState::STD_EXEC;
-    //tempTimer.reset();
+    tempTimer.reset();
     stdExecTask.setActive(true);
     alarmLevelTask.setActive(false);
     alarmTempTask.setActive(false);
