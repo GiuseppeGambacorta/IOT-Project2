@@ -13,6 +13,7 @@ private:
     Display& display;
     DigitalOutput& ledGreen;
     DigitalOutput& ledRed;
+    SerialManager& serialManager = ServiceLocator::getSerialManagerInstance();
 
 public:
     OutputTask( 

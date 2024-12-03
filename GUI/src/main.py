@@ -68,7 +68,7 @@ class RealTimePlotApp(ctk.CTk):
         self.debug = []
         self.event = []
 
-        self.arduino = ArduinoReader(port='COM3')
+        self.arduino = ArduinoReader()
         self.arduino.connect()
         
 
@@ -91,44 +91,34 @@ class RealTimePlotApp(ctk.CTk):
 
                     self.var, self.debug, self.event = result
 
-
                     temperature = None
                     for var in self.var:
                         if var.id == self.data_to_read["temperature"]:
                             temperature = var
 
-
-                    if temperature is None:
-                        continue
-
                     level = None
                     for var in self.var:
                         if var.id == self.data_to_read["level"]:
-                            print(var.data)
                             level = var
-                       
-
-                    if level is None:
-                        continue
-
-                    # Aggiungi un nuovo punto ai dati
-                    self.x_data.append(time.time())
-                    self.y_data.append(int(temperature.data))
 
 
-                    self.x2_data.append(time.time())
-                    self.y2_data.append(float(level.data))
-                    
-                
-                    # Mantieni solo gli ultimi 50 punti
-                    if len(self.x_data) > 50:
-                        self.x_data = self.x_data[-50:]
-                        self.y_data = self.y_data[-50:]
+                    if temperature is not None:
+                        self.x_data.append(time.time())
+                        self.y_data.append(int(temperature.data))
 
-                    if len(self.x2_data) > 50:
-                        self.x2_data = self.x2_data[-50:]
-                        self.y2_data = self.y2_data[-50:]
-                    
+                        if len(self.x_data) > 50:
+                            self.x_data = self.x_data[-50:]
+                            self.y_data = self.y_data[-50:]
+
+                    if level is not None:
+                        self.x2_data.append(time.time())
+                        self.y2_data.append(float(level.data))
+                        if len(self.x2_data) > 50:
+                            self.x2_data = self.x2_data[-50:]
+                            self.y2_data = self.y2_data[-50:]
+
+            
+                         
                     # Aggiorna la gui in modo sicuro dal thread principale
                     self.after(0, self.safe_update)
                     
