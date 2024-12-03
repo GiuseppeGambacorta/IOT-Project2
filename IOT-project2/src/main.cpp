@@ -54,6 +54,7 @@ void setup() {
     userDetector.calibrate();
     display.init();
     serialManager.addDebugMessage("System started");
+    serialManager.addDebugMessage("System ready");
     
     scheduler.init(50);
     serialoutputTask.init(500);
