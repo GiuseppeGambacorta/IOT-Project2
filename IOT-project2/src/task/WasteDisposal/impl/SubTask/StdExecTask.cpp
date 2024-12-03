@@ -16,12 +16,13 @@ StdExecTask ::StdExecTask(Door& door,
       closeButton(closeButton),
       ledGreen(ledGreen),
       ledRed(ledRed),
-      userDetector(userDetector){
+      userDetector(userDetector),
+      openTimer(TOpen),
+      userTimer(TSleep),
+      closeTimer(TClose){
         this->state = READY;
         this->userStatus = false;
 }
-
-
 
 void StdExecTask ::tick(){
 
@@ -40,27 +41,21 @@ void StdExecTask ::tick(){
 }
 
 void StdExecTask ::homingReady(){
-    
-    if (!ledGreen.isActive()){
-        ledGreen.turnOn();
-    }
-    if (ledRed.isActive()){
-        ledRed.turnOff();
-    }   
-    if (door.isOpened()){
-        door.close();
-    }
-    
-    /*if (openButton.isActive()){
-        display.write("open button");
-    }*/
+
+    ledGreen.turnOn();
+    ledRed.turnOff(); 
+    door.close();
     display.write("PRESS OPEN TO INSERT WASTE");
 }
 
 void StdExecTask ::execReady(){
     
-    homingReady();    
-    
+    homingReady();  
+
+    if (openButton.isActive()){
+        Serial.println("OPEN");
+    }
+
     userTimer.active(!userDetector.isDetected());
     
     if (userTimer.isTimeElapsed()) {
@@ -73,24 +68,21 @@ void StdExecTask ::execReady(){
     
 }
 
-void StdExecTask ::homingOpen(){
-   
-    if (door.isClosed()){
-        door.open();
-    }
-
+void StdExecTask ::homingOpen(){  
+    door.open();
     display.write("PRESS CLOSE WHEN YOU'RE DONE");
 }
 
 void StdExecTask ::execOpen(){
     homingOpen();
-    closeTimer.active(door.isOpened());
 
-        if (closeButton.isActive() || closeTimer.isTimeElapsed()){
-            closeTimer.active(false);
-            closeTimer.reset();
-            state = READY;
-         }
+    closeTimer.active(true);
+
+    if (closeButton.isActive() || closeTimer.isTimeElapsed()){
+        closeTimer.active(false);
+        closeTimer.reset();
+        state = READY;
+    }
 }
    
 

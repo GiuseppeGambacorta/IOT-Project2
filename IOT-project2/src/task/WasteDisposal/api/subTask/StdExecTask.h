@@ -33,9 +33,9 @@ class StdExecTask : public Task {
         Pir& userDetector;
 
         bool userStatus;
-        Timer openTimer = Timer(TOpen);
-        Timer userTimer = Timer(TSleep);
-        Timer closeTimer = Timer(TClose);
+        Timer openTimer;
+        Timer userTimer;
+        Timer closeTimer;
 
         void homingReady();
         void homingOpen();
