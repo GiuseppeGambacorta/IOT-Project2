@@ -39,7 +39,7 @@ class Protocol:
             if not response:
                 continue
             response = struct.unpack('B', response)[0]
-            print(f"Ricevuto: {response}")
+
         print("Arduino connesso!")
 
     def read_communication_data(self):
@@ -49,7 +49,7 @@ class Protocol:
         
         starthead = struct.unpack('B', starthead)[0]
         if starthead != 255:
-            print("Errore di sincronizzazione.")
+            print("Errore di sincronizzazione durante lettura inizio dati.")
             return None
         
         starthead = self.serial_connection.read(1)
@@ -57,7 +57,7 @@ class Protocol:
             return None
         starthead = struct.unpack('B', starthead)[0]
         if starthead != 0:
-            print("Errore di sincronizzazione.")
+            print("Errore di sincronizzazione durante lettura inizio dati.")
             return None
 
         number_of_messages = self.serial_connection.read(1)
@@ -164,13 +164,13 @@ class ArduinoReader:
 
                 number_of_messages = self.protocol.read_communication_data()   
                 if number_of_messages is None:
-                    print("Errore di lettura. niente dal leggere")
+                    print("Errore di lettura. niente da leggere")
                     return None
 
                 for i in range(number_of_messages):
                     temp_message = self.protocol.read_message()
                     if temp_message is None:
-                        print("Errore di lettura.")
+                        print("Errore di lettura. non c'erano messaggi")
                         return None
                     if temp_message.message_type == MessageType.VAR.value:
                         self.variables.append(temp_message)
