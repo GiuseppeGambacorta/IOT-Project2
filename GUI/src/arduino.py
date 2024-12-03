@@ -1,6 +1,7 @@
 import serial
 import struct
 from enum import Enum
+from serial.tools import list_ports
 
 
 class MessageType(Enum):
@@ -38,7 +39,7 @@ class Protocol:
             if not response:
                 continue
             response = struct.unpack('B', response)[0]
-            print(f"Ricevuto: {response}")
+
         print("Arduino connesso!")
 
     def read_communication_data(self):
@@ -48,7 +49,7 @@ class Protocol:
         
         starthead = struct.unpack('B', starthead)[0]
         if starthead != 255:
-            print("Errore di sincronizzazione.")
+            print("Errore di sincronizzazione durante lettura inizio dati.")
             return None
         
         starthead = self.serial_connection.read(1)
@@ -56,7 +57,7 @@ class Protocol:
             return None
         starthead = struct.unpack('B', starthead)[0]
         if starthead != 0:
-            print("Errore di sincronizzazione.")
+            print("Errore di sincronizzazione durante lettura inizio dati.")
             return None
 
         number_of_messages = self.serial_connection.read(1)
@@ -97,7 +98,6 @@ class Protocol:
             value = data.decode('utf-8')
         elif var_type == VarType.FLOAT.value:
             value = struct.unpack('<f', data)[0]  # '<f' per float (little-endian)
-            print(f'valore letto {value}')
         else:
             # Tipo non riconosciuto
             return None
@@ -122,8 +122,7 @@ class Protocol:
 
 
 class ArduinoReader:
-    def __init__(self, port, baudrate=9600, timeout=1):
-        self.port = port
+    def __init__(self, baudrate=9600, timeout=1):
         self.baudrate = baudrate
         self.timeout = timeout
         self.serial_connection = None
@@ -136,6 +135,9 @@ class ArduinoReader:
     # Connect to the Arduino, check for handshake and wait for the connection
     def connect(self):
         try:
+            self.port = self._find_arduino_port()
+            if self.port is None:
+                raise Exception("Nessuna porta Arduino trovata.")
            
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
             self.protocol = Protocol(self.serial_connection)
@@ -146,6 +148,10 @@ class ArduinoReader:
 
         except Exception as e:
             print(f"Errore nella connessione: {e}")
+
+    def _find_arduino_port(self):
+        ports = list_ports.comports()
+        return ports[0].device if ports else None
 
     # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
     def read_data(self):
@@ -158,16 +164,15 @@ class ArduinoReader:
 
                 number_of_messages = self.protocol.read_communication_data()   
                 if number_of_messages is None:
-                    print("Errore di lettura. niente dal leggere")
+                    print("Errore di lettura. niente da leggere")
                     return None
 
                 for i in range(number_of_messages):
                     temp_message = self.protocol.read_message()
                     if temp_message is None:
-                        print("Errore di lettura.")
+                        print("Errore di lettura. non c'erano messaggi")
                         return None
                     if temp_message.message_type == MessageType.VAR.value:
-                        print(f'value: {temp_message.data}')
                         self.variables.append(temp_message)
                     elif temp_message.message_type == MessageType.DEBUG.value:
                         self.debugs.append(temp_message)

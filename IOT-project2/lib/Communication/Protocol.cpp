@@ -1,11 +1,6 @@
 #include "Protocol.h"
 
-Register::Register() {
-    for (int i = 0; i < NUMBER_OF_INCOMING_DATA; i++)
-    {
-        datiInArrivo[i] = 0;
-    }
-}
+Register::Register() {}
 
 void Register::addVariable(byte *var, VarType varType)
 {
