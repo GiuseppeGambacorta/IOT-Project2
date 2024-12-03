@@ -36,10 +36,10 @@ void WasteDisposalTask::tick() {
         if (temp >= maxTemp) {
             tempTimer.active(true);
         } else {
-            tempTimer.active(false);
             tempTimer.reset();
         }
         if (tempTimer.isTimeElapsed()) {
+            tempTimer.reset();
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
@@ -51,17 +51,15 @@ void WasteDisposalTask::tick() {
         if (temp >= maxTemp) {
             tempTimer.active(true);
         } else {
-            tempTimer.active(false);
             tempTimer.reset();
         }
         if (tempTimer.isTimeElapsed()) {
+            tempTimer.reset();
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
     case TEMP_ALLARM:
         if ( *fire == 1) {
-            tempTimer.active(false);
-            tempTimer.reset();
             state = WasteDisposalState::TEMP_TIME;
         }
     case LVL_TIME:

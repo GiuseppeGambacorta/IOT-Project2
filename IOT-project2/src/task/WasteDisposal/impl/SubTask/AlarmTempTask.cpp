@@ -46,20 +46,16 @@ void AlarmTempTask::handleAlarmState() {
     display.write("PROBLEM DETECTED");
     ledGreen.turnOff();
     ledRed.turnOn();
-    if (door.isOpened()) {
-        door.close();
-        door.update();
-    }
+    door.close();
     if(*fire == 1) {
         this->state = RESET;
     }
 }
 
 void AlarmTempTask::handleResetState() {
-    ledGreen.turnOn();
     ledRed.turnOff();
-    display.clear();
-    this->timer->reset();
+    //display.clear();
+    //this->timer->reset();
     *fire = 0;
     this->state = IDLE;
 }
