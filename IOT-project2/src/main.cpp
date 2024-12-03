@@ -1,7 +1,7 @@
 /* 
 Gruppo composto da :
 - Giuseppe Gambacorta
-- Enrico Cornacchia
+- Enrico Cornacchia 0001070824
 - Filippo Massari 0001071420
 */
 
