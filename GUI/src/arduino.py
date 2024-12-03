@@ -149,6 +149,11 @@ class ArduinoReader:
         except Exception as e:
             print(f"Errore nella connessione: {e}")
 
+    def disconnect(self):
+        if self.serial_connection and self.serial_connection.is_open:
+            self.serial_connection.close()
+            print("Connessione chiusa.")
+
     def _find_arduino_port(self):
         ports = list_ports.comports()
         return ports[0].device if ports else None

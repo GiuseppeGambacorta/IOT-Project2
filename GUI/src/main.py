@@ -23,8 +23,12 @@ class RealTimePlotApp(ctk.CTk):
         y_pos = int((screen_height - window_height) / 2)
         self.geometry(f"{window_width}x{window_height}+{x_pos}+{y_pos}")
       
+
+        # Crea l'etichetta per lo stato della connessione
+        self.connection_status = ctk.CTkLabel(self, text="Stato connessione: Disconnesso")
+        self.connection_status.pack(pady=(10, 0))
         # Crea il frame per i pulsanti
-        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.restore, self.empty)
+        self.button_frame = ButtonFrame(self, self.start_plotting, self.stop_plotting, self.disconnect, self.restore, self.empty)
         self.button_frame.pack(fill="x", padx=20, pady=(20, 0))
         
         # Crea il frame per visualizzare i grafici
@@ -54,6 +58,8 @@ class RealTimePlotApp(ctk.CTk):
         self.text_debug = tk.Text(self.text_frame_debug, height=10)
         self.text_debug.pack(fill="x", padx=20, pady=(20, 0))
 
+    
+
         # Inizializza i dati
         self.x_data = []
         self.y_data = []
@@ -70,7 +76,6 @@ class RealTimePlotApp(ctk.CTk):
 
         self.arduino = ArduinoReader()
         self.arduino.connect()
-        
 
         self.is_running = True
         self.update_thread = threading.Thread(target=self.update_data)
@@ -79,10 +84,20 @@ class RealTimePlotApp(ctk.CTk):
         
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         
+    def disconnect(self):
+        self.arduino.disconnect()
+        self.stop_plotting()
+                # Aggiorna lo stato della connessione
+        if self.arduino.is_connected():
+            self.connection_status.configure(text="Stato connessione: Connesso")
+        else:
+            self.connection_status.configure(text="Stato connessione: Disconnesso")
+        self.update_idletasks()
+
+    
     def update_data(self):
         while self.is_running:
             try:
-
                 if self.arduino.is_connected():
                     result = self.arduino.read_data()
 
@@ -101,7 +116,6 @@ class RealTimePlotApp(ctk.CTk):
                         if var.id == self.data_to_read["level"]:
                             level = var
 
-
                     if temperature is not None:
                         self.x_data.append(time.time())
                         self.y_data.append(int(temperature.data))
@@ -117,8 +131,6 @@ class RealTimePlotApp(ctk.CTk):
                             self.x2_data = self.x2_data[-50:]
                             self.y2_data = self.y2_data[-50:]
 
-            
-                         
                     # Aggiorna la gui in modo sicuro dal thread principale
                     self.after(0, self.safe_update)
                     
@@ -127,7 +139,7 @@ class RealTimePlotApp(ctk.CTk):
                     self.arduino.connect()
             except RuntimeError:
                 pass
-    
+
     def safe_update(self):
         if self.is_running:
             self.update_graph()
@@ -138,6 +150,11 @@ class RealTimePlotApp(ctk.CTk):
             for event_message in self.event:
                 self.update_event_text(f"EVENT: {event_message.data}")
 
+            # Aggiorna lo stato della connessione
+            if self.arduino.is_connected():
+                self.connection_status.configure(text="Stato connessione: Connesso")
+            else:
+                self.connection_status.configure(text="Stato connessione: Disconnesso")
 
     def update_graph(self):
         self.ax1.clear()
@@ -170,16 +187,13 @@ class RealTimePlotApp(ctk.CTk):
         if len(lines) > max_lines:
             text_widget.delete(1.0, f"{len(lines) - max_lines + 1}.0")
     
-
     def restore(self):
         if self.arduino.is_connected():
-            self.arduino.write_data(1,self.data_to_write["restore"])
-        
+            self.arduino.write_data(1, self.data_to_write["restore"])
 
     def empty(self):
         if self.arduino.is_connected():
-            self.arduino.write_data(1,self.data_to_write["empty"])
-
+            self.arduino.write_data(1, self.data_to_write["empty"])
 
     def start_plotting(self):
         self.is_running = True
@@ -194,8 +208,6 @@ class RealTimePlotApp(ctk.CTk):
         self.x_data.clear()
         self.y_data.clear()
 
-
-    
     def on_close(self):
         self.is_running = False
         self.update_thread.join(timeout=1.0)
