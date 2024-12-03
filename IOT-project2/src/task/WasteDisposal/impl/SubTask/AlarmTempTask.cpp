@@ -2,6 +2,9 @@
 #include "../../api/subTask/AlarmTempTask.h"
 #include "Components/Display/Api/Display.h"
 
+#include "./task/WasteDisposal/api/WasteDisposalTask.h"
+
+
 #define MAXTEMPTIME 10000
 
 AlarmTempTask::AlarmTempTask(DigitalOutput& ledGreen,
@@ -33,11 +36,8 @@ void AlarmTempTask::tick() {
     }
 }
 
-void AlarmTempTask::handleIdleState() {/*
-    this->timer->active(tempSensor.isThresholdExceeded());
-    if (this->timer->isTimeElapsed()) {
-        this->state = ALARM;
-    }*/
+void AlarmTempTask::handleIdleState() {
+
    this->state = ALARM;
 }
 
@@ -51,13 +51,9 @@ void AlarmTempTask::handleAlarmState() {
         door.update();
     }
      int temp = tempSensor.readTemperature();
-      ServiceLocator::getSerialManagerInstance().addEventMessage("Temperature alarm");
-    if(*fire == 1 && temp < 100){
+    if(*fire ==  ResetMessage::MESSAGE_FROM_GUI && temp < 100){
         this->state = RESET;
-    }  else
-    {
-         ServiceLocator::getSerialManagerInstance().addEventMessage("un cazz");
-    }
+    } 
 }
 
 void AlarmTempTask::handleResetState() {
@@ -65,9 +61,9 @@ void AlarmTempTask::handleResetState() {
     ledRed.turnOff();
     display.clear();
     this->timer->reset();
-    *fire = 2;
+    *fire =  ResetMessage::MESSAGE_SEEN;
     this->state = IDLE;
-    ServiceLocator::getSerialManagerInstance().addEventMessage("Temperature alarm reset");
+   
 }
 
 void AlarmTempTask::reset() {

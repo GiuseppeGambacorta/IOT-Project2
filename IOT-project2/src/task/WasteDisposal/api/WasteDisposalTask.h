@@ -10,12 +10,17 @@
 #include "subTask/AlarmTempTask.h"
 
 
+enum ResetMessage : int {
+    NO_MESSAGE = 0,
+    MESSAGE_FROM_GUI = 1,
+    MESSAGE_SEEN = 2,
+};
+
 enum WasteDisposalState {
     STD_EXEC,
     LVL_ALLARM,
-    LVL_TIME,
     TEMP_ALLARM,
-    TEMP_TIME
+
 };
 
 class WasteDisposalTask : public Task {
@@ -51,9 +56,7 @@ public:
     switch (state) {
         case STD_EXEC: return "STD_EXEC";
         case LVL_ALLARM: return "LVL_ALLARM";
-        case LVL_TIME: return "LVL_TIME";
         case TEMP_ALLARM: return "TEMP_ALLARM";
-        case TEMP_TIME: return "TEMP_TIME";
         default: return "UNKNOWN";
     }
 }

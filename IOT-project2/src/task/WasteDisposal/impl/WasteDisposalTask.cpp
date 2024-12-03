@@ -40,10 +40,9 @@ void WasteDisposalTask::tick() {
         }
         break;
     case LVL_ALLARM:
-        if (*empty == 2) {
-           // emptyTimer.active(true);
+        if (*empty ==  ResetMessage::MESSAGE_SEEN) {
             state = WasteDisposalState::STD_EXEC;
-            *empty = 0;
+            *empty =  ResetMessage::NO_MESSAGE;
         }
         
         if (tempTimer.isTimeElapsed()) {
@@ -52,30 +51,11 @@ void WasteDisposalTask::tick() {
         break;
     case TEMP_ALLARM:
 
-        if ( *fire == 2) {
+        if ( *fire ==  ResetMessage::MESSAGE_SEEN) {
             state = WasteDisposalState::STD_EXEC;
-            *fire = 0;
+            *fire = ResetMessage::NO_MESSAGE;;
         }
-    /* 
-    case LVL_TIME:
-        if ( *empty == 0  ) {
-          //  state = WasteDisposalState::STD_EXEC;
-        }
-        break;
-    /*
-        if (emptyTimer.isTimeElapsed()) {
-            emptyTimer.reset();
-            *empty = 0;
-            state = WasteDisposalState::STD_EXEC;
-        }
-    case TEMP_TIME:
-
-        if ( *fire == 0 ) {
-         //   state = WasteDisposalState::STD_EXEC;
-        }
-        break;
-    }
-    */
+   
     }
 
     switch (state){
@@ -90,16 +70,6 @@ void WasteDisposalTask::tick() {
             alarmTempTask.setActive(false);
             break;
         case TEMP_ALLARM:
-            stdExecTask.setActive(false);
-            alarmLevelTask.setActive(false);
-            alarmTempTask.setActive(true);
-            break;
-        case LVL_TIME:
-            stdExecTask.setActive(false);
-            alarmLevelTask.setActive(true);
-            alarmTempTask.setActive(false);
-            break;
-        case TEMP_TIME:
             stdExecTask.setActive(false);
             alarmLevelTask.setActive(false);
             alarmTempTask.setActive(true);
