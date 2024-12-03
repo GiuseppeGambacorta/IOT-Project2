@@ -1,7 +1,7 @@
-# Relazione del Progetto-2 
 ## Design
-### Relazione tra Sheduler e Task
-Il design globale del progetto si basa su di una architettura a `Task` amministrate da uno `Scheduler` che le amminaistra sulla dase dei loro periodi base.
+
+### Relazione tra Scheduler e Task
+Il design globale del progetto si basa su un'architettura a `Task` amministrate da uno `Scheduler` che le gestisce in base ai loro periodi base.
 
 ```mermaid
 classDiagram
@@ -39,10 +39,10 @@ classDiagram
    - Ha una relazione con `Task` tramite l'array `taskList`, che può contenere fino a `MAX_TASKS` oggetti `Task`.
    - Invoca i metodi delle istanze di `Task` attraverso il metodo `schedule`.
 2. `Task`:
-   - Interfaccia base contenete i metodi `tick` e `reset`, essi verrano implementati delle specifiche task.
+   - Classe astratta contenente i metodi `tick` e `reset`, che verranno implementati dalle specifiche task.
 
 ### Interoperatività delle Task
-Le task `InputTask`, `WasteDisposalTask`, `StdExecTask`, `AlarmLevelTask`, `AlarmTempTask`, e `OutputTask` sono implementazioni della classe astratta `Task`. Esse sono contenute nella `taskList` dello `Scheduler` e chiamate da quest'ultimo sulla base del loro stato di attività. Lo stato di attività delle task `StdExecTask`, `AlarmLevelTask` e `AlarmTempTask` è amministrato dalla task di menagment `WasteDisposalTask`
+Le task `InputTask`, `WasteDisposalTask`, `StdExecTask`, `AlarmLevelTask`, `AlarmTempTask` e `OutputTask` sono implementazioni della classe astratta `Task`. Esse sono contenute nella `taskList` dello `Scheduler` e chiamate da quest'ultimo in base al loro stato di attività. Lo stato di attività delle task `StdExecTask`, `AlarmLevelTask` e `AlarmTempTask` è amministrato dalla task di management `WasteDisposalTask`.
 
 ```mermaid
 classDiagram
@@ -154,18 +154,14 @@ classDiagram
     Task <|-- AlarmTempTask
     Task <|-- OutputTask
 
-
     %% Dependency Relationships
     WasteDisposalTask --> StdExecTask : setActive
     WasteDisposalTask --> AlarmLevelTask : setActive
     WasteDisposalTask --> AlarmTempTask : setActive
 ```
 
-#### Dettagli del Diagramma:
-1. **Ereditarietà**:
-   - Tutte le task derivano dalla classe astratta `Task`.
-
-2. **Dipendenze**:
+#### Dettagli del Diagramma
+**Dipendenze**:
    - `WasteDisposalTask` gestisce le sotto-task (`StdExecTask`, `AlarmLevelTask`, `AlarmTempTask`) e utilizza componenti come `Sonar` e `TemperatureSensor`.
    - `InputTask` legge sensori come `Sonar`, `Pir`, `TemperatureSensor` e interagisce con gli input digitali.
    - Altre task (es. `AlarmLevelTask`, `AlarmTempTask`) controllano output (es. LED, display) e interagiscono con i sensori o attuatori (es. `Door`, `Sonar`, `TemperatureSensor`).
@@ -177,24 +173,22 @@ classDiagram
 La `InputTask` viene chiamata dallo `Scheduler` come prima task e sfrutta il metodo `update` contenuto negli oggetti di input per aggiornarne il valore. Grazie a questo passaggio, abbiamo la sicurezza che le task successivamente schedulate lavoreranno sempre sugli stessi dati per il resto del periodo dello `Scheduler`.
 
 ### WasteDisposalTask
-La `WasteDisposalTask` è la task che si occupa della gestione delle task `StdExecTask`, `AlarmLevelTask` e `AlarmTempTask`. Grazie alla sua azione attiva e disattiva queste ultime permettendo la gestione dei casi critici.
+La `WasteDisposalTask` è la task che si occupa della gestione delle task `StdExecTask`, `AlarmLevelTask` e `AlarmTempTask`. Grazie alla sua azione, attiva e disattiva queste ultime permettendo la gestione dei casi critici.
 
 ```mermaid
-
 stateDiagram-v2
     [*] --> STD_EXEC
 
     STD_EXEC: Standard Execution
-    LVL_ALLARM: Level Alarm
-    TEMP_ALLARM: Temperature Alarm
+    LVL_ALARM: Level Alarm
+    TEMP_ALARM: Temperature Alarm
 
-    STD_EXEC --> LVL_ALLARM : level <= maxLevel
-    STD_EXEC --> TEMP_ALLARM : temp >= maxTemp && tempTimer.isTimeElapsed() == true
+    STD_EXEC --> LVL_ALARM : level <= maxLevel
+    STD_EXEC --> TEMP_ALARM : temp >= maxTemp && tempTimer.isTimeElapsed() == true
 
-    LVL_ALLARM --> STD_EXEC : emptyButton.isActive() == true
+    LVL_ALARM --> STD_EXEC : emptyButton.isActive() == true
 
-    TEMP_ALLARM --> STD_EXEC : restoreButton.isActive() == true
-
+    TEMP_ALARM --> STD_EXEC : restoreButton.isActive() == true
 ```
 
 ### StdExecTask
@@ -216,7 +210,7 @@ stateDiagram-v2
     SLEEP --> READY : userDetector.isDetected()
 ```
 
-### AllarmLevelTask
+### AlarmLevelTask
 L'`AlarmLevelTask` modella la gestione della criticità legata al riempimento del bidone.
 
 ```mermaid
@@ -234,7 +228,7 @@ stateDiagram-v2
     RESET --> IDLE
 ```
 
-### AllarmTempTask
+### AlarmTempTask
 L'`AlarmTempTask` modella la gestione di un raggiungimento critico di temperatura.
 
 ```mermaid
@@ -251,4 +245,4 @@ stateDiagram-v2
 ```
 
 ### OutputTask
-La `OuputTask` viene chiamata dallo `Scheduler` come ultima task e sfrutta il metodo `update` contenuto negli oggetti di output per aggiornarne lo stato a livello hardware in un unico momento dello schedul.
+La `OutputTask` viene chiamata dallo `Scheduler` come ultima task e sfrutta il metodo `update` contenuto negli oggetti di output per aggiornarne lo stato a livello hardware in un unico momento dello schedule.
