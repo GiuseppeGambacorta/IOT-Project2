@@ -2,7 +2,7 @@
 #include "ArduinoStandardLibrary.h"
 
 Display::Display(int address, int columns, int rows)
-    : lcd(address, columns, rows), columns(columns), rows(rows), currentMessage(""), oldMessage("") {}
+    : lcd(address, columns, rows), currentMessage(""), oldMessage(""), columns(columns), rows(rows) {}
 
 void Display::init() {
     lcd.init();
