@@ -171,9 +171,13 @@ classDiagram
    - Altre task (es. `AlarmLevelTask`, `AlarmTempTask`) controllano output (es. LED, display) e interagiscono con i sensori o attuatori (es. `Door`, `Sonar`, `TemperatureSensor`).
    - `SerialInputTask` e `SerialOutputTask` dipendono da `SerialManager` e lo utilizzano per gestire le operazioni seriali.
 
-### Diagrammi a Stati delle Task
+## Specifiche delle Task
 
-#### WasteDisposalTask
+### InputTask
+La `InputTask` viene chiamata dallo `Scheduler` come prima task e sfrutta il metodo `update` contenuto negli oggetti di input per aggiornarne il valore. Grazie a questo passaggio, abbiamo la sicurezza che le task successivamente schedulate lavoreranno sempre sugli stessi dati per il resto del periodo dello `Scheduler`.
+
+### WasteDisposalTask
+La `WasteDisposalTask` è la task che si occupa della gestione delle task `StdExecTask`, `AlarmLevelTask` e `AlarmTempTask`. Grazie alla sua azione attiva e disattiva queste ultime permettendo la gestione dei casi critici.
 
 ```mermaid
 
@@ -193,7 +197,8 @@ stateDiagram-v2
 
 ```
 
-#### StdExecTask
+### StdExecTask
+La `StdExecTask` si propone di modellare la macchina a stati finiti che rappresenta le operazioni compibili dal bidone in assenza di condizioni critiche.
 
 ```mermaid
 stateDiagram-v2
@@ -211,7 +216,8 @@ stateDiagram-v2
     SLEEP --> READY : userDetector.isDetected()
 ```
 
-#### AllarmLevelTask
+### AllarmLevelTask
+L'`AlarmLevelTask` modella la gestione della criticità legata al riempimento del bidone.
 
 ```mermaid
 stateDiagram-v2
@@ -228,7 +234,8 @@ stateDiagram-v2
     RESET --> IDLE
 ```
 
-#### AllarmTempTask
+### AllarmTempTask
+L'`AlarmTempTask` modella la gestione di un raggiungimento critico di temperatura.
 
 ```mermaid
 stateDiagram-v2
@@ -242,3 +249,6 @@ stateDiagram-v2
     ALARM --> RESET : temp >= maxTemp && tempTimer.isTimeElapsed() == true
     RESET --> IDLE
 ```
+
+### OutputTask
+La `OuputTask` viene chiamata dallo `Scheduler` come ultima task e sfrutta il metodo `update` contenuto negli oggetti di output per aggiornarne lo stato a livello hardware in un unico momento dello schedul.
