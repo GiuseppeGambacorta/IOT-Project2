@@ -239,7 +239,3 @@ stateDiagram-v2
 #### AllarmTempTask
 
 (DIAGRAMMA)
-
-## Hardware
-
-![Hardware](doc\Project_2.png)
