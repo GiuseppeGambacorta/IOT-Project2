@@ -30,6 +30,8 @@ void WasteDisposalTask::tick() {
 
     switch (state){
     case STD_EXEC:
+                ServiceLocator::getSerialManagerInstance().addEventMessage("STD_EXEC");
+
         if (level <= maxLevel) {
             state = WasteDisposalState::LVL_ALLARM;
         }
@@ -59,7 +61,9 @@ void WasteDisposalTask::tick() {
         }
         break;
     case TEMP_ALLARM:
+        ServiceLocator::getSerialManagerInstance().addEventMessage("TEMPERATURE ENTER");
         if ( *fire == 1) {
+            tempTimer.reset();
             state = WasteDisposalState::TEMP_TIME;
         }
     case LVL_TIME:
