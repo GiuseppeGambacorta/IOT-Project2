@@ -65,11 +65,19 @@ void WasteDisposalTask::tick() {
             state = WasteDisposalState::TEMP_TIME;
         }
     case LVL_TIME:
-        if (emptyTimer.isTimeElapsed()) {
-            emptyTimer.reset();
+        if ( *empty == 0) {
             state = WasteDisposalState::STD_EXEC;
         }
+        break;
+    /*
+        if (emptyTimer.isTimeElapsed()) {
+            emptyTimer.reset();
+            *empty = 0;
+            state = WasteDisposalState::STD_EXEC;
+        }*/
     case TEMP_TIME:
+        ServiceLocator::getSerialManagerInstance().addEventMessage("TEMPERATURE EXIT");
+
         if ( *fire == 0) {
             state = WasteDisposalState::STD_EXEC;
         }
@@ -94,7 +102,7 @@ void WasteDisposalTask::tick() {
             break;
         case LVL_TIME:
             stdExecTask.setActive(false);
-            alarmLevelTask.setActive(active);
+            alarmLevelTask.setActive(true);
             alarmTempTask.setActive(false);
             break;
         case TEMP_TIME:

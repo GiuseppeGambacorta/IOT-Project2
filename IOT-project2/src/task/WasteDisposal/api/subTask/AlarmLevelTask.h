@@ -18,6 +18,7 @@ private:
     Sonar& levelDetector;
     enum State {IDLE, ALARM, EMPTY, RESET} state;
     Timer timer;
+    int *empty;
 
     void handleIdleState();
     void handleAlarmState();

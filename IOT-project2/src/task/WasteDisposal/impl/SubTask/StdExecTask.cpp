@@ -47,7 +47,7 @@ void StdExecTask ::homingReady(){
     ledRed.turnOff(); 
     door.close();
     display.write("PRESS OPEN TO INSERT WASTE");
-    ServiceLocator::getSerialManagerInstance().addEventMessage("PRESS OPEN TO INSERT WASTE");
+//    ServiceLocator::getSerialManagerInstance().addEventMessage("PRESS OPEN TO INSERT WASTE");
 }
 
 void StdExecTask ::execReady(){

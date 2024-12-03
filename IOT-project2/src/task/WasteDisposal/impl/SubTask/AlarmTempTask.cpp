@@ -14,6 +14,7 @@ AlarmTempTask::AlarmTempTask(DigitalOutput& ledGreen,
                                  tempSensor(tempSensor) {
     this->timer = new Timer(MAXTEMPTIME);
     this->state = IDLE;
+    fire = ServiceLocator::getSerialManagerInstance().getvar(0);
 }
 
 void AlarmTempTask::tick() {
@@ -32,12 +33,12 @@ void AlarmTempTask::tick() {
     }
 }
 
-void AlarmTempTask::handleIdleState() {
+void AlarmTempTask::handleIdleState() {/*
     this->timer->active(tempSensor.isThresholdExceeded());
     if (this->timer->isTimeElapsed()) {
         this->state = ALARM;
-        //alarmTemp=true;
-    }
+    }*/
+   this->state = ALARM;
 }
 
 void AlarmTempTask::handleAlarmState() {
@@ -49,9 +50,9 @@ void AlarmTempTask::handleAlarmState() {
         door.close();
         door.update();
     }
-    this->state = RESET;
-    //alarmTempReset=true;
-    //alarmTemp=false;
+    if(*fire == 1) {
+        this->state = RESET;
+    }
 }
 
 void AlarmTempTask::handleResetState() {
@@ -59,8 +60,8 @@ void AlarmTempTask::handleResetState() {
     ledRed.turnOff();
     display.clear();
     this->timer->reset();
+    *fire = 0;
     this->state = IDLE;
-    //alarmTempReset=false;
 }
 
 void AlarmTempTask::reset() {
@@ -68,7 +69,6 @@ void AlarmTempTask::reset() {
     ledRed.turnOff();
     display.clear();
     this->timer->reset();
+    *fire = 0;
     this->state = IDLE;
-    //alarmTempReset=false;
-    //alarmTemp=false;
 }
