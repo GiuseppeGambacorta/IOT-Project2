@@ -176,26 +176,21 @@ classDiagram
 #### WasteDisposalTask
 
 ```mermaid
+
 stateDiagram-v2
     [*] --> STD_EXEC
 
     STD_EXEC: Standard Execution
     LVL_ALLARM: Level Alarm
     TEMP_ALLARM: Temperature Alarm
-    LVL_TIME: Resolution Level Allarm
-    TEMP_TIME: Resolution Timer Allarm
 
     STD_EXEC --> LVL_ALLARM : level <= maxLevel
-    STD_EXEC --> TEMP_ALLARM : temp >= maxTemp && tempTimer.isTimeElapsed()
+    STD_EXEC --> TEMP_ALLARM : temp >= maxTemp && tempTimer.isTimeElapsed() == true
 
-    LVL_ALLARM --> LVL_TIME : resolutionLevelButton.isActive() == true
-    LVL_ALLARM --> TEMP_ALLARM : temp >= maxTemp && tempTimer.isTimeElapsed()
+    LVL_ALLARM --> STD_EXEC : emptyButton.isActive() == true
 
-    TEMP_ALLARM --> TEMP_TIME : resolutionTmpButton.isActive() == true
+    TEMP_ALLARM --> STD_EXEC : restoreButton.isActive() == true
 
-    LVL_TIME --> STD_EXEC : emptyTimer.isTimeElapsed() == true
-
-    TEMP_TIME --> STD_EXEC : resolutionTimer.isElapsed() == true
 ```
 
 #### StdExecTask
@@ -227,15 +222,23 @@ stateDiagram-v2
     EMPTY: Empty
     RESET: Reset
 
-    IDLE --> ALARM : levelDetector.isThresholdLower()
-    ALARM --> EMPTY : *empty == 1
+    IDLE --> ALARM : level <= maxLevel
+    ALARM --> EMPTY : emptyButton.isActive() == true
     EMPTY --> RESET : timer.isTimeElapsed()
-    RESET --> IDLE : reset()
-
-    ALARM --> RESET : door.isOpened() && door.close()
+    RESET --> IDLE
 ```
-(DA SISTEMARE GLI IF)
 
 #### AllarmTempTask
 
-(DIAGRAMMA)
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+
+    IDLE: Idle
+    ALARM: Alarm
+    RESET: Reset
+
+    IDLE --> ALARM : level <= maxLevel
+    ALARM --> RESET : temp >= maxTemp && tempTimer.isTimeElapsed() == true
+    RESET --> IDLE
+```
