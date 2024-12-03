@@ -1,3 +1,10 @@
+# Relazione Elaborato 2 IOT
+
+Gruppo composto da :
+- Giuseppe Gambacorta
+- Enrico Cornacchia
+- Filippo Massari 0001071420
+
 ## Design
 
 ### Relazione tra Scheduler e Task

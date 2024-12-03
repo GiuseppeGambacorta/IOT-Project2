@@ -1,3 +1,10 @@
+/* 
+Gruppo composto da :
+- Giuseppe Gambacorta
+- Enrico Cornacchia
+- Filippo Massari 0001071420
+*/
+
 #include <Arduino.h>
 
 #include "scheduler/api/Scheduler.h"
