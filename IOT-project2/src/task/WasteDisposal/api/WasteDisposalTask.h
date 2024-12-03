@@ -26,7 +26,7 @@ private:
     AlarmTempTask& alarmTempTask;
 
     WasteDisposalState state;
-
+    WasteDisposalState oldState;
     Timer tempTimer;
     Timer emptyTimer;
 
@@ -46,6 +46,17 @@ public:
 
     void tick() override; 
     void reset() override;
+
+    const char* wasteDisposalStateToString(WasteDisposalState state) {
+    switch (state) {
+        case STD_EXEC: return "STD_EXEC";
+        case LVL_ALLARM: return "LVL_ALLARM";
+        case LVL_TIME: return "LVL_TIME";
+        case TEMP_ALLARM: return "TEMP_ALLARM";
+        case TEMP_TIME: return "TEMP_TIME";
+        default: return "UNKNOWN";
+    }
+}
 };
 
 #endif

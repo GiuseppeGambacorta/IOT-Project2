@@ -33,32 +33,26 @@ void WasteDisposalTask::tick() {
         if (level <= maxLevel) {
             state = WasteDisposalState::LVL_ALLARM;
         }
-        if (temp >= maxTemp) {
-            tempTimer.active(true);
-        } else {
-            tempTimer.active(false);
-            tempTimer.reset();
-        }
+
+        tempTimer.active(temp >= maxTemp);
+      
         if (tempTimer.isTimeElapsed()) {
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
     case LVL_ALLARM:
         if (*empty == 1) {
-            emptyTimer.active(true);
+           // emptyTimer.active(true);
             state = WasteDisposalState::LVL_TIME;
         }
-        if (temp >= maxTemp) {
-            tempTimer.active(true);
-        } else {
-            tempTimer.active(false);
-            tempTimer.reset();
-        }
+
+        tempTimer.active(temp >= maxTemp);
         if (tempTimer.isTimeElapsed()) {
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
     case TEMP_ALLARM:
+
         if ( *fire == 1) {
             tempTimer.active(false);
             tempTimer.reset();
@@ -76,7 +70,7 @@ void WasteDisposalTask::tick() {
             state = WasteDisposalState::STD_EXEC;
         }*/
     case TEMP_TIME:
-        ServiceLocator::getSerialManagerInstance().addEventMessage("TEMPERATURE EXIT");
+       
 
         if ( *fire == 0) {
             state = WasteDisposalState::STD_EXEC;
@@ -111,6 +105,11 @@ void WasteDisposalTask::tick() {
             alarmTempTask.setActive(true);
             break;
     }
+
+    if (state != oldState){
+         ServiceLocator::getSerialManagerInstance().addEventMessage(wasteDisposalStateToString(state));
+    }
+    oldState = state;
 }
 
 void WasteDisposalTask::reset() {

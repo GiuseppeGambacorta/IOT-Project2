@@ -84,6 +84,9 @@ class RealTimePlotApp(ctk.CTk):
         
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         
+        self.debug_counter = 0
+        self.event_counter = 0
+        
     def disconnect(self):
         self.arduino.disconnect()
         self.stop_plotting()
@@ -114,7 +117,6 @@ class RealTimePlotApp(ctk.CTk):
                     level = None
                     for var in self.var:
                         if var.id == self.data_to_read["level"]:
-                            print(var.data)
                             level = var
 
                     if temperature is not None:
@@ -174,15 +176,17 @@ class RealTimePlotApp(ctk.CTk):
         self.canvas.draw()
 
     def update_debug_text(self, text):
+        self.debug_counter += 1
         self.text_debug.configure(state=tk.NORMAL)
-        self.text_debug.insert(tk.END, text + "\n")
+        self.text_debug.insert(tk.END, f"DEBUG {self.debug_counter}: {text}\n")
         self.text_debug.see(tk.END)
         self.limit_text(self.text_debug)
         self.text_debug.configure(state=tk.DISABLED)
 
     def update_event_text(self, text):
+        self.event_counter += 1
         self.text_event.configure(state=tk.NORMAL)
-        self.text_event.insert(tk.END, text + "\n")
+        self.text_event.insert(tk.END, f"EVENT {self.event_counter}: {text}\n")
         self.text_event.see(tk.END)
         self.limit_text(self.text_event)
         self.text_event.configure(state=tk.DISABLED)

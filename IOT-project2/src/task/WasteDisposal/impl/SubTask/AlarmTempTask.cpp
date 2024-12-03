@@ -50,6 +50,7 @@ void AlarmTempTask::handleAlarmState() {
         door.close();
         door.update();
     }
+   
     if(*fire == 1) {
         this->state = RESET;
     }

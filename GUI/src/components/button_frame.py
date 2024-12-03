@@ -4,10 +4,10 @@ class ButtonFrame(ctk.CTkFrame):
     def __init__(self, master, start_command, stop_command, disconnect_command , restore_command, empty_command):
         super().__init__(master)
         
-        self.start_button = ctk.CTkButton(self, text="Start", command=start_command)
+        self.start_button = ctk.CTkButton(self, text="Start plot or connect", command=start_command)
         self.start_button.pack(side="left", padx=10)
         
-        self.stop_button = ctk.CTkButton(self, text="Stop", command=stop_command)
+        self.stop_button = ctk.CTkButton(self, text="Stop plot", command=stop_command)
         self.stop_button.pack(side="left", padx=10)
 
         self.disconnect_button = ctk.CTkButton(self, text="Disconnect", command=disconnect_command)
