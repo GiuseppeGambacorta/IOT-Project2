@@ -46,7 +46,6 @@ void AlarmLevelTask::tick() {
 void AlarmLevelTask::handleIdleState() {
     if (levelDetector.isThresholdLower()) {
         this->state = ALARM;
-        //alarmLevel=true;
     }
 }
 

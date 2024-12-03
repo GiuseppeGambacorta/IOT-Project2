@@ -12,7 +12,6 @@ TemperatureSensor::TemperatureSensor(int pin) {
 void TemperatureSensor::update() {
     sensor->update();
     int analogValue = sensor->getValue() - TEMPOFFSET;
-    // Convert the analog value to a temperature value for the LM35 sensor
     this->temperature = analogValue;
 }
 

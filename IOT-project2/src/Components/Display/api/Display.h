@@ -2,7 +2,6 @@
 #define __DISPLAY_H__
 
 #include <LiquidCrystal_I2C.h>
-//#include <cstring.h>
 
 class Display {
 private:
