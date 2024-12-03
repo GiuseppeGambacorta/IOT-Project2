@@ -57,7 +57,6 @@ void AlarmTempTask::handleAlarmState() {
 }
 
 void AlarmTempTask::handleResetState() {
-    ledGreen.turnOn();
     ledRed.turnOff();
     display.clear();
     this->timer->reset();

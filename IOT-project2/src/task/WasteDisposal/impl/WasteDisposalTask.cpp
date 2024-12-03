@@ -31,11 +31,14 @@ void WasteDisposalTask::tick() {
 
     switch (state){
     case STD_EXEC:
+                ServiceLocator::getSerialManagerInstance().addEventMessage("STD_EXEC");
+
         if (level <= maxLevel) {
             state = WasteDisposalState::LVL_ALLARM;
         }
 
         if (tempTimer.isTimeElapsed()) {
+            tempTimer.reset();
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
@@ -46,6 +49,7 @@ void WasteDisposalTask::tick() {
         }
         
         if (tempTimer.isTimeElapsed()) {
+            tempTimer.reset();
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
