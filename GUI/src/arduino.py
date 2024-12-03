@@ -98,7 +98,6 @@ class Protocol:
             value = data.decode('utf-8')
         elif var_type == VarType.FLOAT.value:
             value = struct.unpack('<f', data)[0]  # '<f' per float (little-endian)
-            print(f'valore letto {value}')
         else:
             # Tipo non riconosciuto
             return None
@@ -152,7 +151,6 @@ class ArduinoReader:
 
     def _find_arduino_port(self):
         ports = list_ports.comports()
-        
         return ports[0].device if ports else None
 
     # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
@@ -175,7 +173,6 @@ class ArduinoReader:
                         print("Errore di lettura.")
                         return None
                     if temp_message.message_type == MessageType.VAR.value:
-                        print(f'value: {temp_message.data}')
                         self.variables.append(temp_message)
                     elif temp_message.message_type == MessageType.DEBUG.value:
                         self.debugs.append(temp_message)
