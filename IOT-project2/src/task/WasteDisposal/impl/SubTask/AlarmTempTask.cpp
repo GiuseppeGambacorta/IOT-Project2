@@ -50,9 +50,13 @@ void AlarmTempTask::handleAlarmState() {
         door.close();
         door.update();
     }
-   
-    if(*fire == 1) {
+     int temp = tempSensor.readTemperature();
+      ServiceLocator::getSerialManagerInstance().addEventMessage("Temperature alarm");
+    if(*fire == 1 && temp < 100){
         this->state = RESET;
+    }  else
+    {
+         ServiceLocator::getSerialManagerInstance().addEventMessage("un cazz");
     }
 }
 
@@ -61,11 +65,13 @@ void AlarmTempTask::handleResetState() {
     ledRed.turnOff();
     display.clear();
     this->timer->reset();
-    *fire = 0;
+    *fire = 2;
     this->state = IDLE;
+    ServiceLocator::getSerialManagerInstance().addEventMessage("Temperature alarm reset");
 }
 
 void AlarmTempTask::reset() {
+
     ledGreen.turnOn();
     ledRed.turnOff();
     display.clear();

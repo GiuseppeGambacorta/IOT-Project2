@@ -27,6 +27,7 @@ WasteDisposalTask::WasteDisposalTask(StdExecTask& stdExecTask,
 void WasteDisposalTask::tick() {
     double level = levelDetector.readDistance();
     int temp = tempSensor.readTemperature();
+    tempTimer.active(temp >= maxTemp);
 
     switch (state){
     case STD_EXEC:
@@ -34,33 +35,31 @@ void WasteDisposalTask::tick() {
             state = WasteDisposalState::LVL_ALLARM;
         }
 
-        tempTimer.active(temp >= maxTemp);
-      
         if (tempTimer.isTimeElapsed()) {
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
     case LVL_ALLARM:
-        if (*empty == 1) {
+        if (*empty == 2) {
            // emptyTimer.active(true);
-            state = WasteDisposalState::LVL_TIME;
+            state = WasteDisposalState::STD_EXEC;
+            *empty = 0;
         }
-
-        tempTimer.active(temp >= maxTemp);
+        
         if (tempTimer.isTimeElapsed()) {
             state = WasteDisposalState::TEMP_ALLARM;
         }
         break;
     case TEMP_ALLARM:
 
-        if ( *fire == 1) {
-            tempTimer.active(false);
-            tempTimer.reset();
-            state = WasteDisposalState::TEMP_TIME;
-        }
-    case LVL_TIME:
-        if ( *empty == 0) {
+        if ( *fire == 2) {
             state = WasteDisposalState::STD_EXEC;
+            *fire = 0;
+        }
+    /* 
+    case LVL_TIME:
+        if ( *empty == 0  ) {
+          //  state = WasteDisposalState::STD_EXEC;
         }
         break;
     /*
@@ -68,14 +67,15 @@ void WasteDisposalTask::tick() {
             emptyTimer.reset();
             *empty = 0;
             state = WasteDisposalState::STD_EXEC;
-        }*/
+        }
     case TEMP_TIME:
-       
 
-        if ( *fire == 0) {
-            state = WasteDisposalState::STD_EXEC;
+        if ( *fire == 0 ) {
+         //   state = WasteDisposalState::STD_EXEC;
         }
         break;
+    }
+    */
     }
 
     switch (state){

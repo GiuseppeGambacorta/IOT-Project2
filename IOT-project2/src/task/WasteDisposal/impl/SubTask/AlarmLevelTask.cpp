@@ -77,7 +77,7 @@ void AlarmLevelTask::handleResetState() {
     ledGreen.turnOn();
     ledRed.turnOff();
     display.clear();
-    *empty = 0;
+    *empty = 2;
     this->state = IDLE;
     //alarmLevelReset=false;
     //alarmLevel=false;
