@@ -99,6 +99,7 @@ class RealTimePlotApp(ctk.CTk):
                     level = None
                     for var in self.var:
                         if var.id == self.data_to_read["level"]:
+                            print(var.data)
                             level = var
 
 
