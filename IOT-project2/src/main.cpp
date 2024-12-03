@@ -55,9 +55,15 @@ void setup() {
     display.init();
     serialManager.addDebugMessage("System started");
     
-    scheduler.init(25);
+    scheduler.init(50);
     serialoutputTask.init(500);
     serialinputTask.init(500);
+    inputTask.init(50);
+    wasteDisposalTask.init(50);
+    alarmLevelTask.init(50);
+    alarmTempTask.init(50);
+    stdExecTask.init(50);
+    outputTask.init(50);
 
 
     serialoutputTask.setActive(true);
@@ -77,7 +83,7 @@ void setup() {
     scheduler.addTask(&inputTask);
     scheduler.addTask(&wasteDisposalTask);
     scheduler.addTask(&alarmLevelTask); 
-    //scheduler.addTask(&alarmTempTask);
+    scheduler.addTask(&alarmTempTask);
     scheduler.addTask(&stdExecTask);
     scheduler.addTask(&outputTask);
 }
