@@ -47,7 +47,7 @@ class RealTimePlotApp(ctk.CTk):
         self.text_frame_event.pack(fill="x", padx=20, pady=(20, 0))
         
         # Crea il widget Text per gli eventi
-        self.text_event = tk.Text(self.text_frame_event, height=10)
+        self.text_event = tk.Text(self.text_frame_event, height=10, state=tk.DISABLED)
         self.text_event.pack(fill="x", padx=20, pady=(20, 0))
 
         # Crea il frame per visualizzare i testi di debug
@@ -55,7 +55,7 @@ class RealTimePlotApp(ctk.CTk):
         self.text_frame_debug.pack(fill="x", padx=20, pady=(20, 20))
         
         # Crea il widget Text per i messaggi di debug
-        self.text_debug = tk.Text(self.text_frame_debug, height=10)
+        self.text_debug = tk.Text(self.text_frame_debug, height=10, state=tk.DISABLED)
         self.text_debug.pack(fill="x", padx=20, pady=(20, 0))
 
     
@@ -173,14 +173,18 @@ class RealTimePlotApp(ctk.CTk):
         self.canvas.draw()
 
     def update_debug_text(self, text):
+        self.text_debug.configure(state=tk.NORMAL)
         self.text_debug.insert(tk.END, text + "\n")
         self.text_debug.see(tk.END)
         self.limit_text(self.text_debug)
+        self.text_debug.configure(state=tk.DISABLED)
 
     def update_event_text(self, text):
+        self.text_event.configure(state=tk.NORMAL)
         self.text_event.insert(tk.END, text + "\n")
         self.text_event.see(tk.END)
         self.limit_text(self.text_event)
+        self.text_event.configure(state=tk.DISABLED)
 
     def limit_text(self, text_widget, max_lines=50):
         lines = text_widget.get(1.0, tk.END).splitlines()
