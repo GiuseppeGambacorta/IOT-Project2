@@ -1,6 +1,7 @@
 import serial
 import struct
 from enum import Enum
+from serial.tools import list_ports
 
 
 class MessageType(Enum):
@@ -122,8 +123,7 @@ class Protocol:
 
 
 class ArduinoReader:
-    def __init__(self, port, baudrate=9600, timeout=1):
-        self.port = port
+    def __init__(self, baudrate=9600, timeout=1):
         self.baudrate = baudrate
         self.timeout = timeout
         self.serial_connection = None
@@ -136,6 +136,9 @@ class ArduinoReader:
     # Connect to the Arduino, check for handshake and wait for the connection
     def connect(self):
         try:
+            self.port = self._find_arduino_port()
+            if self.port is None:
+                raise Exception("Nessuna porta Arduino trovata.")
            
             self.serial_connection = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
             self.protocol = Protocol(self.serial_connection)
@@ -146,6 +149,11 @@ class ArduinoReader:
 
         except Exception as e:
             print(f"Errore nella connessione: {e}")
+
+    def _find_arduino_port(self):
+        ports = list_ports.comports()
+        
+        return ports[0].device if ports else None
 
     # Read the data from the serial connection, first read the number of messages and then read the messages, , divide them by type and store them in the respective lists
     def read_data(self):

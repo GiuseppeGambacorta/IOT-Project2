@@ -68,7 +68,7 @@ class RealTimePlotApp(ctk.CTk):
         self.debug = []
         self.event = []
 
-        self.arduino = ArduinoReader(port='COM3')
+        self.arduino = ArduinoReader()
         self.arduino.connect()
         
 
