@@ -4,20 +4,19 @@ InputTask::InputTask(
                  Sonar& levelDetector,
                  Pir& userDetector,
                  TemperatureSensor& tempSensor,
-                     DigitalInput& openButton, 
-                     DigitalInput& closeButton) 
+                 DigitalInput& openButton, 
+                 DigitalInput& closeButton) 
     : 
     levelDetector(levelDetector),
     userDetector(userDetector),
     tempSensor(tempSensor),
     openButton(openButton), 
-    closeButton(closeButton){
-         ServiceLocator::getSerialManagerInstance().addVariableToSend((byte *)&temp, VarType::INT);
-        ServiceLocator::getSerialManagerInstance().addVariableToSend((byte *)&level, VarType::FLOAT);
-    }
+    closeButton(closeButton) {
+    ServiceLocator::getSerialManagerInstance().addVariableToSend((byte *)&temp, VarType::INT);
+    ServiceLocator::getSerialManagerInstance().addVariableToSend((byte *)&level, VarType::FLOAT);
+}
 
-void InputTask::tick(){
-    
+void InputTask::tick() {
     userDetector.update();
     levelDetector.update();
     tempSensor.update();
@@ -28,9 +27,9 @@ void InputTask::tick(){
     level = levelDetector.readDistance();
 
    
+ 
 }
 
-void InputTask::reset(){
+void InputTask::reset() {
     
 }
-

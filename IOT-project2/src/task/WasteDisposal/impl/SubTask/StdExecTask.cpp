@@ -55,6 +55,7 @@ void StdExecTask ::homingReady(){
         display.write("open button");
     }*/
     display.write("PRESS OPEN TO INSERT WASTE");
+    ServiceLocator::getSerialManagerInstance().addEventMessage("PRESS OPEN TO INSERT WASTE");
 }
 
 void StdExecTask ::execReady(){
@@ -80,6 +81,7 @@ void StdExecTask ::homingOpen(){
     }
 
     display.write("PRESS CLOSE WHEN YOU'RE DONE");
+
 }
 
 void StdExecTask ::execOpen(){

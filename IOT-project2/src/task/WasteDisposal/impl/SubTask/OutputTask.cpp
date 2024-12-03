@@ -15,7 +15,7 @@ void OutputTask::tick(){
     
 
     
-    //serialManager.addDebugMessage("OutputTask::tick");
+  
     door.update();
     display.update();
     ledGreen.update();

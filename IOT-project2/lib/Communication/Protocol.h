@@ -31,11 +31,11 @@ private:
     static const int MAX_VARIABLES = 10;
     DataHeader variables[MAX_VARIABLES];
     unsigned int variablesCount = 0;
-    static const int MAX_DEBUG = 20;
+    static const int MAX_DEBUG = 30;
     DataHeader debugMessage[MAX_DEBUG];
     unsigned int debugCount = 0;
 
-    static const int MAX_EVENTS = 20;
+    static const int MAX_EVENTS = 30;
     DataHeader eventMessage[MAX_EVENTS];
     unsigned int eventCount = 0;
 
